@@ -3,6 +3,9 @@
 # ADPROCLUS
 
 This package is an implementation of ADditive PROfile CLUStering (ADPROCLUS) in R. It can be used to obtain overlapping clustering models for object-by-variable data matrices.
+
+The current version is 0.2.05. The package is under development and will be submitted to CRAN in late 2019.
+
 ### Dependencies
 
 R version >= 3.1.0
