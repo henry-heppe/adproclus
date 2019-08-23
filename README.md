@@ -1,2 +1,13 @@
 # ADPROCLUS
-Additive Profile Clustering for generating overlapping clustering models in R
+
+This package is an implementation of ADditive PROfile CLUStering (ADPROCLUS) in R. It can be used to obtain overlapping clustering models for object-by-variable data matrices.
+### Dependencies
+
+R version >= 3.1.0
+```
+gtools
+NMFN
+```
+### License
+
+This project is licensed under the GPL-3 License - see the [LICENSE.md](LICENSE.md) file for details
