@@ -174,6 +174,37 @@ NULL
 
 }
 
+
+.ldadproclus <- function (X, A, s) {
+        t <- proc.time()
+
+
+
+
+}
+
+.ldfindP <- function (X, A, s) {
+        Z <- A %*% matlib::inv(t(A) %*% A) %*% t(A)
+        U <- Z %*% X %*% t(X) %*% Z
+        Q <- eigen(U, symmetric = TRUE)[["vectors"]][1:s,]
+
+        P <- matlib::inv((t(A) %*% A)) %*% t(A) %*% Q %*% t(Q) %*% X
+
+        return(P)
+}
+
+.ldfindA <- function(X, P, k) {
+
+}
+
+
+
+
+
+
+
+
+
 .printoutput <- function (k, time, nstart) {
 
         print ("Clustering completed.")
