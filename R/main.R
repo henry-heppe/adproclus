@@ -571,8 +571,8 @@ adproclus <- function(data, centers, nstart = 1L,
 
 #low dimensional adproclus
 
-adproclus <- function(data, nclusters, ncompononents, start_allocation = NULL, nrandomstart = 1,
-                      randomstart = "random", SaveAllStarts = FALSE) {
+ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, nrandomstart = 1,
+                      randomstart = c("random", "semi-random"), SaveAllStarts = FALSE) {
 
         t <- proc.time()
         results <- list()
@@ -585,23 +585,22 @@ adproclus <- function(data, nclusters, ncompononents, start_allocation = NULL, n
         if (!is.integer(as.integer(nclusters)))
                 stop("'nclusters' must be a number")
 
-        if (ncompononents >= min(n,nclusters)) {
+        if (ncomponents >= min(n,nclusters)) {
                 stop("'ncomponents' must be smaller than min(number of observations, number of clusters)")
         }
         if (!is.null(start_allocation)) {
                 start_allocation <- as.matrix(start_allocation)
                 m <- as.integer(nrow(start_allocation))
                 q <- as.integer(ncol(start_allocation))
-                if (is.na(m) || is.na(q) || !all(start_allocation %in% c(0,1)) || m != n || q < nclusters) {
+                if (is.na(m) || is.na(q) || !all(start_allocation %in% c(0,1)) || m != n || q != nclusters) {
                         stop("invalid start allocation matrix")
                 }
 
         }
-        if(!start_allocation %in% list("random", "semi-random", "r", "s")) {
-                stop("invalid start specification (must be 'random' or 'semi-random')")
-        }
+        randomstart <- match.arg(randomstart)
 
 
+        stop("got here")
 
 
 
