@@ -569,3 +569,160 @@ adproclus <- function(data, centers, nstart = 1L,
     return(results)
 }
 
+#low dimensional adproclus
+
+adproclus <- function(data, nclusters, ncompononents, start_allocation = NULL, nrandomstart = 1,
+                      randomstart = "random", SaveAllStarts = FALSE) {
+
+        t <- proc.time()
+        results <- list()
+
+        data <- as.matrix(data)
+        n <- as.integer(nrow(data))
+        p <- as.integer(ncol(data))
+        if (is.na(n) || is.na(p))
+                stop("invalid data matrix")
+        if (!is.integer(as.integer(nclusters)))
+                stop("'nclusters' must be a number")
+
+        if (ncompononents >= min(n,nclusters)) {
+                stop("'ncomponents' must be smaller than min(number of observations, number of clusters)")
+        }
+        if (!is.null(start_allocation)) {
+                start_allocation <- as.matrix(start_allocation)
+                m <- as.integer(nrow(start_allocation))
+                q <- as.integer(ncol(start_allocation))
+                if (is.na(m) || is.na(q) || !all(start_allocation %in% c(0,1)) || m != n || q < nclusters) {
+                        stop("invalid start allocation matrix")
+                }
+
+        }
+        if(!start_allocation %in% list("random", "semi-random", "r", "s")) {
+                stop("invalid start specification (must be 'random' or 'semi-random')")
+        }
+
+
+
+
+
+
+
+
+
+
+
+        #old code (for adproclus, not LDadrproclus)
+
+        if (length(centers) != 1L) {
+                if (ncol(data) != ncol(centers))
+                        stop("number of columns in 'centers' must match number of columns in 'data'")
+                k <- nclusters
+                if (n < k)
+                        stop("number of clusters cannot exceed number of objects in 'data'")
+                if (sum(nstart) != 1L) {
+                        nstart <- c(0,1)
+                        warning("'centers' is an initial profile matrix.
+                    Number of starts has been set to one.")
+                }
+                initialStart <- getRational(data,
+                                            centers)
+                if (alg == 1) {
+                        results <- .adproclus_lf1(data, initialStart$A)
+                        results$initialStart <- initialStart
+
+                }
+                if (alg == 2) {
+                        results <- .adproclus_lf2(data, initialStart$A,
+                                                  initialStart$P)
+                        results$initialStart <- initialStart
+                }
+        } else {
+                k <- centers
+                if (n < k)
+                        stop("number of clusters cannot exceed number of objects in 'data'")
+
+                if (length(nstart) > 2) {
+                        stop("'nstart' must be a vector of length 1 or 2")
+                }
+                if (sum(nstart) > 50) {
+                        warning("Number of starts is larger than 50. Computation might take a while")
+                }
+
+                BestSol <- list(sse = Inf)
+
+                if (alg == 1) {
+                        for (i in 1:nstart[1]) {
+                                initialStart <- getRandom(data,
+                                                          centers)
+                                res <- .adproclus_lf1(data, initialStart$A)
+                                res$initialStart <- initialStart
+                                if (res$sse < BestSol$sse) {
+                                        BestSol <- res
+                                }
+                                if (SaveAllStarts == TRUE) {
+                                        results <- append(results, list(res))
+                                }
+                        }
+                        remove(i)
+                        if (!is.na(nstart[2])) {
+                                for (i in 1:nstart[2]) {
+                                        initialStart <- getRational(data,
+                                                                    centers)
+                                        res <- .adproclus_lf1(data, initialStart$A)
+                                        res$initialStart <- initialStart
+                                        if (res$sse < BestSol$sse) {
+                                                BestSol <- res
+                                        }
+                                        if (SaveAllStarts == TRUE) {
+                                                results <- append(results, list(res))
+                                        }
+                                }
+                                remove(i)
+                        }
+                }
+
+                if (alg == 2) {
+                        for (i in 1:nstart[1]) {
+                                initialStart <- getRandom(data,
+                                                          centers)
+                                res <- .adproclus_lf2(data, initialStart$A,
+                                                      initialStart$P)
+                                res$initialStart <- initialStart
+                                if (res$sse < BestSol$sse) {
+                                        BestSol <- res
+                                }
+                                if (SaveAllStarts == TRUE) {
+                                        results <- append(results, list(res))
+                                }
+                                remove(i)
+                        }
+                        if (!is.na(nstart[2])) {
+                                for (i in 1:nstart[2]) {
+                                        initialStart <- getRational(data,
+                                                                    centers)
+                                        res <- .adproclus_lf2(data, initialStart$A,
+                                                              initialStart$P)
+                                        res$initialStart <- initialStart
+                                        if (res$sse < BestSol$sse) {
+                                                BestSol <- res
+                                        }
+                                        if (SaveAllStarts == TRUE) {
+                                                results <- append(results, list(res))
+                                        }
+                                }
+                                remove(i)
+                        }
+                }
+
+                if (SaveAllStarts == TRUE) {
+                        results <- list(BestSol = BestSol, Runs = results)
+                        names(results$Runs) <- as.character(c(1:length(results$Runs)))
+                } else {
+                        results <- BestSol
+                }
+        }
+        time <- (proc.time() - t)[1]
+        .printoutput(k,time, nstart)
+        return(results)
+}
+
