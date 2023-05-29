@@ -188,7 +188,7 @@ NULL
         U <- Z %*% X %*% t(X) %*% Z
         Q <- eigen(U, symmetric = TRUE)[["vectors"]][1:s,]
 
-        P <- matlib::inv((t(A) %*% A)) %*% t(A) %*% Q %*% t(Q) %*% X
+        P <- matlib::inv((t(A) %*% A)) %*% t(A) %*% t(Q) %*% Q %*% X
 
         return(P)
 }
