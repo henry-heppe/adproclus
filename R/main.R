@@ -175,8 +175,65 @@ NULL
 }
 
 
-.ldadproclus <- function (X, A, s) {
+.ldadproclus <- function (x, A, s) {
         t <- proc.time()
+
+        data <- x
+        n <- nrow(x)
+        #totvar <- norm(data - mean(data), "f")^2
+        k <- ncol(A)
+        npos <- 2^k
+
+       #need: first P
+
+        #G <- NMFN::mpinv(A) %*% data
+        res <- data - (A %*% P)
+        f <- .lossL2(res)
+        fold <- f + 1
+        iter <- 1
+
+        PossibA <- gtools::permutations(2, k, v = c(0, 1), repeats.allowed = TRUE)
+        PossibA <- apply(PossibA, 2, rev)
+        if (k > 1) {
+                PossibA <- t(apply(PossibA, 1, rev))
+        }
+        PossibA <- .repmat(PossibA, n, 1)
+
+        replX <- data.frame()
+        for (i in 1:n) {
+                reps <- matrix(.repmat(data[i, ], npos, 1),
+                               ncol = ncol(data), nrow = npos, byrow = TRUE)
+                replX <- rbind(replX, reps)
+        }
+        replX <- as.matrix(replX)
+
+        while (fold > f) {
+
+                fold = f
+                Aold = A
+                Pold = P
+
+                A <- .updateA_lf2(n, Pold, replX, PossibA)
+                P <- .ldfindP(data, A, s)
+                f <- .lossL2(x - (A %*% P))
+
+                iter <- iter + 1
+        }
+
+        runs <- iter - 1
+        Membs <- Aold
+        Profs <- Pold
+        sse <- fold
+        explvar <- 1 - (fold/totvar)
+
+        timeruns <- (proc.time() - t)[1]
+
+        model <- Membs %*% Profs
+        result <- list(Model = model, Membs = Membs, Profs = Profs,
+                       sse = sum((model - x)^2), totvar = totvar,
+                       explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns))
+
+        return(result)
 
 
 
