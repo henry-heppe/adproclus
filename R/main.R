@@ -222,7 +222,7 @@ NULL
         Membs <- Aold
         Profs <- Pold
         ldBase <- pracma::orth(t(P)) #B
-        ldProfs <- NULL #C
+        ldProfs <- NULL #C insert function here
         sse <- fold
         explvar <- 1 - (fold/totvar)
 
