@@ -180,15 +180,13 @@ NULL
 
         data <- x
         n <- nrow(x)
-        #totvar <- norm(data - mean(data), "f")^2
+        totvar <- norm(data - mean(data), "f")^2
         k <- ncol(A)
         npos <- 2^k
 
-       #need: first P
+        P <- .ldfindP(x, A, s)
 
-        #G <- NMFN::mpinv(A) %*% data
-        res <- data - (A %*% P)
-        f <- .lossL2(res)
+        f <- .lossL2(x - (A %*% P))
         fold <- f + 1
         iter <- 1
 
@@ -223,13 +221,16 @@ NULL
         runs <- iter - 1
         Membs <- Aold
         Profs <- Pold
+        ldBase <- pracma::orth(t(P)) #B
+        ldProfs <- NULL #C
         sse <- fold
         explvar <- 1 - (fold/totvar)
+
 
         timeruns <- (proc.time() - t)[1]
 
         model <- Membs %*% Profs
-        result <- list(Model = model, Membs = Membs, Profs = Profs,
+        result <- list(Model = model, Membs = Membs, Profs = Profs, low_dim_profs = ldProfs, low_dim_base = ldBase,
                        sse = sum((model - x)^2), totvar = totvar,
                        explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns))
 
@@ -248,10 +249,6 @@ NULL
         P <- matlib::inv((t(A) %*% A)) %*% t(A) %*% Q %*% t(Q) %*% X
 
         return(P)
-}
-
-.ldfindA <- function(X, P, k) {
-
 }
 
 
@@ -688,7 +685,7 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         randomstart <- match.arg(randomstart)
 
 
-        stop("got here")
+
 
 
 
