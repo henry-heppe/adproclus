@@ -219,13 +219,15 @@ NULL
         }
 
         runs <- iter - 1
-        Membs <- Aold
-        Profs <- Pold
-        ldBase <- pracma::orth(t(P)) #B
-        #ldBase <- svd()
-        ldProfs <- NULL #C
+        Membs <- A   #or Aold instead?
+        Profs <- P   #or Pold instead?
         sse <- fold
         explvar <- 1 - (fold/totvar)
+
+        decomp <- svd(P)
+
+        ldBase <- decomp$v[,1:s] #B (correct to neglect columns and sv after s?)
+        ldProfs <- decomp$u[,1:s] %*% diag(decomp$d[1:s]) #C
 
 
         timeruns <- (proc.time() - t)[1]
@@ -233,7 +235,7 @@ NULL
         model <- Membs %*% Profs
         result <- list(Model = model, Membs = Membs, Profs = Profs, low_dim_profs = ldProfs, low_dim_base = ldBase,
                        sse = sum((model - x)^2), totvar = totvar,
-                       explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns))
+                       explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns), svd = svd(Profs))
 
         return(result)
 
@@ -814,7 +816,7 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
 basic_test <- function() {
         set.seed(1)
         k <- 6 #number of clusters
-        s <- 4 #number of dimensions
+        s <- 3 #number of dimensions
 
         a <- matrix(rbinom(400*k, 1, 0.5), 400, k)
         a <- data.frame(a)
