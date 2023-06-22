@@ -222,7 +222,8 @@ NULL
         Membs <- Aold
         Profs <- Pold
         ldBase <- pracma::orth(t(P)) #B
-        ldProfs <- NULL #C insert function here
+        #ldBase <- svd()
+        ldProfs <- NULL #C
         sse <- fold
         explvar <- 1 - (fold/totvar)
 
@@ -808,5 +809,29 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         time <- (proc.time() - t)[1]
         .printoutput(k,time, nstart)
         return(results)
+}
+
+basic_test <- function() {
+        set.seed(1)
+        k <- 6 #number of clusters
+        s <- 4 #number of dimensions
+
+        a <- matrix(rbinom(400*k, 1, 0.5), 400, k)
+        a <- data.frame(a)
+        a_ext <- cbind(a, rsum = rowSums(a))
+        not_done = TRUE
+        iterr <- 0
+        while(not_done) {
+                iterr <- iterr + 1
+                a_filt <- a_ext[a_ext$rsum == 0 | a_ext$rsum == k,]
+                a_ext[a_ext$rsum == 0 | a_ext$rsum == k,] <- data.frame(matrix(rbinom(k*nrow(a_filt),1,0.5), nrow(a_filt), k))
+                if (nrow(a_ext[a_ext$rsum == 0 | a_ext$rsum == k,])) {
+                     not_done <- FALSE
+                }
+                a <- a_ext[,1:k]
+                a_ext <- cbind(a, rsum = rowSums(a))
+        }
+        print("A created")
+        .ldadproclus(as.matrix(CGdata), as.matrix(a), s)
 }
 
