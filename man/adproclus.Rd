@@ -4,8 +4,13 @@
 \alias{adproclus}
 \title{Additive profile clustering}
 \usage{
-adproclus(data, centers, nstart = 1L, algorithm = "ALS1",
-  SaveAllStarts = FALSE)
+adproclus(
+  data,
+  centers,
+  nstart = 1L,
+  algorithm = "ALS1",
+  SaveAllStarts = FALSE
+)
 }
 \arguments{
 \item{data}{object-by-variable data matrix of class \code{matrix} or

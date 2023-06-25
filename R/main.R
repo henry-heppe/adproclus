@@ -657,8 +657,22 @@ adproclus <- function(data, centers, nstart = 1L,
     return(results)
 }
 
-#low dimensional adproclus
 
+
+#' Low dimensional ADPROCLUS
+#'
+#' @param data the data
+#' @param nclusters the number of clusters
+#' @param ncomponents the number of dimensions (the number of components)
+#' @param start_allocation a possible start allocation
+#' @param nrandomstart the number of random starts
+#' @param randomstart type of random start
+#' @param SaveAllStarts option to save all starts
+#'
+#' @return a list of relevant information about the resulting model
+#' @export
+#'
+#' @examples some example
 ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, nrandomstart = 1,
                       randomstart = c("random", "semi-random"), SaveAllStarts = FALSE) {
 

@@ -4,7 +4,9 @@
 \name{CGdata}
 \alias{CGdata}
 \title{Generated data with underlying overlapping clusters.}
-\format{A data frame with 500 rows and 15 variables}
+\format{
+A data frame with 500 rows and 15 variables
+}
 \usage{
 CGdata
 }
