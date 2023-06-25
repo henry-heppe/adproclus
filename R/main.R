@@ -233,7 +233,7 @@ NULL
         timeruns <- (proc.time() - t)[1]
 
         model <- Membs %*% Profs
-        result <- list(Model = model, Membs = Membs, Profs = Profs, low_dim_profs = ldProfs, low_dim_base = ldBase,
+        result <- list(type = NULL, Model = model, Membs = Membs, Profs = Profs, low_dim_profs = ldProfs, low_dim_base = ldBase,
                        sse = sum((model - x)^2), totvar = totvar,
                        explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns), svd = svd(Profs))
 
@@ -271,6 +271,21 @@ NULL
                 round (time, digits = 1), "seconds."))
         print (paste ("Algorithm starts:", nstart[1], "random and",
                 gtools::na.replace (nstart[2], 0), "rational."))
+
+}
+
+.LDprintoutput <- function (k, s, time, nrandomstart, nsemirandomstart, rationalStart) {
+
+        print ("Clustering completed.")
+        print (paste ("Low dimensional Additive Profile Clustering with ",
+                      k, " overlapping clusters, and ", s, "components (dimensions)."))
+        print (paste ("Total processing time: ",
+                      round (time, digits = 1), " seconds."))
+        print (paste ("Algorithm starts: ", nrandomstart, "random and ",
+                      nsemirandomstart, " semi-random."))
+        if (rationalStart) {
+                print("A rational start was included as the first run.")
+        }
 
 }
 
@@ -337,7 +352,7 @@ getRandom <- function(data, centers) {
         }
         P <- NMFN::mpinv(A) %*% data
 
-        return(list(type = "Random Start", A = A, P = P))
+        return(list(type = "Random Start", A = A, P = P)) #issue: this P is only valid (and only needed) for adproclus (not LD)
 }
 
 #' Generate initial rational start
@@ -415,8 +430,8 @@ getRational <- function(data, centers) {
         replX <- as.matrix(replX)
 
         A <- as.matrix(.updateA_lf2(n, P, replX, PossibA))
-        result <- list(type = "Rational Start", A = A,
-                P = P)
+        result <- list(type = "Semi-random Start", A = A,
+                P = P) #issue: what about P?
         return(result)
 }
 
@@ -674,7 +689,7 @@ adproclus <- function(data, centers, nstart = 1L,
 #'
 #' @examples some example
 ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, nrandomstart = 1,
-                      randomstart = c("random", "semi-random"), SaveAllStarts = FALSE) {
+                      nsemirandomstart = 1, SaveAllStarts = FALSE) {
 
         t <- proc.time()
         results <- list()
@@ -690,6 +705,7 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         if (ncomponents >= min(n,nclusters)) {
                 stop("'ncomponents' must be smaller than min(number of observations, number of clusters)")
         }
+        best_sol <- list(sse = Inf)
         if (!is.null(start_allocation)) {
                 start_allocation <- as.matrix(start_allocation)
                 m <- as.integer(nrow(start_allocation))
@@ -697,134 +713,49 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                 if (is.na(m) || is.na(q) || !all(start_allocation %in% c(0,1)) || m != n || q != nclusters) {
                         stop("invalid start allocation matrix")
                 }
-
+                model_new <- .ldadproclus(data, start_allocation, ncomponents)
+                model_new$initialA <- start_allocation
+                model_new$type <- "rational_start_model"
+                results <- append(results, list(model_new))
+                best_sol <- results[[1]]
         }
-        randomstart <- match.arg(randomstart)
 
-
-
-
-
-
-
-
-
-
-
-
-        #old code (for adproclus, not LDadrproclus)
-
-        if (length(centers) != 1L) {
-                if (ncol(data) != ncol(centers))
-                        stop("number of columns in 'centers' must match number of columns in 'data'")
-                k <- nclusters
-                if (n < k)
-                        stop("number of clusters cannot exceed number of objects in 'data'")
-                if (sum(nstart) != 1L) {
-                        nstart <- c(0,1)
-                        warning("'centers' is an initial profile matrix.
-                    Number of starts has been set to one.")
+        for (i in 1:nrandomstart) {
+                random_start <- getRandom(data, nclusters)$A
+                model_new <- .ldadproclus(data, random_start, ncomponents)
+                model_new$initialA <- random_start
+                model_new$type <- paste("random_start_model_no_", i)
+                results <- append(results, list(model_new))
+                #names(results)[length(results)] <- paste("random_start_model_no_", i)
+                if(model_new$sse < best_sol$sse) {
+                        best_sol <- model_new
                 }
-                initialStart <- getRational(data,
-                                            centers)
-                if (alg == 1) {
-                        results <- .adproclus_lf1(data, initialStart$A)
-                        results$initialStart <- initialStart
+        }
+        for (j in 1:nsemirandomstart) {
+                semi_random_start <- getRational(data, nclusters)$A
+                model_new <- .ldadproclus(data, semi_random_start, ncomponents)
+                model_new$initialA <- semi_random_start
+                model_new$type <- paste("semi_random_start_model_no_", j)
+                results <- append(results, list(model_new))
+                #names(results)[length(results)] <- paste("semi_random_start_model_no_", j)
+                if(model_new$sse < best_sol$sse) {
+                        best_sol <- model_new
+                }
+        }
 
-                }
-                if (alg == 2) {
-                        results <- .adproclus_lf2(data, initialStart$A,
-                                                  initialStart$P)
-                        results$initialStart <- initialStart
-                }
+
+        if (SaveAllStarts == TRUE) {
+                results <- list(BestSol = best_sol, Runs = results)
+                names(results$Runs) <- as.character(c(1:length(results$Runs)))
         } else {
-                k <- centers
-                if (n < k)
-                        stop("number of clusters cannot exceed number of objects in 'data'")
-
-                if (length(nstart) > 2) {
-                        stop("'nstart' must be a vector of length 1 or 2")
-                }
-                if (sum(nstart) > 50) {
-                        warning("Number of starts is larger than 50. Computation might take a while")
-                }
-
-                BestSol <- list(sse = Inf)
-
-                if (alg == 1) {
-                        for (i in 1:nstart[1]) {
-                                initialStart <- getRandom(data,
-                                                          centers)
-                                res <- .adproclus_lf1(data, initialStart$A)
-                                res$initialStart <- initialStart
-                                if (res$sse < BestSol$sse) {
-                                        BestSol <- res
-                                }
-                                if (SaveAllStarts == TRUE) {
-                                        results <- append(results, list(res))
-                                }
-                        }
-                        remove(i)
-                        if (!is.na(nstart[2])) {
-                                for (i in 1:nstart[2]) {
-                                        initialStart <- getRational(data,
-                                                                    centers)
-                                        res <- .adproclus_lf1(data, initialStart$A)
-                                        res$initialStart <- initialStart
-                                        if (res$sse < BestSol$sse) {
-                                                BestSol <- res
-                                        }
-                                        if (SaveAllStarts == TRUE) {
-                                                results <- append(results, list(res))
-                                        }
-                                }
-                                remove(i)
-                        }
-                }
-
-                if (alg == 2) {
-                        for (i in 1:nstart[1]) {
-                                initialStart <- getRandom(data,
-                                                          centers)
-                                res <- .adproclus_lf2(data, initialStart$A,
-                                                      initialStart$P)
-                                res$initialStart <- initialStart
-                                if (res$sse < BestSol$sse) {
-                                        BestSol <- res
-                                }
-                                if (SaveAllStarts == TRUE) {
-                                        results <- append(results, list(res))
-                                }
-                                remove(i)
-                        }
-                        if (!is.na(nstart[2])) {
-                                for (i in 1:nstart[2]) {
-                                        initialStart <- getRational(data,
-                                                                    centers)
-                                        res <- .adproclus_lf2(data, initialStart$A,
-                                                              initialStart$P)
-                                        res$initialStart <- initialStart
-                                        if (res$sse < BestSol$sse) {
-                                                BestSol <- res
-                                        }
-                                        if (SaveAllStarts == TRUE) {
-                                                results <- append(results, list(res))
-                                        }
-                                }
-                                remove(i)
-                        }
-                }
-
-                if (SaveAllStarts == TRUE) {
-                        results <- list(BestSol = BestSol, Runs = results)
-                        names(results$Runs) <- as.character(c(1:length(results$Runs)))
-                } else {
-                        results <- BestSol
-                }
+                results <- BestSol
         }
+
         time <- (proc.time() - t)[1]
-        .printoutput(k,time, nstart)
+        .LDprintoutput(nclusters, ncomponents, time, nrandomstart, nsemirandomstart, !is.null(start_allocation))
         return(results)
+
+
 }
 
 basic_test <- function() {
@@ -848,6 +779,7 @@ basic_test <- function() {
                 a_ext <- cbind(a, rsum = rowSums(a))
         }
         print("A created")
-        .ldadproclus(as.matrix(CGdata), as.matrix(a), s)
+        #.ldadproclus(as.matrix(CGdata), as.matrix(a), s)
+        return(as.matrix(a))
 }
 

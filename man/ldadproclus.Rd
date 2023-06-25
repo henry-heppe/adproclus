@@ -10,7 +10,7 @@ ldadproclus(
   ncomponents,
   start_allocation = NULL,
   nrandomstart = 1,
-  randomstart = c("random", "semi-random"),
+  nsemirandomstart = 1,
   SaveAllStarts = FALSE
 )
 }
@@ -25,9 +25,9 @@ ldadproclus(
 
 \item{nrandomstart}{the number of random starts}
 
-\item{randomstart}{type of random start}
-
 \item{SaveAllStarts}{option to save all starts}
+
+\item{randomstart}{type of random start}
 }
 \value{
 a list of relevant information about the resulting model
