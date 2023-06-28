@@ -16,13 +16,18 @@ Description: This package is an implementation of ADditive PROfile
         overlapping clustering models for object-by-variable data
         matrices.
 Depends: R (>= 3.1.0)
-License: GPL-3
+License: GPL (>= 3)
+Encoding: UTF-8
 LazyData: true
 Imports: 
     gtools,
-    NMFN
+    matlib,
+    methods,
+    NMFN,
+    stats
 RoxygenNote: 7.2.3
 Collate: 
+    'ADPROCLUS-package.R'
     'adproclus_classes.R'
     'data.R'
     'main.R'

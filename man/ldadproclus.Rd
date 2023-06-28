@@ -25,9 +25,9 @@ ldadproclus(
 
 \item{nrandomstart}{the number of random starts}
 
-\item{SaveAllStarts}{option to save all starts}
+\item{nsemirandomstart}{the number of semi-random starts}
 
-\item{randomstart}{type of random start}
+\item{SaveAllStarts}{option to save all starts}
 }
 \value{
 a list of relevant information about the resulting model
@@ -36,5 +36,5 @@ a list of relevant information about the resulting model
 Low dimensional ADPROCLUS
 }
 \examples{
-some example
+#some example
 }
