@@ -681,13 +681,13 @@ adproclus <- function(data, centers, nstart = 1L,
 #' @param ncomponents the number of dimensions (the number of components)
 #' @param start_allocation a possible start allocation
 #' @param nrandomstart the number of random starts
-#' @param randomstart type of random start
+#' @param nsemirandomstart the number of semi-random starts
 #' @param SaveAllStarts option to save all starts
 #'
 #' @return a list of relevant information about the resulting model
 #' @export
 #'
-#' @examples some example
+#' @examples #some example
 ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, nrandomstart = 1,
                       nsemirandomstart = 1, SaveAllStarts = FALSE) {
 
@@ -748,7 +748,7 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                 results <- list(BestSol = best_sol, Runs = results)
                 names(results$Runs) <- as.character(c(1:length(results$Runs)))
         } else {
-                results <- BestSol
+                results <- best_sol
         }
 
         time <- (proc.time() - t)[1]
@@ -763,7 +763,7 @@ basic_test <- function() {
         k <- 6 #number of clusters
         s <- 3 #number of dimensions
 
-        a <- matrix(rbinom(400*k, 1, 0.5), 400, k)
+        a <- matrix(stats::rbinom(400*k, 1, 0.5), 400, k)
         a <- data.frame(a)
         a_ext <- cbind(a, rsum = rowSums(a))
         not_done = TRUE
@@ -771,7 +771,7 @@ basic_test <- function() {
         while(not_done) {
                 iterr <- iterr + 1
                 a_filt <- a_ext[a_ext$rsum == 0 | a_ext$rsum == k,]
-                a_ext[a_ext$rsum == 0 | a_ext$rsum == k,] <- data.frame(matrix(rbinom(k*nrow(a_filt),1,0.5), nrow(a_filt), k))
+                a_ext[a_ext$rsum == 0 | a_ext$rsum == k,] <- data.frame(matrix(stats::rbinom(k*nrow(a_filt),1,0.5), nrow(a_filt), k))
                 if (nrow(a_ext[a_ext$rsum == 0 | a_ext$rsum == k,])) {
                      not_done <- FALSE
                 }
