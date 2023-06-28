@@ -11,7 +11,7 @@
 #' @slot timer A numeric denoting the elapsed time in seconds to obtain the clustering solution
 #' @slot initialStart A list containing information about the stat used to initialize the algorithm
 
-setClass("adproclus", representation(
+methods::setClass("adproclus", representation(
         clusters = "numeric",
         Model = "matrix",
         Membs = "matrix",
@@ -24,7 +24,7 @@ setClass("adproclus", representation(
         initialStart = "list",
         Runs = "list"))
 
-setMethod ("show", "adproclus", function(object){
+methods::setMethod ("show", "adproclus", function(object){
         cat ("ADPROCLUS overlapping clustering solution with", object@clusters, "clusters. \n")
         cat (" Type             :", class(object), '\n')
         cat ("This is a test and not fully implemented yet")
