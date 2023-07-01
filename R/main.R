@@ -228,7 +228,12 @@ NULL
 
         ldBase <- decomp$v[,1:s] #B (correct to neglect columns and sv after s?)
         U <- as.matrix(decomp$u[,1:s])
-        D <- diag(as.matrix(decomp$d[1:s]))
+        if (s == 1) {
+                D <- diag(as.matrix(decomp$d[1:s]))
+        } else {
+                D <- diag(decomp$d[1:s])
+        }
+
         ldProfs <- U %*%  D #C = U*D
 
 
@@ -704,7 +709,7 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         if (!is.integer(as.integer(nclusters)))
                 stop("'nclusters' must be a number")
 
-        if (ncomponents >= min(n,nclusters)) {
+        if (ncomponents > min(n,nclusters)) {
                 stop("'ncomponents' must be smaller than min(number of observations, number of clusters)")
         }
         best_sol <- list(sse = Inf)
@@ -763,7 +768,7 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
 basic_test <- function() {
         set.seed(1)
         k <- 4 #number of clusters
-        s <- 1 #number of dimensions
+        s <- 2 #number of dimensions
 
         a <- matrix(stats::rbinom(400*k, 1, 0.5), 400, k)
         a <- data.frame(a)
