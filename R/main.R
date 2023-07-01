@@ -247,11 +247,11 @@ NULL
 }
 
 .ldfindP <- function (X, A, s) {
-        Z <- A %*% matlib::inv(t(A) %*% A) %*% t(A)
+        Z <- A %*% NMFN::mpinv(A)
         U <- Z %*% X %*% t(X) %*% Z
         Q <- eigen(U, symmetric = TRUE)[["vectors"]][,1:s]
 
-        P <- matlib::inv((t(A) %*% A)) %*% t(A) %*% Q %*% t(Q) %*% X
+        P <- NMFN::mpinv(A) %*% Q %*% t(Q) %*% X
 
         return(P)
 }
