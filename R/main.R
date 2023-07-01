@@ -227,7 +227,9 @@ NULL
         decomp <- svd(P)
 
         ldBase <- decomp$v[,1:s] #B (correct to neglect columns and sv after s?)
-        ldProfs <- decomp$u[,1:s] %*% diag(decomp$d[1:s]) #C
+        U <- as.matrix(decomp$u[,1:s])
+        D <- diag(as.matrix(decomp$d[1:s]))
+        ldProfs <- U %*%  D #C = U*D
 
 
         timeruns <- (proc.time() - t)[1]
@@ -760,8 +762,8 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
 
 basic_test <- function() {
         set.seed(1)
-        k <- 6 #number of clusters
-        s <- 3 #number of dimensions
+        k <- 4 #number of clusters
+        s <- 1 #number of dimensions
 
         a <- matrix(stats::rbinom(400*k, 1, 0.5), 400, k)
         a <- data.frame(a)
@@ -779,7 +781,7 @@ basic_test <- function() {
                 a_ext <- cbind(a, rsum = rowSums(a))
         }
         print("A created")
-        #.ldadproclus(as.matrix(CGdata), as.matrix(a), s)
+        .ldadproclus(as.matrix(CGdata), as.matrix(a), s)
         return(as.matrix(a))
 }
 
