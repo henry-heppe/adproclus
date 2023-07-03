@@ -242,7 +242,7 @@ NULL
         model <- Membs %*% Profs
         result <- list(type = NULL, Model = model, Membs = Membs, Profs = Profs, low_dim_profs = ldProfs, low_dim_base = ldBase,
                        sse = sum((model - x)^2), totvar = totvar,
-                       explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns), svd = svd(Profs))
+                       explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns), svd = svd(Profs)) #issue: take out svd here
 
         return(result)
 
@@ -668,10 +668,11 @@ adproclus <- function(data, centers, nstart = 1L,
         }
 
         if (SaveAllStarts == TRUE) {
-            results <- list(BestSol = BestSol, Runs = results)
-            names(results$Runs) <- as.character(c(1:length(results$Runs)))
+                BestSol$Runs <- results
+                results <- BestSol
+                names(results$Runs) <- as.character(c(1:length(results$Runs)))
         } else {
-            results <- BestSol
+                results <- BestSol
         }
     }
     time <- (proc.time() - t)[1]
@@ -755,7 +756,8 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         }
 
         if (SaveAllStarts == TRUE) {
-                results <- list(BestSol = best_sol, Runs = results)
+                best_sol$Runs <- results
+                results <- best_sol
                 names(results$Runs) <- as.character(c(1:length(results$Runs)))
         } else {
                 results <- best_sol
@@ -770,8 +772,8 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
 
 basic_test <- function() {
         set.seed(1)
-        k <- 4 #number of clusters
-        s <- 2 #number of dimensions
+        k <- 6 #number of clusters
+        s <- 3 #number of dimensions
 
         a <- matrix(stats::rbinom(400*k, 1, 0.5), 400, k)
         a <- data.frame(a)
