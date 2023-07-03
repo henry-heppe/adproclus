@@ -726,30 +726,33 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                 results <- append(results, list(model_new))
                 best_sol <- results[[1]]
         }
-
-        for (i in 1:nrandomstart) {
-                random_start <- getRandom(data, nclusters)$A
-                model_new <- .ldadproclus(data, random_start, ncomponents)
-                model_new$initialA <- random_start
-                model_new$type <- paste("random_start_model_no_", i)
-                results <- append(results, list(model_new))
-                #names(results)[length(results)] <- paste("random_start_model_no_", i)
-                if(model_new$sse < best_sol$sse) {
-                        best_sol <- model_new
-                }
-        }
-        for (j in 1:nsemirandomstart) {
-                semi_random_start <- getRational(data, nclusters)$A
-                model_new <- .ldadproclus(data, semi_random_start, ncomponents)
-                model_new$initialA <- semi_random_start
-                model_new$type <- paste("semi_random_start_model_no_", j)
-                results <- append(results, list(model_new))
-                #names(results)[length(results)] <- paste("semi_random_start_model_no_", j)
-                if(model_new$sse < best_sol$sse) {
-                        best_sol <- model_new
+        if (nrandomstart > 0) {
+                for (i in 1:nrandomstart) {
+                        random_start <- getRandom(data, nclusters)$A
+                        model_new <- .ldadproclus(data, random_start, ncomponents)
+                        model_new$initialA <- random_start
+                        model_new$type <- paste("random_start_model_no_", i)
+                        results <- append(results, list(model_new))
+                        #names(results)[length(results)] <- paste("random_start_model_no_", i)
+                        if(model_new$sse < best_sol$sse) {
+                                best_sol <- model_new
+                        }
                 }
         }
 
+        if (nsemirandomstart > 0) {
+                for (j in 1:nsemirandomstart) {
+                        semi_random_start <- getRational(data, nclusters)$A
+                        model_new <- .ldadproclus(data, semi_random_start, ncomponents)
+                        model_new$initialA <- semi_random_start
+                        model_new$type <- paste("semi_random_start_model_no_", j)
+                        results <- append(results, list(model_new))
+                        #names(results)[length(results)] <- paste("semi_random_start_model_no_", j)
+                        if(model_new$sse < best_sol$sse) {
+                                best_sol <- model_new
+                        }
+                }
+        }
 
         if (SaveAllStarts == TRUE) {
                 results <- list(BestSol = best_sol, Runs = results)
