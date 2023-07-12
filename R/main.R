@@ -158,10 +158,10 @@ NULL
         }
 
         runs <- iter - 1
-        Membs <- Aold
-        Profs <- Pold
-        sse <- fold
-        explvar <- 1 - (fold/totvar)
+        Membs <- A
+        Profs <- P
+        sse <- f
+        explvar <- 1 - (f/totvar)
 
         timeruns <- (proc.time() - t)[1]
 
@@ -219,14 +219,14 @@ NULL
         }
 
         runs <- iter - 1
-        Membs <- A   #or Aold instead?
-        Profs <- P   #or Pold instead?
-        sse <- fold
-        explvar <- 1 - (fold/totvar)
+        Membs <- A
+        Profs <- P
+        sse <- f
+        explvar <- 1 - (f/totvar)
 
         decomp <- svd(P)
 
-        ldBase <- decomp$v[,1:s] #B (correct to neglect columns and sv after s?)
+        ldBase <- decomp$v[,1:s] #B
         U <- as.matrix(decomp$u[,1:s])
         if (s == 1) {
                 D <- diag(as.matrix(decomp$d[1:s]))
