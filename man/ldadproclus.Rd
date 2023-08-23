@@ -36,5 +36,9 @@ a list of relevant information about the resulting model
 Low dimensional ADPROCLUS
 }
 \examples{
-#some example
+# Loading a test dataset into the global environment
+x <- ADPROCLUS::CGdata
+
+# Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
+clust <- ldadproclus(x, 3, 1)
 }

@@ -21,10 +21,10 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
     gtools,
-    matlib,
-    methods,
     NMFN,
-    stats
+    stats,
+    igraph,
+    methods
 RoxygenNote: 7.2.3
 Collate: 
     'ADPROCLUS-package.R'
