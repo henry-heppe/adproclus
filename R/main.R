@@ -684,15 +684,36 @@ adproclus <- function(data, centers, nstart = 1L,
 
 #' Low dimensional ADPROCLUS
 #'
-#' Perform \strong{low dimensional} ADditive PROfile CLUStering (ADPRCOLUS) on object by variable data.
+#' Perform \strong{low dimensional} additive profile clustering (ADPROCLUS) on object by variable data.
+#' Use case: data to cluster consists of a large set of variables, where it can be useful to interpret
+#' the cluster profiles in terms of a smaller set of components that represent the original variables well.
+#'
+#' In this function, an extension by Depril et al. (2012) of Mirkins (1987, 1990) additive profile clustering
+#' method is used to obtain a low dimensional overlapping clustering model of the object by variable data provided by \code{data}.
+#' More precisely, the low dimensional ADPROCLUS model approximates an \eqn{I \times J} object by
+#' variable data matrix \eqn{\boldsymbol{X}} by an \eqn{I \times J} model matrix
+#' \eqn{\boldsymbol{M}}. For \eqn{K} overlapping clusters, \eqn{\boldsymbol{M}} can be decomposed into an \eqn{I \times K} binary
+#' cluster membership matrix \eqn{\boldsymbol{A}} and a \eqn{K \times J} real-valued cluster profile matrix \eqn{\boldsymbol{P}} s.t.
+#' \deqn{M = AP.}
+#' With the simultaneous dimension reduction, \eqn{\boldsymbol{P}} is restricted to be
+#' of reduced rank \eqn{S < \min(K,J)}, such that it can be decomposed into \deqn{P = CB',}
+#' with \eqn{\boldsymbol{C}} a \eqn{K \times S} matrix and \eqn{\boldsymbol{B}} a \eqn{J \times S} matrix. Now,
+#' a row in \eqn{\boldsymbol{C}} represents the profile values associated with the respective cluster in terms of the \eqn{S} components, while
+#' the entries of \eqn{\boldsymbol{B}} can be used to interpret the components in terms of the complete set of variables.
+#' In particular, the aim of an ADPROCLUS
+#' analysis is therefore, given a number of clusters \eqn{K} and a number of dimensions \eqn{S}, to estimate a
+#' model matrix \eqn{\boldsymbol{M}} that reconstructs data matrix
+#' \eqn{\boldsymbol{X}} as close as possible in a least squares sense and simultaneously reduce the dimensions of the data.
+#' For a detailed illustration of the low dimensional ADPROCLUS model and associated
+#' loss function, see Depril et al. (2012).
 #'
 #' @param data Object-by-variable data matrix of class \code{matrix} or
 #'   \code{data.frame}.
 #' @param nclusters Number of clusters to be used. Must be a positive integer.
 #' @param ncomponents Number of components (dimensions) to which the profiles should be restricted. Must be a positive integer.
-#' @param start_allocation Matrix of binary values as starting allocation for first run. Default is \code{NULL}.
-#' @param nrandomstart Number of random starts (see \link{getRandom}). Can be zero.
-#' @param nsemirandomstart Number of semi-random starts (see \link{getRational})). Can be zero.
+#' @param start_allocation Optional matrix of binary values as starting allocation for first run. Default is \code{NULL}.
+#' @param nrandomstart Number of random starts (see \code{\link{getRandom}}). Can be zero. Increase for better results, though longer computation time.
+#' @param nsemirandomstart Number of semi-random starts (see \code{\link{getRational}})). Can be zero. Increase for better results, though longer computation time.
 #' @param SaveAllStarts logical. If \code{TRUE}, the results of all algorithm
 #'   starts are returned. By default, only the best solution is retained.
 #'
@@ -706,8 +727,8 @@ adproclus <- function(data, centers, nstart = 1L,
 #' # Low dimensional clustering with K = 3 clusters
 #' # where the resulting profiles can be characterized in S = 1 dimensions (components)
 #' clust <- adproclusLD(x, 3, 1)
-adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, nrandomstart = 1,
-                      nsemirandomstart = 1, SaveAllStarts = FALSE) {
+adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, nrandomstart = 10,
+                      nsemirandomstart = 10, SaveAllStarts = FALSE) {
 
         t <- proc.time()
         results <- list()
@@ -727,6 +748,9 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
 
         if (ncomponents > min(n,nclusters)) {
                 stop("'ncomponents' must be smaller than min(number of observations, number of clusters)")
+        }
+        if (is.null(start_allocation) & nrandomstart == 0 & nsemirandomstart == 0) {
+                stop("need either start allocation matrix or a non-zero number of random starts")
         }
         best_sol <- list(sse = Inf)
         if (!is.null(start_allocation)) {
