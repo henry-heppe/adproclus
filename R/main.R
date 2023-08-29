@@ -684,13 +684,17 @@ adproclus <- function(data, centers, nstart = 1L,
 
 #' Low dimensional ADPROCLUS
 #'
-#' @param data the data
-#' @param nclusters the number of clusters
-#' @param ncomponents the number of dimensions (the number of components)
-#' @param start_allocation a possible start allocation
-#' @param nrandomstart the number of random starts
-#' @param nsemirandomstart the number of semi-random starts
-#' @param SaveAllStarts option to save all starts
+#' Perform \strong{low dimensional} ADditive PROfile CLUStering (ADPRCOLUS) on object by variable data.
+#'
+#' @param data Object-by-variable data matrix of class \code{matrix} or
+#'   \code{data.frame}.
+#' @param nclusters Number of clusters to be used. Must be a positive integer.
+#' @param ncomponents Number of components (dimensions) to which the profiles should be restricted. Must be a positive integer.
+#' @param start_allocation Matrix of binary values as starting allocation for first run. Default is \code{NULL}.
+#' @param nrandomstart Number of random starts (see \link{getRandom}). Can be zero.
+#' @param nsemirandomstart Number of semi-random starts (see \link{getRational})). Can be zero.
+#' @param SaveAllStarts logical. If \code{TRUE}, the results of all algorithm
+#'   starts are returned. By default, only the best solution is retained.
 #'
 #' @return a list of relevant information about the resulting model
 #' @export
@@ -699,9 +703,10 @@ adproclus <- function(data, centers, nstart = 1L,
 #' # Loading a test dataset into the global environment
 #' x <- ADPROCLUS::CGdata
 #'
-#' # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
-#' clust <- ldadproclus(x, 3, 1)
-ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, nrandomstart = 1,
+#' # Low dimensional clustering with K = 3 clusters
+#' # where the resulting profiles can be characterized in S = 1 dimensions (components)
+#' clust <- adproclusLD(x, 3, 1)
+adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, nrandomstart = 1,
                       nsemirandomstart = 1, SaveAllStarts = FALSE) {
 
         t <- proc.time()
@@ -710,10 +715,15 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         data <- as.matrix(data)
         n <- as.integer(nrow(data))
         p <- as.integer(ncol(data))
-        if (is.na(n) || is.na(p))
-                stop("invalid data matrix")
-        if (!is.integer(as.integer(nclusters)))
-                stop("'nclusters' must be a number")
+
+
+        checkmate::assertCount(nclusters, positive = TRUE, coerce = TRUE)
+        checkmate::assertCount(ncomponents, positive = TRUE, coerce = TRUE)
+        checkmate::assertCount(nrandomstart, coerce = TRUE)
+        checkmate::assertCount(nsemirandomstart, coerce = TRUE)
+        checkmate::assertFlag(SaveAllStarts)
+        checkmate::assertMatrix(data)
+
 
         if (ncomponents > min(n,nclusters)) {
                 stop("'ncomponents' must be smaller than min(number of observations, number of clusters)")
@@ -721,11 +731,14 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         best_sol <- list(sse = Inf)
         if (!is.null(start_allocation)) {
                 start_allocation <- as.matrix(start_allocation)
+                checkmate::assertMatrix(start_allocation)
+
                 m <- as.integer(nrow(start_allocation))
                 q <- as.integer(ncol(start_allocation))
-                if (is.na(m) || is.na(q) || !all(start_allocation %in% c(0,1)) || m != n || q != nclusters) {
+                if (!all(start_allocation %in% c(0,1)) || m != n || q != nclusters) {
                         stop("invalid start allocation matrix")
                 }
+
                 model_new <- .ldadproclus(data, start_allocation, ncomponents)
                 model_new$initialA <- start_allocation
                 model_new$type <- "rational_start_model"
@@ -736,10 +749,11 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                 for (i in 1:nrandomstart) {
                         random_start <- getRandom(data, nclusters)$A
                         model_new <- .ldadproclus(data, random_start, ncomponents)
+
                         model_new$initialA <- random_start
                         model_new$type <- paste("random_start_model_no_", i)
+
                         results <- append(results, list(model_new))
-                        #names(results)[length(results)] <- paste("random_start_model_no_", i)
                         if(model_new$sse < best_sol$sse) {
                                 best_sol <- model_new
                         }
@@ -750,10 +764,11 @@ ldadproclus <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                 for (j in 1:nsemirandomstart) {
                         semi_random_start <- getRational(data, nclusters)$A
                         model_new <- .ldadproclus(data, semi_random_start, ncomponents)
+
                         model_new$initialA <- semi_random_start
                         model_new$type <- paste("semi_random_start_model_no_", j)
+
                         results <- append(results, list(model_new))
-                        #names(results)[length(results)] <- paste("semi_random_start_model_no_", j)
                         if(model_new$sse < best_sol$sse) {
                                 best_sol <- model_new
                         }
@@ -819,7 +834,7 @@ basic_test <- function() {
 #' x <- ADPROCLUS::CGdata
 #'
 #' # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
-#' clust <- ldadproclus(x, 3, 1)
+#' clust <- adproclusLD(x, 3, 1)
 #'
 #' # Plot the overlapping the clusters
 #' plot_clusters_as_network(clust)

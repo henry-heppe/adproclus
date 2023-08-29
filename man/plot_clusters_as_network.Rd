@@ -37,7 +37,7 @@ Plots a low dimensional ADPROCLUS solution as a network
 x <- ADPROCLUS::CGdata
 
 # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
-clust <- ldadproclus(x, 3, 1)
+clust <- adproclusLD(x, 3, 1)
 
 # Plot the overlapping the clusters
 plot_clusters_as_network(clust)
