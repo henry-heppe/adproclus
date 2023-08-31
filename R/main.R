@@ -627,8 +627,8 @@ getRational <- function(data, starting_profiles) {
 #' start <- getRational(x,x[1:4,])$A
 #' clust <- adproclus(data = x, ncluster = 2, start_allocation = start)
 #'
-#' @seealso \code{\link{getRandom}} and \code{\link{getSemiRandom}} for generating
-#'   random and rational starts for ADORCLUS.
+#' @seealso \code{\link{adproclusLD}} for low dimensional ADPROCLUS, \code{\link{getRandom}},\code{\link{getSemiRandom}} and \code{\link{getRational}} for generating
+#'   (semi-)random and rational starts for ADPROCLUS.
 adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3, nsemirandomstart = 3,
         algorithm = "ALS1", SaveAllStarts = FALSE) {
 
@@ -830,6 +830,10 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #'   Each element contains all of the above information.}}
 #' @export
 #'
+#' @references Depril, D., Van Mechelen, I., & Wilderjans, T. F.
+#'   (2012). Lowdimensional additive overlapping clustering.
+#'   \emph{Journal of classification, 29,} 297-320.
+#'
 #' @examples
 #' # Loading a test dataset into the global environment
 #' x <- ADPROCLUS::CGdata
@@ -837,6 +841,9 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #' # Low dimensional clustering with K = 3 clusters
 #' # where the resulting profiles can be characterized in S = 1 dimensions (components)
 #' clust <- adproclusLD(x, ncluster = 3, ncomponents = 1)
+#'
+#' @seealso \code{\link{adproclus}} for full dimensional ADPROCLUS, \code{\link{getRandom}},\code{\link{getSemiRandom}} and \code{\link{getRational}} for generating
+#'   (semi-)random and rational starts for (low dimensional) ADPROCLUS.
 adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, nrandomstart = 3,
                       nsemirandomstart = 3, SaveAllStarts = FALSE) {
 
