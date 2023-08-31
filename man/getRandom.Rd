@@ -4,37 +4,30 @@
 \alias{getRandom}
 \title{Generate initial random start}
 \usage{
-getRandom(data, centers)
+getRandom(data, nclusters)
 }
 \arguments{
 \item{data}{Object-by-variable data matrix of class \code{matrix} or \code{data.frame}.}
 
-\item{centers}{either the number of clusters \emph{k}, or a matrix of initial
-(distinct) cluster centres.}
+\item{nclusters}{Number of clusters to be used. Must be a positive integer.}
 }
 \value{
 \code{getRandom} returns a list with the following components:
   \describe{ \item{\code{type}}{A character string denoting the type of start
   ('Random Start')} \item{\code{A}}{A randomly generated initial Membership
-  matrix} \item{\code{P}}{The corresponding initial Profile matrix} }
+  matrix}}
 }
 \description{
-Generate an initial random start for the Additive Profile Clustering
-algorithm (see \code{\link{adproclus}}).
+Generate an initial random start for the (low dimensional) Additive Profile Clustering
+algorithm (see \code{\link{adproclus}} and \code{\link{adproclusLD}}).
 }
 \details{
-\code{getRandom} generates an  random initial binary membership matrix
+\code{getRandom} generates a random initial binary membership matrix
 \strong{A} by drawing entries from a Bernoulli Distribution with \eqn{\pi =
-0.5}. A corresponding initial profile matrix \strong{P} is subsequently
-estimated conditionally upon A (for details, see Depril et al., 2008, and
-Wilderjans et al., 2010).
+0.5}.
 
-For programming simplicity, this function provides the option to pass a
-matrix of initial cluster centers to the \code{centers} argument. In this
-case, the matrix is dismissed, the number of clusters \emph{k} is set to
-\code{nrow(centers)} and a new profile matrix is returned, based on a
-randomly generated membership matrix. For generating an initial start based
-on a specific set of initial cluster centers, see \code{\link{getRational}}.
+For generating an initial start from random draws from the data, see \code{\link{getSemiRandom}}
+For generating an initial start based on a specific set of initial cluster centers, see \code{\link{getRational}}.
 
 \strong{Warning:} This function does \emph{not} obtain an ADPRCOLUS model. To
 perform aditive profile clustering, see \code{\link{adproclus}}.
@@ -52,8 +45,13 @@ Research Methods, 43}(1), 56-65.
 Depril, D., Van Mechelen, I., & Mirkin, B.
 (2008). Algorithms for additive clustering of rectangular data tables.
 \emph{Computational Statistics and Data Analysis, 52,} 4923-4938.
+
+Depril, D., Van Mechelen, I., & Wilderjans, T. F.
+(2012). Lowdimensional additive overlapping clustering.
+\emph{Journal of classification, 29,} 297-320.
 }
 \seealso{
+\code{\link{getSemiRandom}} for generating semi-random starts,
 \code{\link{getRational}} for generating rational starts and
-  \code{\link{adproclus}} for details about membership and profile matrices.
+\code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
 }

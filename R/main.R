@@ -108,12 +108,12 @@ NULL
         model <- Membs %*% Profs
         result <- list(Model = model, Membs = Membs, Profs = Profs,
                 sse = sum((model - x)^2), totvar = totvar,
-                explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns))
+                explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns), initialStart = NULL)
 
         return(result)
 }
 
-.adproclus_lf2 <- function(x, A, P) {
+.adproclus_lf2 <- function(x, A) {
 
         t <- proc.time()
 
@@ -123,8 +123,8 @@ NULL
         k <- ncol(A)
         npos <- 2^k
 
-        G <- NMFN::mpinv(A) %*% data
-        res <- data - (A %*% G)
+        P <- NMFN::mpinv(A) %*% data
+        res <- data - (A %*% P)
         f <- .lossL2(res)
         fold <- f + 1
         iter <- 1
@@ -166,9 +166,9 @@ NULL
         timeruns <- (proc.time() - t)[1]
 
         model <- Membs %*% Profs
-        result <- list(Model = model, Membs = Membs, Profs = Profs,
+        result <- list(Model = model, A = Membs, P = Profs,
                 sse = sum((model - x)^2), totvar = totvar,
-                explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns))
+                explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initialStart = NULL)
 
         return(result)
 
@@ -240,9 +240,12 @@ NULL
         timeruns <- (proc.time() - t)[1]
 
         model <- Membs %*% Profs
-        result <- list(type = NULL, Model = model, Membs = Membs, Profs = Profs, low_dim_profs = ldProfs, low_dim_base = ldBase,
+        # result <- list(type = NULL, Model = model, Membs = Membs, Profs = Profs, low_dim_profs = ldProfs, low_dim_base = ldBase,
+        #                sse = sum((model - x)^2), totvar = totvar,
+        #                explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns), svd = svd(Profs)) #issue: take out svd here
+        result <- list(Model = model, A = Membs, P = Profs, C = ldProfs, B = ldBase,
                        sse = sum((model - x)^2), totvar = totvar,
-                       explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns), svd = svd(Profs)) #issue: take out svd here
+                       explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initialStart = NULL)
 
         return(result)
 
@@ -269,15 +272,18 @@ NULL
 
 
 
-.printoutput <- function (k, time, nstart) {
+.printoutput <- function (k, time, nrandomstart, nsemirandomstart, rationalStart) {
 
         print ("Clustering completed.")
         print (paste ("Additive Profile Clustering with",
                 k, "overlapping clusters."))
         print (paste ("Total processing time:",
                 round (time, digits = 1), "seconds."))
-        print (paste ("Algorithm starts:", nstart[1], "random and",
-                gtools::na.replace (nstart[2], 0), "rational."))
+        print (paste ("Algorithm starts:", nrandomstart, "random and",
+                nsemirandomstart, "semi random"))
+        if (rationalStart) {
+                print("A rational start was included as the first run.")
+        }
 
 }
 
@@ -298,33 +304,26 @@ NULL
 
 #' Generate initial random start
 #'
-#' Generate an initial random start for the Additive Profile Clustering
-#' algorithm (see \code{\link{adproclus}}).
+#' Generate an initial random start for the (low dimensional) Additive Profile Clustering
+#' algorithm (see \code{\link{adproclus}} and \code{\link{adproclusLD}}).
 #'
-#' \code{getRandom} generates an  random initial binary membership matrix
+#' \code{getRandom} generates a random initial binary membership matrix
 #' \strong{A} by drawing entries from a Bernoulli Distribution with \eqn{\pi =
-#' 0.5}. A corresponding initial profile matrix \strong{P} is subsequently
-#' estimated conditionally upon A (for details, see Depril et al., 2008, and
-#' Wilderjans et al., 2010).
+#' 0.5}.
 #'
-#' For programming simplicity, this function provides the option to pass a
-#' matrix of initial cluster centers to the \code{centers} argument. In this
-#' case, the matrix is dismissed, the number of clusters \emph{k} is set to
-#' \code{nrow(centers)} and a new profile matrix is returned, based on a
-#' randomly generated membership matrix. For generating an initial start based
-#' on a specific set of initial cluster centers, see \code{\link{getRational}}.
+#' For generating an initial start from random draws from the data, see \code{\link{getSemiRandom}}
+#' For generating an initial start based on a specific set of initial cluster centers, see \code{\link{getRational}}.
 #'
 #' \strong{Warning:} This function does \emph{not} obtain an ADPRCOLUS model. To
 #' perform aditive profile clustering, see \code{\link{adproclus}}.
 #'
 #' @param data Object-by-variable data matrix of class \code{matrix} or \code{data.frame}.
-#' @param centers either the number of clusters \emph{k}, or a matrix of initial
-#'   (distinct) cluster centres.
+#' @param nclusters Number of clusters to be used. Must be a positive integer.
 #'
 #' @return \code{getRandom} returns a list with the following components:
 #'   \describe{ \item{\code{type}}{A character string denoting the type of start
 #'   ('Random Start')} \item{\code{A}}{A randomly generated initial Membership
-#'   matrix} \item{\code{P}}{The corresponding initial Profile matrix} }
+#'   matrix}}
 #'
 #' @export
 #'
@@ -337,19 +336,26 @@ NULL
 #' (2008). Algorithms for additive clustering of rectangular data tables.
 #' \emph{Computational Statistics and Data Analysis, 52,} 4923-4938.
 #'
+#' Depril, D., Van Mechelen, I., & Wilderjans, T. F.
+#' (2012). Lowdimensional additive overlapping clustering.
+#' \emph{Journal of classification, 29,} 297-320.
+#'
 #' @examples
 #' getRandom(ADPROCLUS::CGdata, 3)
 #'
-#' @seealso \code{\link{getRational}} for generating rational starts and
-#'   \code{\link{adproclus}} for details about membership and profile matrices.
-getRandom <- function(data, centers) {
+#' @seealso \code{\link{getSemiRandom}} for generating semi-random starts,
+#' \code{\link{getRational}} for generating rational starts and
+#' \code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
+getRandom <- function(data, nclusters) {
 
         data <- as.matrix(data)
+        checkmate::assertMatrix(data)
+        checkmate::assertCount(nclusters, positive = TRUE, coerce = TRUE)
 
-        if (length(centers) == 1L) {
-                k <- centers
+        if (length(nclusters) == 1L) {
+                k <- nclusters
         } else {
-                k <- nrow(centers)
+                k <- nrow(nclusters)
         }
         n <- nrow(data)
 
@@ -357,38 +363,33 @@ getRandom <- function(data, centers) {
         while (any(colSums(A) == 0) || qr(A)$rank < k) {
                 A <- (matrix(stats::runif(n * k), n, k) < 0.5) * 1
         }
-        P <- NMFN::mpinv(A) %*% data
 
-        return(list(type = "Random Start", A = A, P = P)) #issue: this P is only valid (and only needed) for adproclus (not LD)
+        return(list(type = "Random Start", A = A))
 }
 
-#' Generate initial rational start
+#' Generate initial semi-random start
 #'
-#' Generate an initial rational start for the Additive Profile Clustering
-#' algorithm (see \code{\link{adproclus}}).
+#' Generate an initial semi-random start for the (low dimensional) Additive Profile Clustering
+#' algorithm (see \code{\link{adproclus}} and \code{\link{adproclusLD}}).
 #'
-#' If \code{centers} is a number of clusters \emph{k}, an initial profile matrix
-#' \strong{P} is generated by drawing \emph{k} randomly chosen, distinct, rows
-#' from \code{data}. Alternatively, you can pass a user selected matrix of size
-#' \emph{k} * \code{ncol(data)} with initial cluster profiles to the
-#' \code{centers} argument. In both cases, a corresponding membership matrix
-#' \strong{A} is subsequently estimated conditionally upon \strong{P} (for
-#' details, see Depril et al., 2008, and Wilderjans et al., 2010).
+#' An initial cluster membership matrix \eqn{\boldsymbol{A}} is generated by finding the best \eqn{\boldsymbol{A}} conditional
+#' on an initial profile matrix
+#' \eqn{\boldsymbol{P}} generated by drawing \emph{k} randomly chosen, distinct, rows
+#' from \code{data} (for
+#' details, see Depril et al., 2012).
 #'
 #' \strong{Warning:} This function does \emph{not} obtain an ADPRCOLUS model. To
 #' perform aditive profile clustering, see \code{\link{adproclus}}.
 #'
 #' @param data Object-by-variable data matrix of class \code{matrix} or
 #'   \code{data.frame}.
-#' @param centers either the number of clusters \emph{k}, or a matrix of initial
-#'   (distinct) cluster centres.
+#' @param nclusters Number of clusters to be used. Must be a positive integer.
 #'
-#' @return \code{getRational} returns a list with the following components:
+#' @return \code{getSemiRandom} returns a list with the following components:
 #'   \describe{
 #'   \item{\code{type}}{A character string denoting the type of start
-#'   ('Rational Start')}
-#'   \item{\code{A}}{An initial Membership matrix}
-#'   \item{\code{P}}{The corresponding initial Profile matrix} }
+#'   ('Semi-random Start')}
+#'   \item{\code{A}}{An initial Membership matrix}}
 #'
 #' @export
 #'
@@ -401,29 +402,30 @@ getRandom <- function(data, centers) {
 #'   clustering of rectangular data tables. \emph{Computational Statistics and
 #'   Data Analysis, 52,} 4923-4938.
 #'
-#' @examples
-#' getRational(ADPROCLUS::CGdata, 3)
+#'   #' Depril, D., Van Mechelen, I., & Wilderjans, T. F.
+#'   (2012). Lowdimensional additive overlapping clustering.
+#'   \emph{Journal of classification, 29,} 297-320.
 #'
-#' @seealso \code{\link{getRandom}} for generating random starts and
-#'   \code{\link{adproclus}} for details about membership and profile matrices.
-getRational <- function(data, centers) {
-
+#' @examples
+#' getSemiRandom(ADPROCLUS::CGdata, 3)
+#'
+#' @seealso \code{\link{getRandom}} for generating random starts,
+#' \code{\link{getRational}} for generating rational starts and
+#' \code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
+getSemiRandom <- function(data, nclusters) {
         data <- as.matrix(data)
+        checkmate::assertMatrix(data)
+        checkmate::assertCount(nclusters, positive = TRUE, coerce = TRUE)
+
         n <- nrow(data)
 
-        if (length(centers) == 1L) {
-                k <- centers
-                Permutation <- sample(n)
-                P <- data[Permutation[1:k], ]
-        } else {
-                k <- nrow(centers)
-                P <- centers
-        }
+        Permutation <- sample(n)
+        P <- data[Permutation[1:nclusters], ]
 
-        npos <- 2^k
-        PossibA <- gtools::permutations(2, k, v = c(0, 1), repeats.allowed = TRUE)
+        npos <- 2^nclusters
+        PossibA <- gtools::permutations(2, nclusters, v = c(0, 1), repeats.allowed = TRUE)
         PossibA <- apply(PossibA, 2, rev)
-        if (k > 1) {
+        if (nclusters > 1) {
                 PossibA <- t(apply(PossibA, 1, rev))
         }
         PossibA <- .repmat(PossibA, n, 1)
@@ -431,83 +433,161 @@ getRational <- function(data, centers) {
         replX <- data.frame()
         for (i in 1:n) {
                 reps <- matrix(.repmat(data[i, ], npos, 1),
-                        ncol = ncol(data), nrow = npos, byrow = TRUE)
+                               ncol = ncol(data), nrow = npos, byrow = TRUE)
                 replX <- rbind(replX, reps)
         }
         replX <- as.matrix(replX)
 
         A <- as.matrix(.updateA_lf2(n, P, replX, PossibA))
-        result <- list(type = "Semi-random Start", A = A,
-                P = P) #issue: what about P?
+        result <- list(type = "Semi-random Start", A = A)
+        return(result)
+}
+
+#' Generate start allocation based on a priori profiles
+#'
+#' If cluster profiles are given a priori, this function can be used to compute the conditionally optimal
+#' cluster membership matrix A which can then be used as a rational starting allocation for the (low dimensional) ADPROCLUS
+#' procedure (see \code{\link{adproclus}} and \code{\link{adproclusLD}}).
+#'
+#' The function uses the same quadratic loss function and minimization method as the (low dimensional) ADPROCLUS procedure
+#' does to find the next conditionally optimal membership matrix A. (for details, see Depril et al., 2012).
+#'
+#' \strong{Warning:} This function does \emph{not} obtain an ADPRCOLUS model. To
+#' perform additive profile clustering, see \code{\link{adproclus}}.
+#'
+#' @param data Object-by-variable data matrix of class \code{matrix} or
+#'   \code{data.frame}.
+#' @param starting_profiles A matrix where each row represents the profile values for a cluster
+#'
+#' @return \code{getRational} returns a list with the following components:
+#'   \describe{
+#'   \item{\code{type}}{A character string denoting the type of start
+#'   ('Rational Start')}
+#'   \item{\code{A}}{An initial Membership matrix}}
+#' @export
+#'
+#' @references Depril, D., Van Mechelen, I., & Wilderjans, T. F.
+#'   (2012). Lowdimensional additive overlapping clustering.
+#'   \emph{Journal of classification, 29,} 297-320.
+#'
+#' @examples
+#' x <- ADPROCLUS::CGdata
+#'
+#' # Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
+#' start <- getRational(x,x[1:4,])$A
+#' clust <- adproclus(x, ncluster = 2, start_allocation = start)
+#'
+#' @seealso \code{\link{getRandom}} for generating random starts,
+#' \code{\link{getSemiRandom}} for generating semi-random starts and
+#' \code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
+getRational <- function(data, starting_profiles) {
+        #determine the conditionally optimal A, to be used as a starting allocation in (ld) Adproclus
+        #use case: when we have some initial idea about the profile values and thus want one run with
+        #seeded on this
+        data <- as.matrix(data)
+        starting_profiles <- as.matrix(starting_profiles)
+        checkmate::assertMatrix(data)
+        checkmate::assertMatrix(starting_profiles)
+
+        n <- nrow(data)
+
+        nclusters <- nrow(starting_profiles)
+        P <- starting_profiles
+
+        npos <- 2^nclusters
+        PossibA <- gtools::permutations(2, nclusters, v = c(0, 1), repeats.allowed = TRUE)
+        PossibA <- apply(PossibA, 2, rev)
+        if (nclusters > 1) {
+                PossibA <- t(apply(PossibA, 1, rev))
+        }
+        PossibA <- .repmat(PossibA, n, 1)
+
+        replX <- data.frame()
+        for (i in 1:n) {
+                reps <- matrix(.repmat(data[i, ], npos, 1),
+                               ncol = ncol(data), nrow = npos, byrow = TRUE)
+                replX <- rbind(replX, reps)
+        }
+        replX <- as.matrix(replX)
+
+        A <- as.matrix(.updateA_lf2(n, P, replX, PossibA))
+        result <- list(type = "Rational Start", A = A)
         return(result)
 }
 
 #' Additive profile clustering
 #'
-#' Perform ADditive PROfile CLUStering (ADPRCOLUS) on object by variable data.
+#' Perform additive profile clustering (ADPRCOLUS) on object by variable data.
 #'
-#' In this function, Mirkin's (1987, 1990) Aditive Profile Clustering
+#' In this function, Mirkin's (1987, 1990) Additive Profile Clustering
 #' (ADPROCLUS) method is used to obtain an unrestricted overlapping clustering
 #' model of the object by variable data provided by \code{data}.
 #'
-#' The ADPROCLUS model approximates an \emph{I} \eqn{x} \emph{J} object by
-#' variable data matrix \strong{X} by an \emph{I} \eqn{x} \emph{J} model matrix
-#' \strong{M} that can be decomposed into an \emph{I} \eqn{x} \emph{K} binary
-#' cluster membership matrix \strong{A} and a \emph{K} \eqn{x} \emph{J}
-#' real-valued cluster profile matrix \strong{P}, with \emph{K} indicating the
+#' The ADPROCLUS model approximates an \eqn{I \times J} object by
+#' variable data matrix \eqn{\boldsymbol{X}} by an \eqn{I \times J} model matrix
+#' \eqn{\boldsymbol{M}} that can be decomposed into an \eqn{I \times K} binary
+#' cluster membership matrix \eqn{\boldsymbol{A}} and a \eqn{K \times J}
+#' real-valued cluster profile matrix \eqn{\boldsymbol{P}}, with \eqn{K} indicating the
 #' number of overlapping clusters. In particular, the aim of an ADPROCLUS
-#' analysis is therefore, given a number of clusters \emph{k}, to estimate a
-#' model matrix \strong{M} = \strong{AP} that reconstructs data matrix
-#' \strong{X} as close as possible in a least squares sense (i.e. sum of squared
+#' analysis is therefore, given a number of clusters \eqn{K}, to estimate a
+#' model matrix \deqn{M = AP} which reconstructs the data matrix
+#' \eqn{\boldsymbol{X}} as close as possible in a least squares sense (i.e. sum of squared
 #' residuals). For a detailed illustration of the ADPROCLUS model and associated
 #' loss function, see Wilderjans et al., 2011.
 #'
 #' The alternating least squares algorithms ("\code{ALS1}" and "\code{ALS2}")
 #' that can be used for minimization of the loss function were proposed by
 #' Depril et al. (2008). In "\code{ALS2}", starting from an initial random or
-#' rational estimate of \strong{A} (see \code{\link{getRandom}} and
-#' \code{\link{getRational}}), \strong{A} and \strong{P} are alternately
+#' rational estimate of \eqn{\boldsymbol{A}} (see \code{\link{getRandom}} and
+#' \code{\link{getSemiRandom}}), \eqn{\boldsymbol{A}} and \eqn{\boldsymbol{P}} are alternately
 #' re-estimated conditionally upon each other until convergence. The
 #' "\code{ALS1}" algorithm differs from the one previous one in that each row in
-#' \strong{A} is updated independently and that the conditionally optimal
-#' \strong{P} is recalculated after each row update, instead of the end of the
+#' \eqn{\boldsymbol{A}} is updated independently and that the conditionally optimal
+#' \eqn{\boldsymbol{P}} is recalculated after each row update, instead of the end of the
 #' matrix. For a discussion and comparison of the different algorithms, see
 #' Depril et al., 2008.
 #'
 #' \strong{Warning:} Computation time increases exponentially with increasing
-#' number of clusters, \emph{k}! We recommend to determine the computation time
-#' of a single start for each specific dataset and \emph{k} before employing a
+#' number of clusters, \eqn{K}! We recommend to determine the computation time
+#' of a single start for each specific dataset and \eqn{K} before employing a
 #' multistart procedure.
 #'
 #' @param data object-by-variable data matrix of class \code{matrix} or
 #'   \code{data.frame}.
-#' @param centers either the number of clusters \emph{k}, or a matrix of initial
-#'   (distinct) cluster centres. If a number \emph{k}, a random set of \emph{k}
-#'   rows in \code{data} is chosen as initial centres.
-#' @param nstart if \code{centers} is a number, a vector of length 1 or 2
+#' @param nclusters Number of clusters to be used. Must be a positive integer.
+#' @param start_allocation Optional matrix of binary values as starting allocation for first run. Default is \code{NULL}.
+#' @param nrandomstart if \code{centers} is a number, a vector of length 1 or 2
 #'   denoting the number of random and rational starts to be performed.
+#'   Some research 500 starts to be a useful reference.
+#' @param nsemirandomstart number of semirandom starts
+#' Some research 500 starts to be a useful reference.
 #' @param algorithm character string "\code{ALS1}" (default) or "\code{ALS2}",
 #'   denoting the type of alternating least squares algorithm.
 #' @param SaveAllStarts logical. If \code{TRUE}, the results of all algorithm
 #'   starts are returned. By default, only the best solution is retained.
 #'
-#' @return By default, \code{adproclus} returns a list with the following
-#'   components: (If \code{SaveAllStarts} is \code{TRUE}, a list is returned for
-#'   each start of the algorithm) \describe{ \item{\code{Model}}{matrix. The
-#'   obtained overlapping clustering model \strong{M} of the same size as
-#'   \code{data}.} \item{\code{Membs}}{matrix. The membership matrix \strong{A}
-#'   of the clustering model.} \item{\code{Profs}}{matrix. The profile matrix
-#'   \strong{P} of the clustering model.} \item{\code{sse}}{numeric. The
-#'   residual sum of sqares of the clustering model, which is minimised by the
-#'   ALS algorithm.} \item{\code{totvar}}{numeric. The total sum of squares
-#'   of\code{data}.} \item{\code{explvar}}{numeric. The proportion of variance
+#' @return \code{adproclus} returns a list with the following
+#'   components, which describe the best model (from the multiple starts): \describe{
+#'   \item{\code{Model}}{matrix. The obtained overlapping clustering model \strong{M} of the same size as \code{data}.}
+#'   \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering model.}
+#'   \item{\code{P}}{matrix. The profile matrix
+#'   \strong{P} of the clustering model.}
+#'   \item{\code{sse}}{numeric. The
+#'   residual sum of squares of the clustering model, which is minimized by the
+#'   ALS algorithm.}
+#'   \item{\code{totvar}}{numeric. The total sum of squares
+#'   of \code{data}.}
+#'   \item{\code{explvar}}{numeric. The proportion of variance
 #'   in \code{data} that is accounted for by the clustering model.}
-#'   \item{\code{alg_iter}}{numeric. The number of iterations of the algorithm.}
+#'   \item{\code{iterations}}{numeric. The number of iterations of the algorithm.}
 #'   \item{\code{timer}}{numeric. The amount of time (in seconds) the algorithm
-#'   ran for.} \item{\code{initialStart}}{list. A list containing initial
-#'   membership and profile matrices, as well as the type of start that was used
+#'   ran for.}
+#'   \item{\code{initialStart}}{list. A list containing the initial
+#'   membership matrix, as well as the type of start that was used
 #'   to obtain the clustering solution. (as returned by \code{\link{getRandom}}
-#'   or \code{\link{getRational}})}}
+#'   or \code{\link{getSemiRandom}})}
+#'   \item{\code{Runs}}{list. Each element represents one model obtained from one of the multiple starts.
+#'   Each element contains all of the above information.}}
 #'
 #' @export
 #'
@@ -531,23 +611,25 @@ getRational <- function(data, centers) {
 #' x <- ADPROCLUS::CGdata
 #'
 #' # Quick clustering with K = 3 clusters
-#' clust <- adproclus(x, 3)
+#' clust <- adproclus(data = x, ncluster = 3)
 #'
 #' # Clustering with K = 4 clusters,
 #' # using the ALS2 algorithm,
 #' # with 5 random and 5 rational starts
-#' clust <- adproclus(x, 4, c(5,5), "ALS2")
+#' clust <- adproclus(data = x, nclusters = 4,
+#'                    nrandomstart = 5, nsemirandomstart = 5, algorithm = "ALS2")
 #'
 #' # Saving the results of all starts
-#' clust <- adproclus(x, 3, c(2,2), SaveAllStarts = TRUE)
+#' clust <- adproclus(data = x, ncluster = 3,
+#'                    nrandomstart = 2, nsemirandomstart = 2, SaveAllStarts = TRUE)
 #'
-#' # Clustering using a user-defined rational start
-#' start <- getRational(x,3)
-#' clust <- adproclus(x, start$P)
+#' # Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
+#' start <- getRational(x,x[1:4,])$A
+#' clust <- adproclus(data = x, ncluster = 2, start_allocation = start)
 #'
-#' @seealso \code{\link{getRandom}} and \code{\link{getRational}} for generating
+#' @seealso \code{\link{getRandom}} and \code{\link{getSemiRandom}} for generating
 #'   random and rational starts for ADORCLUS.
-adproclus <- function(data, centers, nstart = 1L,
+adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3, nsemirandomstart = 3,
         algorithm = "ALS1", SaveAllStarts = FALSE) {
 
     t <- proc.time()
@@ -556,127 +638,125 @@ adproclus <- function(data, centers, nstart = 1L,
     data <- as.matrix(data)
     n <- as.integer(nrow(data))
     p <- as.integer(ncol(data))
-    if (is.na(n) || is.na(p))
-        stop("'invalid data matrix")
-    if (missing(centers))
-        stop("'centers' must be a number or a matrix")
+
+    checkmate::assertCount(nclusters, positive = TRUE, coerce = TRUE)
+    checkmate::assertCount(nrandomstart, coerce = TRUE)
+    checkmate::assertCount(nsemirandomstart, coerce = TRUE)
+    checkmate::assertFlag(SaveAllStarts)
+    checkmate::assertMatrix(data)
+
+    if (n < nclusters)
+            stop("number of clusters cannot exceed number of objects in 'data'")
+    if (nrandomstart + nsemirandomstart > 50) {
+            warning("Number of starts is larger than 50. Computation might take a while")
+    }
+    if (is.null(start_allocation) & nrandomstart == 0 & nsemirandomstart == 0) {
+            stop("need either start allocation matrix or a non-zero number of (semi-) random starts")
+    }
+
+    BestSol <- list(sse = Inf)
+
 
     alg <- switch(match.arg(algorithm, c("ALS1", "ALS2")),
         ALS1 = 1, ALS2 = 2)
 
-    if (length(centers) != 1L) {
-        if (ncol(data) != ncol(centers))
-            stop("number of columns in 'centers' must match number of columns in 'data'")
-        k <- nrow(centers)
-        centers <- as.matrix(centers)
-        nstart <- c(0,nstart)
-        if (n < k)
-            stop("number of clusters cannot exceed number of objects in 'data'")
-        if (sum(nstart) != 1L) {
-            nstart <- c(0,1)
-            warning("'centers' is an initial profile matrix.
-                    Number of starts has been set to one.")
-        }
-        initialStart <- getRational(data,
-            centers)
-        if (alg == 1) {
-            results <- .adproclus_lf1(data, initialStart$A)
-            results$initialStart <- initialStart
+    if (!is.null(start_allocation)) {
+            start_allocation <- as.matrix(start_allocation)
+            checkmate::assertMatrix(start_allocation)
+            if (n < nclusters)
+                    stop("number of clusters cannot exceed number of objects in 'data'")
 
-        }
-        if (alg == 2) {
-            results <- .adproclus_lf2(data, initialStart$A,
-                initialStart$P)
-            results$initialStart <- initialStart
-        }
-    } else {
-        k <- centers
-        if (n < k)
-            stop("number of clusters cannot exceed number of objects in 'data'")
-
-        if (length(nstart) > 2) {
-            stop("'nstart' must be a vector of length 1 or 2")
-        }
-        if (sum(nstart) > 50) {
-            warning("Number of starts is larger than 50. Computation might take a while")
-        }
-
-        BestSol <- list(sse = Inf)
-
-        if (alg == 1) {
-            for (i in 1:nstart[1]) {
-                initialStart <- getRandom(data,
-                  centers)
-                res <- .adproclus_lf1(data, initialStart$A)
-                res$initialStart <- initialStart
-                if (res$sse < BestSol$sse) {
-                  BestSol <- res
-                }
-                if (SaveAllStarts == TRUE) {
-                  results <- append(results, list(res))
-                }
+            if (alg == 1) {
+                    results <- .adproclus_lf1(data, start_allocation)
             }
-            remove(i)
-            if (!is.na(nstart[2])) {
-                for (i in 1:nstart[2]) {
-                  initialStart <- getRational(data,
-                    centers)
-                  res <- .adproclus_lf1(data, initialStart$A)
-                  res$initialStart <- initialStart
-                  if (res$sse < BestSol$sse) {
-                    BestSol <- res
-                  }
-                  if (SaveAllStarts == TRUE) {
-                    results <- append(results, list(res))
-                  }
-                }
-                remove(i)
-            }
-        }
+            if (alg == 2) {
+                    results <- .adproclus_lf2(data, start_allocation)
 
-        if (alg == 2) {
-            for (i in 1:nstart[1]) {
-                initialStart <- getRandom(data,
-                  centers)
-                res <- .adproclus_lf2(data, initialStart$A,
-                  initialStart$P)
-                res$initialStart <- initialStart
-                if (res$sse < BestSol$sse) {
-                  BestSol <- res
-                }
-                if (SaveAllStarts == TRUE) {
-                  results <- append(results, list(res))
-                }
-                remove(i)
             }
-            if (!is.na(nstart[2])) {
-                for (i in 1:nstart[2]) {
-                  initialStart <- getRational(data,
-                    centers)
-                  res <- .adproclus_lf2(data, initialStart$A,
-                    initialStart$P)
-                  res$initialStart <- initialStart
-                  if (res$sse < BestSol$sse) {
-                    BestSol <- res
-                  }
-                  if (SaveAllStarts == TRUE) {
-                    results <- append(results, list(res))
-                  }
-                }
-                remove(i)
-            }
-        }
-
-        if (SaveAllStarts == TRUE) {
-                BestSol$Runs <- results
-                results <- BestSol
-                names(results$Runs) <- as.character(c(1:length(results$Runs)))
-        } else {
-                results <- BestSol
-        }
+            results$initialStart <- list(type = "Rational Start", initialA = start_allocation)
     }
+    if (alg == 1) {
+            if (nrandomstart > 0) {
+                    for (i in 1:nrandomstart) {
+                            initialStart <- getRandom(data,
+                                                      nclusters)
+                            initialStart$type <- paste("random_start_no_", i)
+                            res <- .adproclus_lf1(data, initialStart$A)
+                            res$initialStart <- initialStart
+                            if (res$sse < BestSol$sse) {
+                                    BestSol <- res
+                            }
+                            if (SaveAllStarts == TRUE) {
+                                    results <- append(results, list(res))
+                            }
+                    }
+                    remove(i)
+
+            }
+            if (nsemirandomstart > 0) {
+                    for (i in 1:nsemirandomstart) {
+                            initialStart <- getSemiRandom(data,
+                                                          nclusters)
+                            initialStart$type <- paste("semi_random_start_no_", i)
+                            res <- .adproclus_lf1(data, initialStart$A)
+                            res$initialStart <- initialStart
+                            if (res$sse < BestSol$sse) {
+                                    BestSol <- res
+                            }
+                            if (SaveAllStarts == TRUE) {
+                                    results <- append(results, list(res))
+                            }
+                    }
+                    remove(i)
+            }
+
+
+    } else { #alg == 2
+            if (nrandomstart > 0) {
+                    for (i in 1:nrandomstart) {
+                            initialStart <- getRandom(data,
+                                                      nclusters)
+                            initialStart$type <- paste("random_start_no_", i)
+                            res <- .adproclus_lf2(data, initialStart$A)
+                            res$initialStart <- initialStart
+                            if (res$sse < BestSol$sse) {
+                                    BestSol <- res
+                            }
+                            if (SaveAllStarts == TRUE) {
+                                    results <- append(results, list(res))
+                            }
+                    }
+                    remove(i)
+
+            }
+            if (nsemirandomstart > 0) {
+                    for (i in 1:nsemirandomstart) {
+                            initialStart <- getSemiRandom(data,
+                                                          nclusters)
+                            initialStart$type <- paste("semi_random_start_no_", i)
+                            res <- .adproclus_lf2(data, initialStart$A)
+                            res$initialStart <- initialStart
+                            if (res$sse < BestSol$sse) {
+                                    BestSol <- res
+                            }
+                            if (SaveAllStarts == TRUE) {
+                                    results <- append(results, list(res))
+                            }
+                    }
+                    remove(i)
+            }
+    }
+
+    if (SaveAllStarts == TRUE) {
+            BestSol$Runs <- results
+            results <- BestSol
+            names(results$Runs) <- as.character(c(1:length(results$Runs)))
+    } else {
+            results <- BestSol
+    }
+
     time <- (proc.time() - t)[1]
-    .printoutput(k,time, nstart)
+    .printoutput(nclusters,time, nrandomstart, nsemirandomstart, !is.null(start_allocation))
     return(results)
 }
 
@@ -707,17 +787,47 @@ adproclus <- function(data, centers, nstart = 1L,
 #' For a detailed illustration of the low dimensional ADPROCLUS model and associated
 #' loss function, see Depril et al. (2012).
 #'
+#' \strong{Warning:} Computation time increases exponentially with increasing
+#' number of clusters, \eqn{K}! We recommend to determine the computation time
+#' of a single start for each specific dataset and \eqn{K} before employing a
+#' multistart procedure.
+#'
 #' @param data Object-by-variable data matrix of class \code{matrix} or
 #'   \code{data.frame}.
 #' @param nclusters Number of clusters to be used. Must be a positive integer.
 #' @param ncomponents Number of components (dimensions) to which the profiles should be restricted. Must be a positive integer.
 #' @param start_allocation Optional matrix of binary values as starting allocation for first run. Default is \code{NULL}.
 #' @param nrandomstart Number of random starts (see \code{\link{getRandom}}). Can be zero. Increase for better results, though longer computation time.
-#' @param nsemirandomstart Number of semi-random starts (see \code{\link{getRational}})). Can be zero. Increase for better results, though longer computation time.
+#' Some research 500 starts to be a useful reference.
+#' @param nsemirandomstart Number of semi-random starts (see \code{\link{getSemiRandom}})). Can be zero. Increase for better results, though longer computation time.
+#' Some research 500 starts to be a useful reference.
 #' @param SaveAllStarts logical. If \code{TRUE}, the results of all algorithm
 #'   starts are returned. By default, only the best solution is retained.
 #'
-#' @return a list of relevant information about the resulting model
+#' @return \code{adproclusLD} returns a list with the following
+#'   components, which describe the best model (from the multiple starts): \describe{
+#'   \item{\code{Model}}{matrix. The obtained low dimensional overlapping clustering model \strong{M} of the same size as \code{data}.}
+#'   \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering model.}
+#'   \item{\code{P}}{matrix. The profile matrix
+#'   \strong{P} of the clustering model.}
+#'   \item{\code{c}}{matrix. The profile values in terms of the low dimensional components.}
+#'   \item{\code{B}}{matrix. Base vectors connecting low dimensional components with original variables.}
+#'   \item{\code{sse}}{numeric. The
+#'   residual sum of squares of the clustering model, which is minimized by the
+#'   ALS algorithm.}
+#'   \item{\code{totvar}}{numeric. The total sum of squares
+#'   of \code{data}.}
+#'   \item{\code{explvar}}{numeric. The proportion of variance
+#'   in \code{data} that is accounted for by the clustering model.}
+#'   \item{\code{iterations}}{numeric. The number of iterations of the algorithm.}
+#'   \item{\code{timer}}{numeric. The amount of time (in seconds) the algorithm
+#'   ran for.}
+#'   \item{\code{initialStart}}{list. A list containing the initial
+#'   membership matrix, as well as the type of start that was used
+#'   to obtain the clustering solution. (as returned by \code{\link{getRandom}}
+#'   or \code{\link{getSemiRandom}})}
+#'   \item{\code{Runs}}{list. Each element represents one model obtained from one of the multiple starts.
+#'   Each element contains all of the above information.}}
 #' @export
 #'
 #' @examples
@@ -726,9 +836,9 @@ adproclus <- function(data, centers, nstart = 1L,
 #'
 #' # Low dimensional clustering with K = 3 clusters
 #' # where the resulting profiles can be characterized in S = 1 dimensions (components)
-#' clust <- adproclusLD(x, 3, 1)
-adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, nrandomstart = 10,
-                      nsemirandomstart = 10, SaveAllStarts = FALSE) {
+#' clust <- adproclusLD(x, ncluster = 3, ncomponents = 1)
+adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, nrandomstart = 3,
+                      nsemirandomstart = 3, SaveAllStarts = FALSE) {
 
         t <- proc.time()
         results <- list()
@@ -737,7 +847,6 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         n <- as.integer(nrow(data))
         p <- as.integer(ncol(data))
 
-
         checkmate::assertCount(nclusters, positive = TRUE, coerce = TRUE)
         checkmate::assertCount(ncomponents, positive = TRUE, coerce = TRUE)
         checkmate::assertCount(nrandomstart, coerce = TRUE)
@@ -745,13 +854,19 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         checkmate::assertFlag(SaveAllStarts)
         checkmate::assertMatrix(data)
 
-
         if (ncomponents > min(n,nclusters)) {
                 stop("'ncomponents' must be smaller than min(number of observations, number of clusters)")
         }
         if (is.null(start_allocation) & nrandomstart == 0 & nsemirandomstart == 0) {
-                stop("need either start allocation matrix or a non-zero number of random starts")
+                stop("need either start allocation matrix or a non-zero number of (semi-) random starts")
         }
+        if (n < nclusters) {
+                stop("number of clusters cannot exceed number of objects in 'data'")
+        }
+        if (nrandomstart + nsemirandomstart > 50) {
+                warning("Number of starts is larger than 50. Computation might take a while")
+        }
+
         best_sol <- list(sse = Inf)
         if (!is.null(start_allocation)) {
                 start_allocation <- as.matrix(start_allocation)
@@ -764,8 +879,7 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                 }
 
                 model_new <- .ldadproclus(data, start_allocation, ncomponents)
-                model_new$initialA <- start_allocation
-                model_new$type <- "rational_start_model"
+                model_new$initialStart <- list(type = "rational_start_model", initialA = start_allocation)
                 results <- append(results, list(model_new))
                 best_sol <- results[[1]]
         }
@@ -774,8 +888,8 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                         random_start <- getRandom(data, nclusters)$A
                         model_new <- .ldadproclus(data, random_start, ncomponents)
 
-                        model_new$initialA <- random_start
-                        model_new$type <- paste("random_start_model_no_", i)
+                        model_new$initialStart <- list(type = paste("random_start_no_", i),
+                                                       initialA = random_start)
 
                         results <- append(results, list(model_new))
                         if(model_new$sse < best_sol$sse) {
@@ -786,11 +900,11 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
 
         if (nsemirandomstart > 0) {
                 for (j in 1:nsemirandomstart) {
-                        semi_random_start <- getRational(data, nclusters)$A
+                        semi_random_start <- getSemiRandom(data, nclusters)$A
                         model_new <- .ldadproclus(data, semi_random_start, ncomponents)
 
-                        model_new$initialA <- semi_random_start
-                        model_new$type <- paste("semi_random_start_model_no_", j)
+                        model_new$initialStart <- list(type = paste("semi_random_start_no_", j),
+                                                       initialA = semi_random_start)
 
                         results <- append(results, list(model_new))
                         if(model_new$sse < best_sol$sse) {
@@ -868,9 +982,9 @@ plot_clusters_as_network <- function(model, cluster_names = NULL,
                                   edge_color_low = "lavenderblush2",
                                   edge_color_high = "lavenderblush4") {
         data <- model$Model
-        A <- model$Membs
-        C <- model$low_dim_profs
-        B <- model$low_dim_base
+        A <- model$A
+        C <- model$C
+        B <- model$B
 
         k <- ncol(A)
 

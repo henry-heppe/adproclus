@@ -6,8 +6,10 @@
 \usage{
 adproclus(
   data,
-  centers,
-  nstart = 1L,
+  nclusters,
+  start_allocation = NULL,
+  nrandomstart = 3,
+  nsemirandomstart = 3,
   algorithm = "ALS1",
   SaveAllStarts = FALSE
 )
@@ -16,12 +18,16 @@ adproclus(
 \item{data}{object-by-variable data matrix of class \code{matrix} or
 \code{data.frame}.}
 
-\item{centers}{either the number of clusters \emph{k}, or a matrix of initial
-(distinct) cluster centres. If a number \emph{k}, a random set of \emph{k}
-rows in \code{data} is chosen as initial centres.}
+\item{nclusters}{Number of clusters to be used. Must be a positive integer.}
 
-\item{nstart}{if \code{centers} is a number, a vector of length 1 or 2
-denoting the number of random and rational starts to be performed.}
+\item{start_allocation}{Optional matrix of binary values as starting allocation for first run. Default is \code{NULL}.}
+
+\item{nrandomstart}{if \code{centers} is a number, a vector of length 1 or 2
+denoting the number of random and rational starts to be performed.
+Some research 500 starts to be a useful reference.}
+
+\item{nsemirandomstart}{number of semirandom starts
+Some research 500 starts to be a useful reference.}
 
 \item{algorithm}{character string "\code{ALS1}" (default) or "\code{ALS2}",
 denoting the type of alternating least squares algorithm.}
@@ -30,59 +36,64 @@ denoting the type of alternating least squares algorithm.}
 starts are returned. By default, only the best solution is retained.}
 }
 \value{
-By default, \code{adproclus} returns a list with the following
-  components: (If \code{SaveAllStarts} is \code{TRUE}, a list is returned for
-  each start of the algorithm) \describe{ \item{\code{Model}}{matrix. The
-  obtained overlapping clustering model \strong{M} of the same size as
-  \code{data}.} \item{\code{Membs}}{matrix. The membership matrix \strong{A}
-  of the clustering model.} \item{\code{Profs}}{matrix. The profile matrix
-  \strong{P} of the clustering model.} \item{\code{sse}}{numeric. The
-  residual sum of sqares of the clustering model, which is minimised by the
-  ALS algorithm.} \item{\code{totvar}}{numeric. The total sum of squares
-  of\code{data}.} \item{\code{explvar}}{numeric. The proportion of variance
+\code{adproclus} returns a list with the following
+  components, which describe the best model (from the multiple starts): \describe{
+  \item{\code{Model}}{matrix. The obtained overlapping clustering model \strong{M} of the same size as \code{data}.}
+  \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering model.}
+  \item{\code{P}}{matrix. The profile matrix
+  \strong{P} of the clustering model.}
+  \item{\code{sse}}{numeric. The
+  residual sum of squares of the clustering model, which is minimized by the
+  ALS algorithm.}
+  \item{\code{totvar}}{numeric. The total sum of squares
+  of \code{data}.}
+  \item{\code{explvar}}{numeric. The proportion of variance
   in \code{data} that is accounted for by the clustering model.}
-  \item{\code{alg_iter}}{numeric. The number of iterations of the algorithm.}
+  \item{\code{iterations}}{numeric. The number of iterations of the algorithm.}
   \item{\code{timer}}{numeric. The amount of time (in seconds) the algorithm
-  ran for.} \item{\code{initialStart}}{list. A list containing initial
-  membership and profile matrices, as well as the type of start that was used
+  ran for.}
+  \item{\code{initialStart}}{list. A list containing the initial
+  membership matrix, as well as the type of start that was used
   to obtain the clustering solution. (as returned by \code{\link{getRandom}}
-  or \code{\link{getRational}})}}
+  or \code{\link{getSemiRandom}})}
+  \item{\code{Runs}}{list. Each element represents one model obtained from one of the multiple starts.
+  Each element contains all of the above information.}}
 }
 \description{
-Perform ADditive PROfile CLUStering (ADPRCOLUS) on object by variable data.
+Perform additive profile clustering (ADPRCOLUS) on object by variable data.
 }
 \details{
-In this function, Mirkin's (1987, 1990) Aditive Profile Clustering
+In this function, Mirkin's (1987, 1990) Additive Profile Clustering
 (ADPROCLUS) method is used to obtain an unrestricted overlapping clustering
 model of the object by variable data provided by \code{data}.
 
-The ADPROCLUS model approximates an \emph{I} \eqn{x} \emph{J} object by
-variable data matrix \strong{X} by an \emph{I} \eqn{x} \emph{J} model matrix
-\strong{M} that can be decomposed into an \emph{I} \eqn{x} \emph{K} binary
-cluster membership matrix \strong{A} and a \emph{K} \eqn{x} \emph{J}
-real-valued cluster profile matrix \strong{P}, with \emph{K} indicating the
+The ADPROCLUS model approximates an \eqn{I \times J} object by
+variable data matrix \eqn{\boldsymbol{X}} by an \eqn{I \times J} model matrix
+\eqn{\boldsymbol{M}} that can be decomposed into an \eqn{I \times K} binary
+cluster membership matrix \eqn{\boldsymbol{A}} and a \eqn{K \times J}
+real-valued cluster profile matrix \eqn{\boldsymbol{P}}, with \eqn{K} indicating the
 number of overlapping clusters. In particular, the aim of an ADPROCLUS
-analysis is therefore, given a number of clusters \emph{k}, to estimate a
-model matrix \strong{M} = \strong{AP} that reconstructs data matrix
-\strong{X} as close as possible in a least squares sense (i.e. sum of squared
+analysis is therefore, given a number of clusters \eqn{K}, to estimate a
+model matrix \deqn{M = AP} which reconstructs the data matrix
+\eqn{\boldsymbol{X}} as close as possible in a least squares sense (i.e. sum of squared
 residuals). For a detailed illustration of the ADPROCLUS model and associated
 loss function, see Wilderjans et al., 2011.
 
 The alternating least squares algorithms ("\code{ALS1}" and "\code{ALS2}")
 that can be used for minimization of the loss function were proposed by
 Depril et al. (2008). In "\code{ALS2}", starting from an initial random or
-rational estimate of \strong{A} (see \code{\link{getRandom}} and
-\code{\link{getRational}}), \strong{A} and \strong{P} are alternately
+rational estimate of \eqn{\boldsymbol{A}} (see \code{\link{getRandom}} and
+\code{\link{getSemiRandom}}), \eqn{\boldsymbol{A}} and \eqn{\boldsymbol{P}} are alternately
 re-estimated conditionally upon each other until convergence. The
 "\code{ALS1}" algorithm differs from the one previous one in that each row in
-\strong{A} is updated independently and that the conditionally optimal
-\strong{P} is recalculated after each row update, instead of the end of the
+\eqn{\boldsymbol{A}} is updated independently and that the conditionally optimal
+\eqn{\boldsymbol{P}} is recalculated after each row update, instead of the end of the
 matrix. For a discussion and comparison of the different algorithms, see
 Depril et al., 2008.
 
 \strong{Warning:} Computation time increases exponentially with increasing
-number of clusters, \emph{k}! We recommend to determine the computation time
-of a single start for each specific dataset and \emph{k} before employing a
+number of clusters, \eqn{K}! We recommend to determine the computation time
+of a single start for each specific dataset and \eqn{K} before employing a
 multistart procedure.
 }
 \examples{
@@ -90,19 +101,21 @@ multistart procedure.
 x <- ADPROCLUS::CGdata
 
 # Quick clustering with K = 3 clusters
-clust <- adproclus(x, 3)
+clust <- adproclus(data = x, ncluster = 3)
 
 # Clustering with K = 4 clusters,
 # using the ALS2 algorithm,
 # with 5 random and 5 rational starts
-clust <- adproclus(x, 4, c(5,5), "ALS2")
+clust <- adproclus(data = x, nclusters = 4,
+                   nrandomstart = 5, nsemirandomstart = 5, algorithm = "ALS2")
 
 # Saving the results of all starts
-clust <- adproclus(x, 3, c(2,2), SaveAllStarts = TRUE)
+clust <- adproclus(data = x, ncluster = 3,
+                   nrandomstart = 2, nsemirandomstart = 2, SaveAllStarts = TRUE)
 
-# Clustering using a user-defined rational start
-start <- getRational(x,3)
-clust <- adproclus(x, start$P)
+# Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
+start <- getRational(x,x[1:4,])$A
+clust <- adproclus(data = x, ncluster = 2, start_allocation = start)
 
 }
 \references{
@@ -122,6 +135,6 @@ Wilderjans, T. F., Ceulemans, E., Van Mechelen, I., & Depril, D.
   analysis models. \emph{Journal of Classification}, 7(2):167-195.
 }
 \seealso{
-\code{\link{getRandom}} and \code{\link{getRational}} for generating
+\code{\link{getRandom}} and \code{\link{getSemiRandom}} for generating
   random and rational starts for ADORCLUS.
 }
