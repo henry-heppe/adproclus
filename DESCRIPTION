@@ -1,31 +1,33 @@
 Package: ADPROCLUS
 Title: Additive Profile Clustering Algorithms for R
 Version: 1.0.0
-Date: 2018-04-12
-Authors@R: c(person("Rossbroich", "Julian", 
-        role = c("aut", "cre"), 
-        email = "rossbroich@outlook.com"), 
-    person("Tom", "Wilderjans", 
+Authors@R: c(person("Henry", "Heppe",
+        role = c("aut", "cre"),
+        email = "heppe.henry@gmail.com"),
+        person("Julian", "Rossbroich", 
+        role = c("aut"), 
+        email = "rossbroich@outlook.com"),
+        person("Jeffrey", "Durieux", 
+        role = "aut", 
+        email = "")
+        person("Tom", "Wilderjans", 
         role = "aut", 
         email = "t.f.wilderjans@fsw.leidenuniv.nl"))
-Author: Julian Rossbroich [aut, cre],
-        Tom F. Wilderjans [aut]
-Maintainer: Julian Rossbroich <rossbroich@outlook.com>
-Description: This package is an implementation of ADditive PROfile 
-        CLUStering (ADPROCLUS) in R. It can be used to obtain
-        overlapping clustering models for object-by-variable data
-        matrices.
+Description: Obtain overlapping clustering models for object-by-variable data
+        matrices using the additive profile clustering (ADPROCLUS) method. 
+        Also contains the low dimensional ADPROCLUS method, 
+        for simultaneous dimension reduction and overlapping clustering.
 Depends: R (>= 3.1.0)
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Imports: 
+    checkmate,
     gtools,
-    NMFN,
-    stats,
     igraph,
     methods,
-    checkmate
+    NMFN,
+    stats
 RoxygenNote: 7.2.3
 Collate: 
     'ADPROCLUS-package.R'

@@ -135,6 +135,6 @@ Wilderjans, T. F., Ceulemans, E., Van Mechelen, I., & Depril, D.
   analysis models. \emph{Journal of Classification}, 7(2):167-195.
 }
 \seealso{
-\code{\link{getRandom}} and \code{\link{getSemiRandom}} for generating
-  random and rational starts for ADORCLUS.
+\code{\link{adproclusLD}} for low dimensional ADPROCLUS, \code{\link{getRandom}},\code{\link{getSemiRandom}} and \code{\link{getRational}} for generating
+  (semi-)random and rational starts for ADPROCLUS.
 }

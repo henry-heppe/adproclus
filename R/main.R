@@ -517,7 +517,7 @@ getRational <- function(data, starting_profiles) {
 
 #' Additive profile clustering
 #'
-#' Perform additive profile clustering (ADPRCOLUS) on object by variable data.
+#' Perform additive profile clustering (ADPROCLUS) on object by variable data.
 #'
 #' In this function, Mirkin's (1987, 1990) Additive Profile Clustering
 #' (ADPROCLUS) method is used to obtain an unrestricted overlapping clustering
@@ -548,21 +548,18 @@ getRational <- function(data, starting_profiles) {
 #' Depril et al., 2008.
 #'
 #' \strong{Warning:} Computation time increases exponentially with increasing
-#' number of clusters, \eqn{K}! We recommend to determine the computation time
+#' number of clusters, \eqn{K}. We recommend to determine the computation time
 #' of a single start for each specific dataset and \eqn{K} before employing a
 #' multistart procedure.
 #'
-#' @param data object-by-variable data matrix of class \code{matrix} or
+#' @param data Object-by-variable data matrix of class \code{matrix} or
 #'   \code{data.frame}.
 #' @param nclusters Number of clusters to be used. Must be a positive integer.
 #' @param start_allocation Optional matrix of binary values as starting allocation for first run. Default is \code{NULL}.
-#' @param nrandomstart if \code{centers} is a number, a vector of length 1 or 2
-#'   denoting the number of random and rational starts to be performed.
-#'   Some research 500 starts to be a useful reference.
-#' @param nsemirandomstart number of semirandom starts
-#' Some research 500 starts to be a useful reference.
-#' @param algorithm character string "\code{ALS1}" (default) or "\code{ALS2}",
-#'   denoting the type of alternating least squares algorithm.
+#' @param nrandomstart Number of random starts (see \code{\link{getRandom}}). Can be zero. Increase for better results, though longer computation time.
+#' Some research finds 500 starts to be a useful reference.
+#' @param nsemirandomstart Number of semi-random starts (see \code{\link{getSemiRandom}})). Can be zero. Increase for better results, though longer computation time.
+#' Some research finds 500 starts to be a useful reference.
 #' @param SaveAllStarts logical. If \code{TRUE}, the results of all algorithm
 #'   starts are returned. By default, only the best solution is retained.
 #'
@@ -788,7 +785,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #' loss function, see Depril et al. (2012).
 #'
 #' \strong{Warning:} Computation time increases exponentially with increasing
-#' number of clusters, \eqn{K}! We recommend to determine the computation time
+#' number of clusters, \eqn{K}. We recommend to determine the computation time
 #' of a single start for each specific dataset and \eqn{K} before employing a
 #' multistart procedure.
 #'
@@ -798,9 +795,9 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #' @param ncomponents Number of components (dimensions) to which the profiles should be restricted. Must be a positive integer.
 #' @param start_allocation Optional matrix of binary values as starting allocation for first run. Default is \code{NULL}.
 #' @param nrandomstart Number of random starts (see \code{\link{getRandom}}). Can be zero. Increase for better results, though longer computation time.
-#' Some research 500 starts to be a useful reference.
+#' Some research finds 500 starts to be a useful reference.
 #' @param nsemirandomstart Number of semi-random starts (see \code{\link{getSemiRandom}})). Can be zero. Increase for better results, though longer computation time.
-#' Some research 500 starts to be a useful reference.
+#' Some research finds 500 starts to be a useful reference.
 #' @param SaveAllStarts logical. If \code{TRUE}, the results of all algorithm
 #'   starts are returned. By default, only the best solution is retained.
 #'

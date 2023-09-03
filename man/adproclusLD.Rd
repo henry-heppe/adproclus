@@ -96,4 +96,14 @@ x <- ADPROCLUS::CGdata
 # Low dimensional clustering with K = 3 clusters
 # where the resulting profiles can be characterized in S = 1 dimensions (components)
 clust <- adproclusLD(x, ncluster = 3, ncomponents = 1)
+
+}
+\references{
+Depril, D., Van Mechelen, I., & Wilderjans, T. F.
+  (2012). Lowdimensional additive overlapping clustering.
+  \emph{Journal of classification, 29,} 297-320.
+}
+\seealso{
+\code{\link{adproclus}} for full dimensional ADPROCLUS, \code{\link{getRandom}},\code{\link{getSemiRandom}} and \code{\link{getRational}} for generating
+  (semi-)random and rational starts for (low dimensional) ADPROCLUS.
 }
