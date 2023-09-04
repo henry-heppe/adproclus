@@ -341,22 +341,20 @@ NULL
 #' \emph{Journal of classification, 29,} 297-320.
 #'
 #' @examples
-#' getRandom(ADPROCLUS::CGdata, 3)
+#' start_allocation <- getRandom(ADPROCLUS::CGdata, 3)$A
 #'
 #' @seealso \code{\link{getSemiRandom}} for generating semi-random starts,
 #' \code{\link{getRational}} for generating rational starts and
 #' \code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
 getRandom <- function(data, nclusters) {
+        withr::local_seed(1)
 
         data <- as.matrix(data)
         checkmate::assertMatrix(data)
         checkmate::assertCount(nclusters, positive = TRUE, coerce = TRUE)
 
-        if (length(nclusters) == 1L) {
-                k <- nclusters
-        } else {
-                k <- nrow(nclusters)
-        }
+        k <- nclusters
+
         n <- nrow(data)
 
         A <- (matrix(stats::runif(n * k), n, k) < 0.5) * 1
@@ -407,20 +405,22 @@ getRandom <- function(data, nclusters) {
 #'   \emph{Journal of classification, 29,} 297-320.
 #'
 #' @examples
-#' getSemiRandom(ADPROCLUS::CGdata, 3)
+#' start_allocation <- getSemiRandom(ADPROCLUS::CGdata, 3)$A
 #'
 #' @seealso \code{\link{getRandom}} for generating random starts,
 #' \code{\link{getRational}} for generating rational starts and
 #' \code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
 getSemiRandom <- function(data, nclusters) {
+        withr::local_seed(1)
+
         data <- as.matrix(data)
         checkmate::assertMatrix(data)
         checkmate::assertCount(nclusters, positive = TRUE, coerce = TRUE)
 
         n <- nrow(data)
 
-        Permutation <- sample(n)
-        P <- data[Permutation[1:nclusters], ]
+        rows_selected <- sample(n, nclusters)
+        P <- data[rows_selected, ]
 
         npos <- 2^nclusters
         PossibA <- gtools::permutations(2, nclusters, v = c(0, 1), repeats.allowed = TRUE)
@@ -474,8 +474,7 @@ getSemiRandom <- function(data, nclusters) {
 #' x <- ADPROCLUS::CGdata
 #'
 #' # Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
-#' start <- getRational(x,x[1:4,])$A
-#' clust <- adproclus(x, ncluster = 2, start_allocation = start)
+#' start_allocation <- getRational(x,x[1:4,])$A
 #'
 #' @seealso \code{\link{getRandom}} for generating random starts,
 #' \code{\link{getSemiRandom}} for generating semi-random starts and
@@ -612,9 +611,9 @@ getRational <- function(data, starting_profiles) {
 #'
 #' # Clustering with K = 4 clusters,
 #' # using the ALS2 algorithm,
-#' # with 5 random and 5 rational starts
+#' # with 2 random and 2 semi-random starts
 #' clust <- adproclus(data = x, nclusters = 4,
-#'                    nrandomstart = 5, nsemirandomstart = 5, algorithm = "ALS2")
+#'                    nrandomstart = 2, nsemirandomstart = 2, algorithm = "ALS2")
 #'
 #' # Saving the results of all starts
 #' clust <- adproclus(data = x, ncluster = 3,
@@ -985,6 +984,9 @@ plot_clusters_as_network <- function(model, cluster_names = NULL,
                                   vertex_color = "antiquewhite",
                                   edge_color_low = "lavenderblush2",
                                   edge_color_high = "lavenderblush4") {
+
+        withr::local_seed(1)
+
         data <- model$Model
         A <- model$A
         C <- model$C
