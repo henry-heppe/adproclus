@@ -25,10 +25,10 @@ adproclusLD(
 \item{start_allocation}{Optional matrix of binary values as starting allocation for first run. Default is \code{NULL}.}
 
 \item{nrandomstart}{Number of random starts (see \code{\link{getRandom}}). Can be zero. Increase for better results, though longer computation time.
-Some research 500 starts to be a useful reference.}
+Some research finds 500 starts to be a useful reference.}
 
 \item{nsemirandomstart}{Number of semi-random starts (see \code{\link{getSemiRandom}})). Can be zero. Increase for better results, though longer computation time.
-Some research 500 starts to be a useful reference.}
+Some research finds 500 starts to be a useful reference.}
 
 \item{SaveAllStarts}{logical. If \code{TRUE}, the results of all algorithm
 starts are returned. By default, only the best solution is retained.}
@@ -85,7 +85,7 @@ For a detailed illustration of the low dimensional ADPROCLUS model and associate
 loss function, see Depril et al. (2012).
 
 \strong{Warning:} Computation time increases exponentially with increasing
-number of clusters, \eqn{K}! We recommend to determine the computation time
+number of clusters, \eqn{K}. We recommend to determine the computation time
 of a single start for each specific dataset and \eqn{K} before employing a
 multistart procedure.
 }

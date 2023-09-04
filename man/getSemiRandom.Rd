@@ -34,7 +34,7 @@ details, see Depril et al., 2012).
 perform aditive profile clustering, see \code{\link{adproclus}}.
 }
 \examples{
-getSemiRandom(ADPROCLUS::CGdata, 3)
+start_allocation <- getSemiRandom(ADPROCLUS::CGdata, 3)$A
 
 }
 \references{

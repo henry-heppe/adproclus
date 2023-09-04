@@ -6,13 +6,15 @@
 \alias{ADPROCLUS-package}
 \title{ADPROCLUS: Additive Profile Clustering Algorithms for R}
 \description{
-This package is an implementation of ADditive PROfile CLUStering (ADPROCLUS) in R. It can be used to obtain overlapping clustering models for object-by-variable data matrices.
+Obtain overlapping clustering models for object-by-variable data matrices using the additive profile clustering (ADPROCLUS) method. Also contains the low dimensional ADPROCLUS method, for simultaneous dimension reduction and overlapping clustering.
 }
 \author{
-\strong{Maintainer}: Rossbroich Julian \email{rossbroich@outlook.com}
+\strong{Maintainer}: Henry Heppe \email{heppe.henry@gmail.com}
 
 Authors:
 \itemize{
+  \item Julian Rossbroich \email{rossbroich@outlook.com}
+  \item Jeffrey Durieux
   \item Tom Wilderjans \email{t.f.wilderjans@fsw.leidenuniv.nl}
 }
 

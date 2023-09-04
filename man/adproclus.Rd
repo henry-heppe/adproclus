@@ -15,22 +15,18 @@ adproclus(
 )
 }
 \arguments{
-\item{data}{object-by-variable data matrix of class \code{matrix} or
+\item{data}{Object-by-variable data matrix of class \code{matrix} or
 \code{data.frame}.}
 
 \item{nclusters}{Number of clusters to be used. Must be a positive integer.}
 
 \item{start_allocation}{Optional matrix of binary values as starting allocation for first run. Default is \code{NULL}.}
 
-\item{nrandomstart}{if \code{centers} is a number, a vector of length 1 or 2
-denoting the number of random and rational starts to be performed.
-Some research 500 starts to be a useful reference.}
+\item{nrandomstart}{Number of random starts (see \code{\link{getRandom}}). Can be zero. Increase for better results, though longer computation time.
+Some research finds 500 starts to be a useful reference.}
 
-\item{nsemirandomstart}{number of semirandom starts
-Some research 500 starts to be a useful reference.}
-
-\item{algorithm}{character string "\code{ALS1}" (default) or "\code{ALS2}",
-denoting the type of alternating least squares algorithm.}
+\item{nsemirandomstart}{Number of semi-random starts (see \code{\link{getSemiRandom}})). Can be zero. Increase for better results, though longer computation time.
+Some research finds 500 starts to be a useful reference.}
 
 \item{SaveAllStarts}{logical. If \code{TRUE}, the results of all algorithm
 starts are returned. By default, only the best solution is retained.}
@@ -60,7 +56,7 @@ starts are returned. By default, only the best solution is retained.}
   Each element contains all of the above information.}}
 }
 \description{
-Perform additive profile clustering (ADPRCOLUS) on object by variable data.
+Perform additive profile clustering (ADPROCLUS) on object by variable data.
 }
 \details{
 In this function, Mirkin's (1987, 1990) Additive Profile Clustering
@@ -92,7 +88,7 @@ matrix. For a discussion and comparison of the different algorithms, see
 Depril et al., 2008.
 
 \strong{Warning:} Computation time increases exponentially with increasing
-number of clusters, \eqn{K}! We recommend to determine the computation time
+number of clusters, \eqn{K}. We recommend to determine the computation time
 of a single start for each specific dataset and \eqn{K} before employing a
 multistart procedure.
 }
@@ -105,9 +101,9 @@ clust <- adproclus(data = x, ncluster = 3)
 
 # Clustering with K = 4 clusters,
 # using the ALS2 algorithm,
-# with 5 random and 5 rational starts
+# with 2 random and 2 semi-random starts
 clust <- adproclus(data = x, nclusters = 4,
-                   nrandomstart = 5, nsemirandomstart = 5, algorithm = "ALS2")
+                   nrandomstart = 2, nsemirandomstart = 2, algorithm = "ALS2")
 
 # Saving the results of all starts
 clust <- adproclus(data = x, ncluster = 3,

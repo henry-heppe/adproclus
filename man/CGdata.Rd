@@ -3,15 +3,15 @@
 \docType{data}
 \name{CGdata}
 \alias{CGdata}
-\title{Generated data with underlying overlapping clusters.}
+\title{Randomly generated data with underlying overlapping clusters.}
 \format{
-A data frame with 500 rows and 15 variables
+A data frame with 400 rows and 15 variables
 }
 \usage{
 CGdata
 }
 \description{
-A computer generated object by variable dataset with an underlying
+A computer generated object-by-variable dataset with an underlying
 nonrestricted overlapping clustering structure. For illustrative purposes
 within the ADPROCLUS package only.
 }

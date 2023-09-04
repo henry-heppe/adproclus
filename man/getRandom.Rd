@@ -33,7 +33,7 @@ For generating an initial start based on a specific set of initial cluster cente
 perform aditive profile clustering, see \code{\link{adproclus}}.
 }
 \examples{
-getRandom(ADPROCLUS::CGdata, 3)
+start_allocation <- getRandom(ADPROCLUS::CGdata, 3)$A
 
 }
 \references{
