@@ -27,7 +27,8 @@ Imports:
     igraph,
     methods,
     NMFN,
-    stats
+    stats,
+    withr
 RoxygenNote: 7.2.3
 Collate: 
     'ADPROCLUS-package.R'

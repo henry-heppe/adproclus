@@ -28,6 +28,9 @@ Some research finds 500 starts to be a useful reference.}
 \item{nsemirandomstart}{Number of semi-random starts (see \code{\link{getSemiRandom}})). Can be zero. Increase for better results, though longer computation time.
 Some research finds 500 starts to be a useful reference.}
 
+\item{algorithm}{character string "\code{ALS1}" (default) or "\code{ALS2}",
+denoting the type of alternating least squares algorithm.}
+
 \item{SaveAllStarts}{logical. If \code{TRUE}, the results of all algorithm
 starts are returned. By default, only the best solution is retained.}
 }
@@ -96,13 +99,13 @@ multistart procedure.
 # Loading a test dataset into the global environment
 x <- ADPROCLUS::CGdata
 
-# Quick clustering with K = 3 clusters
-clust <- adproclus(data = x, ncluster = 3)
+# Quick clustering with K = 2 clusters
+clust <- adproclus(data = x, ncluster = 2)
 
-# Clustering with K = 4 clusters,
+# Clustering with K = 3 clusters,
 # using the ALS2 algorithm,
 # with 2 random and 2 semi-random starts
-clust <- adproclus(data = x, nclusters = 4,
+clust <- adproclus(data = x, nclusters = 3,
                    nrandomstart = 2, nsemirandomstart = 2, algorithm = "ALS2")
 
 # Saving the results of all starts
