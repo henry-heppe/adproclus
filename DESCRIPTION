@@ -33,8 +33,11 @@ RoxygenNote: 7.2.3
 Collate: 
     'ADPROCLUS-package.R'
     'adproclus_classes.R'
+    'clustering.R'
     'data.R'
-    'main.R'
+    'getStarts.R'
+    'utils.R'
+    'visualize.R'
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
