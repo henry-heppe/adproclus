@@ -36,7 +36,7 @@ starts are returned. By default, only the best solution is retained.}
 \value{
 \code{adproclusLD} returns a list with the following
   components, which describe the best model (from the multiple starts): \describe{
-  \item{\code{Model}}{matrix. The obtained low dimensional overlapping clustering model \strong{M} of the same size as \code{data}.}
+  \item{\code{model}}{matrix. The obtained low dimensional overlapping clustering model \strong{M} of the same size as \code{data}.}
   \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering model.}
   \item{\code{P}}{matrix. The profile matrix
   \strong{P} of the clustering model.}
@@ -56,7 +56,7 @@ starts are returned. By default, only the best solution is retained.}
   membership matrix, as well as the type of start that was used
   to obtain the clustering solution. (as returned by \code{\link{getRandom}}
   or \code{\link{getSemiRandom}})}
-  \item{\code{Runs}}{list. Each element represents one model obtained from one of the multiple starts.
+  \item{\code{runs}}{list. Each element represents one model obtained from one of the multiple starts.
   Each element contains all of the above information.}}
 }
 \description{

@@ -97,7 +97,7 @@ NULL
         timeruns <- (proc.time() - t)[1]
 
         model <- Membs %*% Profs
-        result <- list(Model = model, Membs = Membs, Profs = Profs,
+        result <- list(model = model, A = Membs, P = Profs,
                 sse = sum((model - x)^2), totvar = totvar,
                 explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns), initialStart = NULL)
 
@@ -157,7 +157,7 @@ NULL
         timeruns <- (proc.time() - t)[1]
 
         model <- Membs %*% Profs
-        result <- list(Model = model, A = Membs, P = Profs,
+        result <- list(model = model, A = Membs, P = Profs,
                 sse = sum((model - x)^2), totvar = totvar,
                 explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initialStart = NULL)
 
@@ -234,7 +234,7 @@ NULL
         # result <- list(type = NULL, Model = model, Membs = Membs, Profs = Profs, low_dim_profs = ldProfs, low_dim_base = ldBase,
         #                sse = sum((model - x)^2), totvar = totvar,
         #                explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns), svd = svd(Profs)) #issue: take out svd here
-        result <- list(Model = model, A = Membs, P = Profs, C = ldProfs, B = ldBase,
+        result <- list(model = model, A = Membs, P = Profs, C = ldProfs, B = ldBase,
                        sse = sum((model - x)^2), totvar = totvar,
                        explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initialStart = NULL)
 
@@ -345,7 +345,7 @@ NULL
 #'
 #' @return \code{adproclus} returns a list with the following
 #'   components, which describe the best model (from the multiple starts): \describe{
-#'   \item{\code{Model}}{matrix. The obtained overlapping clustering model \strong{M} of the same size as \code{data}.}
+#'   \item{\code{model}}{matrix. The obtained overlapping clustering model \strong{M} of the same size as \code{data}.}
 #'   \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering model.}
 #'   \item{\code{P}}{matrix. The profile matrix
 #'   \strong{P} of the clustering model.}
@@ -363,7 +363,7 @@ NULL
 #'   membership matrix, as well as the type of start that was used
 #'   to obtain the clustering solution. (as returned by \code{\link{getRandom}}
 #'   or \code{\link{getSemiRandom}})}
-#'   \item{\code{Runs}}{list. Each element represents one model obtained from one of the multiple starts.
+#'   \item{\code{runs}}{list. Each element represents one model obtained from one of the multiple starts.
 #'   Each element contains all of the above information.}}
 #'
 #' @export
@@ -537,9 +537,9 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
     }
 
     if (SaveAllStarts == TRUE) {
-            BestSol$Runs <- results
+            BestSol$runs <- results
             results <- BestSol
-            names(results$Runs) <- as.character(c(1:length(results$Runs)))
+            names(results$runs) <- as.character(c(1:length(results$runs)))
     } else {
             results <- BestSol
     }
@@ -595,7 +595,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #'
 #' @return \code{adproclusLD} returns a list with the following
 #'   components, which describe the best model (from the multiple starts): \describe{
-#'   \item{\code{Model}}{matrix. The obtained low dimensional overlapping clustering model \strong{M} of the same size as \code{data}.}
+#'   \item{\code{model}}{matrix. The obtained low dimensional overlapping clustering model \strong{M} of the same size as \code{data}.}
 #'   \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering model.}
 #'   \item{\code{P}}{matrix. The profile matrix
 #'   \strong{P} of the clustering model.}
@@ -615,7 +615,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #'   membership matrix, as well as the type of start that was used
 #'   to obtain the clustering solution. (as returned by \code{\link{getRandom}}
 #'   or \code{\link{getSemiRandom}})}
-#'   \item{\code{Runs}}{list. Each element represents one model obtained from one of the multiple starts.
+#'   \item{\code{runs}}{list. Each element represents one model obtained from one of the multiple starts.
 #'   Each element contains all of the above information.}}
 #' @export
 #'
@@ -711,9 +711,9 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         }
 
         if (SaveAllStarts == TRUE) {
-                best_sol$Runs <- results
+                best_sol$runs <- results
                 results <- best_sol
-                names(results$Runs) <- as.character(c(1:length(results$Runs)))
+                names(results$runs) <- as.character(c(1:length(results$runs)))
         } else {
                 results <- best_sol
         }
