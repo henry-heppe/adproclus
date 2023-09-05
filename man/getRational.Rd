@@ -34,7 +34,7 @@ perform additive profile clustering, see \code{\link{adproclus}}.
 \examples{
 x <- ADPROCLUS::CGdata
 
-# Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
+# Obtaining a user-defined rational start profile matrix (here the first 4 rows of the data)
 start_allocation <- getRational(x,x[1:4,])$A
 
 }
