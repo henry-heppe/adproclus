@@ -51,6 +51,9 @@ getRandom <- function(data, nclusters) {
         data <- as.matrix(data)
         checkmate::assertMatrix(data)
         checkmate::assertCount(nclusters, positive = TRUE, coerce = TRUE)
+        if (nrow(data) < nclusters) {
+                stop("number of clusters cannot exceed number of objects in 'data'")
+        }
 
         k <- nclusters
 
@@ -115,6 +118,10 @@ getSemiRandom <- function(data, nclusters) {
         data <- as.matrix(data)
         checkmate::assertMatrix(data)
         checkmate::assertCount(nclusters, positive = TRUE, coerce = TRUE)
+
+        if (nrow(data) < nclusters) {
+                stop("number of clusters cannot exceed number of objects in 'data'")
+        }
 
         n <- nrow(data)
 
@@ -186,6 +193,9 @@ getRational <- function(data, starting_profiles) {
         starting_profiles <- as.matrix(starting_profiles)
         checkmate::assertMatrix(data)
         checkmate::assertMatrix(starting_profiles)
+        if(ncol(starting_profiles) != ncol(data)) {
+                stop("Number of variables in data must equal number of columns of profile matrix.")
+        }
 
         n <- nrow(data)
 

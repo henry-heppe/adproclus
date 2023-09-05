@@ -384,8 +384,8 @@ NULL
 #'   analysis models. \emph{Journal of Classification}, 7(2):167-195.
 #'
 #' @examples
-#' # Loading a test dataset into the global environment
-#' x <- ADPROCLUS::CGdata
+#' # Loading a (subset of a) test dataset into the global environment
+#' x <- ADPROCLUS::CGdata[1:100,]
 #'
 #' # Quick clustering with K = 2 clusters
 #' clust <- adproclus(data = x, ncluster = 2)
@@ -423,14 +423,21 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
     checkmate::assertMatrix(data)
     checkmate::assertChoice(algorithm, c("ALS1", "ALS2"))
 
-    if (n < nclusters)
-            stop("number of clusters cannot exceed number of objects in 'data'")
     if (nrandomstart + nsemirandomstart > 50) {
             warning("Number of starts is larger than 50. Computation might take a while")
     }
+
+    if (n < nclusters)
+            stop("number of clusters cannot exceed number of objects in 'data'")
     if (is.null(start_allocation) & nrandomstart == 0 & nsemirandomstart == 0) {
             stop("need either start allocation matrix or a non-zero number of (semi-) random starts")
     }
+    if (nclusters > ncol(data)) {
+            stop("Cannot have more clusters than variables")
+    }
+    if (n < nclusters)
+            stop("number of clusters cannot exceed number of objects in 'data'")
+
 
     BestSol <- list(sse = Inf)
 
@@ -441,8 +448,12 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
     if (!is.null(start_allocation)) {
             start_allocation <- as.matrix(start_allocation)
             checkmate::assertMatrix(start_allocation)
-            if (n < nclusters)
-                    stop("number of clusters cannot exceed number of objects in 'data'")
+            m <- as.integer(nrow(start_allocation))
+            q <- as.integer(ncol(start_allocation))
+            if (!all(start_allocation %in% c(0,1)) || m != n || q != nclusters) {
+                    stop("invalid start allocation matrix: either non-binary matrix,
+                         or number of rows or columns do not match data")
+            }
 
             if (alg == 1) {
                     results <- .adproclus_lf1(data, start_allocation)
@@ -660,7 +671,8 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                 m <- as.integer(nrow(start_allocation))
                 q <- as.integer(ncol(start_allocation))
                 if (!all(start_allocation %in% c(0,1)) || m != n || q != nclusters) {
-                        stop("invalid start allocation matrix")
+                        stop("invalid start allocation matrix: either non-binary matrix,
+                             or number of rows or columns do not match data")
                 }
 
                 model_new <- .ldadproclus(data, start_allocation, ncomponents)
@@ -711,29 +723,4 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         return(results)
 
 
-}
-
-basic_test <- function() {
-        set.seed(1)
-        k <- 6 #number of clusters
-        s <- 3 #number of dimensions
-
-        a <- matrix(stats::rbinom(400*k, 1, 0.5), 400, k)
-        a <- data.frame(a)
-        a_ext <- cbind(a, rsum = rowSums(a))
-        not_done = TRUE
-        iterr <- 0
-        while(not_done) {
-                iterr <- iterr + 1
-                a_filt <- a_ext[a_ext$rsum == 0 | a_ext$rsum == k,]
-                a_ext[a_ext$rsum == 0 | a_ext$rsum == k,] <- data.frame(matrix(stats::rbinom(k*nrow(a_filt),1,0.5), nrow(a_filt), k))
-                if (nrow(a_ext[a_ext$rsum == 0 | a_ext$rsum == k,])) {
-                     not_done <- FALSE
-                }
-                a <- a_ext[,1:k]
-                a_ext <- cbind(a, rsum = rowSums(a))
-        }
-        print("A created")
-        .ldadproclus(as.matrix(ADPROCLUS::CGdata), as.matrix(a), s)
-        return(as.matrix(a))
 }
