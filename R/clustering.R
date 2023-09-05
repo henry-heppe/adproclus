@@ -402,7 +402,7 @@ NULL
 #'
 #' # Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
 #' start <- getRational(x,x[1:4,])$A
-#' clust <- adproclus(data = x, ncluster = 2, start_allocation = start)
+#' clust <- adproclus(data = x, ncluster = 4, start_allocation = start)
 #'
 #' @seealso \code{\link{adproclusLD}} for low dimensional ADPROCLUS, \code{\link{getRandom}},\code{\link{getSemiRandom}} and \code{\link{getRational}} for generating
 #'   (semi-)random and rational starts for ADPROCLUS.

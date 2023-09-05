@@ -96,8 +96,8 @@ of a single start for each specific dataset and \eqn{K} before employing a
 multistart procedure.
 }
 \examples{
-# Loading a test dataset into the global environment
-x <- ADPROCLUS::CGdata
+# Loading a (subset of a) test dataset into the global environment
+x <- ADPROCLUS::CGdata[1:100,]
 
 # Quick clustering with K = 2 clusters
 clust <- adproclus(data = x, ncluster = 2)
@@ -114,7 +114,7 @@ clust <- adproclus(data = x, ncluster = 3,
 
 # Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
 start <- getRational(x,x[1:4,])$A
-clust <- adproclus(data = x, ncluster = 2, start_allocation = start)
+clust <- adproclus(data = x, ncluster = 4, start_allocation = start)
 
 }
 \references{
