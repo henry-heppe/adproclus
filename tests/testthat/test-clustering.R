@@ -66,10 +66,22 @@ test_that("adproclusLD illegal inputs", {
         expect_error(adproclusLD(data = x, nclusters= 2, ncomponents = 1, start_allocation = start))
 })
 
-#other test ideas
-test_that("ADPROCLUS seed functionality", {
+test_that("reproducibility both functions", {
+        withr::local_seed(1)
+        #set.seed(1)
+        x <- ADPROCLUS::CGdata
+        start <- getRational(x,x[1:4,])$A
+        expect_equal(adproclus(data = x, nclusters= 4, nrnadomstart = 3, nsemirandomstart = 3,
+                               start_allocation = start, SaveAllStarts = TRUE),
+                     adproclus(data = x, nclusters= 4, nrnadomstart = 3, nsemirandomstart = 3,
+                               start_allocation = start, SaveAllStarts = TRUE))
+        expect_equal(adproclusLD(data = x, nclusters= 4, ncomponents = 1, nrnadomstart = 3, nsemirandomstart = 3,
+                               start_allocation = start, SaveAllStarts = TRUE),
+                     adproclusLD(data = x, nclusters= 4, ncomponents = 1, nrnadomstart = 3, nsemirandomstart = 3,
+                               start_allocation = start, SaveAllStarts = TRUE))
 })
 
+#other test ideas
 test_that("ADPROCLUS S3 functionality", {
 
 })
