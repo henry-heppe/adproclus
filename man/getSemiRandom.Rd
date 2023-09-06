@@ -4,13 +4,15 @@
 \alias{getSemiRandom}
 \title{Generate initial semi-random start}
 \usage{
-getSemiRandom(data, nclusters)
+getSemiRandom(data, nclusters, seed = NULL)
 }
 \arguments{
 \item{data}{Object-by-variable data matrix of class \code{matrix} or
 \code{data.frame}.}
 
 \item{nclusters}{Number of clusters to be used. Must be a positive integer.}
+
+\item{seed}{Integer. Seed for the random number generator. Default: NULL}
 }
 \value{
 \code{getSemiRandom} returns a list with the following components:

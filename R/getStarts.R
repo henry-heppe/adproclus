@@ -18,6 +18,7 @@
 #'
 #' @param data Object-by-variable data matrix of class \code{matrix} or \code{data.frame}.
 #' @param nclusters Number of clusters to be used. Must be a positive integer.
+#' @param seed Integer. Seed for the random number generator. Default: NULL
 #'
 #' @return \code{getRandom} returns a list with the following components:
 #'   \describe{ \item{\code{type}}{A character string denoting the type of start
@@ -45,8 +46,8 @@
 #' @seealso \code{\link{getSemiRandom}} for generating semi-random starts,
 #' \code{\link{getRational}} for generating rational starts and
 #' \code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
-getRandom <- function(data, nclusters) {
-        withr::local_seed(1)
+getRandom <- function(data, nclusters, seed = NULL) {
+        withr::local_seed(seed = seed)
 
         data <- as.matrix(data)
         checkmate::assertMatrix(data)
@@ -84,6 +85,7 @@ getRandom <- function(data, nclusters) {
 #' @param data Object-by-variable data matrix of class \code{matrix} or
 #'   \code{data.frame}.
 #' @param nclusters Number of clusters to be used. Must be a positive integer.
+#' @param seed Integer. Seed for the random number generator. Default: NULL
 #'
 #' @return \code{getSemiRandom} returns a list with the following components:
 #'   \describe{
@@ -112,8 +114,8 @@ getRandom <- function(data, nclusters) {
 #' @seealso \code{\link{getRandom}} for generating random starts,
 #' \code{\link{getRational}} for generating rational starts and
 #' \code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
-getSemiRandom <- function(data, nclusters) {
-        withr::local_seed(1)
+getSemiRandom <- function(data, nclusters, seed = NULL) {
+        withr::local_seed(seed = seed)
 
         data <- as.matrix(data)
         checkmate::assertMatrix(data)

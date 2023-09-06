@@ -468,7 +468,8 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
             if (nrandomstart > 0) {
                     for (i in 1:nrandomstart) {
                             initialStart <- getRandom(data,
-                                                      nclusters)
+                                                      nclusters,
+                                                      seed = i)
                             initialStart$type <- paste("random_start_no_", i)
                             res <- .adproclus_lf1(data, initialStart$A)
                             res$initialStart <- initialStart
@@ -485,7 +486,8 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
             if (nsemirandomstart > 0) {
                     for (i in 1:nsemirandomstart) {
                             initialStart <- getSemiRandom(data,
-                                                          nclusters)
+                                                          nclusters,
+                                                          seed = i)
                             initialStart$type <- paste("semi_random_start_no_", i)
                             res <- .adproclus_lf1(data, initialStart$A)
                             res$initialStart <- initialStart
@@ -504,7 +506,8 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
             if (nrandomstart > 0) {
                     for (i in 1:nrandomstart) {
                             initialStart <- getRandom(data,
-                                                      nclusters)
+                                                      nclusters,
+                                                      seed = i)
                             initialStart$type <- paste("random_start_no_", i)
                             res <- .adproclus_lf2(data, initialStart$A)
                             res$initialStart <- initialStart
@@ -521,7 +524,8 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
             if (nsemirandomstart > 0) {
                     for (i in 1:nsemirandomstart) {
                             initialStart <- getSemiRandom(data,
-                                                          nclusters)
+                                                          nclusters,
+                                                          seed = i)
                             initialStart$type <- paste("semi_random_start_no_", i)
                             res <- .adproclus_lf2(data, initialStart$A)
                             res$initialStart <- initialStart
@@ -682,7 +686,7 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         }
         if (nrandomstart > 0) {
                 for (i in 1:nrandomstart) {
-                        random_start <- getRandom(data, nclusters)$A
+                        random_start <- getRandom(data, nclusters, seed = i)$A
                         model_new <- .ldadproclus(data, random_start, ncomponents)
 
                         model_new$initialStart <- list(type = paste("random_start_no_", i),
@@ -697,7 +701,7 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
 
         if (nsemirandomstart > 0) {
                 for (j in 1:nsemirandomstart) {
-                        semi_random_start <- getSemiRandom(data, nclusters)$A
+                        semi_random_start <- getSemiRandom(data, nclusters, seed = i)$A
                         model_new <- .ldadproclus(data, semi_random_start, ncomponents)
 
                         model_new$initialStart <- list(type = paste("semi_random_start_no_", j),
