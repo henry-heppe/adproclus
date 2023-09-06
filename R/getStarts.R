@@ -47,7 +47,9 @@
 #' \code{\link{getRational}} for generating rational starts and
 #' \code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
 getRandom <- function(data, nclusters, seed = NULL) {
-        withr::local_seed(seed = seed)
+        if ( !is.null(seed)) {
+                withr::local_seed(seed = seed)
+        }
 
         data <- as.matrix(data)
         checkmate::assertMatrix(data)
@@ -115,7 +117,9 @@ getRandom <- function(data, nclusters, seed = NULL) {
 #' \code{\link{getRational}} for generating rational starts and
 #' \code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
 getSemiRandom <- function(data, nclusters, seed = NULL) {
-        withr::local_seed(seed = seed)
+        if ( !is.null(seed)) {
+                withr::local_seed(seed = seed)
+        }
 
         data <- as.matrix(data)
         checkmate::assertMatrix(data)
