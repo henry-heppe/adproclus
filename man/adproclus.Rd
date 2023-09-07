@@ -11,7 +11,8 @@ adproclus(
   nrandomstart = 3,
   nsemirandomstart = 3,
   algorithm = "ALS1",
-  SaveAllStarts = FALSE
+  saveAllStarts = FALSE,
+  seed = NULL
 )
 }
 \arguments{
@@ -31,8 +32,10 @@ Some research finds 500 starts to be a useful reference.}
 \item{algorithm}{character string "\code{ALS1}" (default) or "\code{ALS2}",
 denoting the type of alternating least squares algorithm.}
 
-\item{SaveAllStarts}{logical. If \code{TRUE}, the results of all algorithm
+\item{saveAllStarts}{logical. If \code{TRUE}, the results of all algorithm
 starts are returned. By default, only the best solution is retained.}
+
+\item{seed}{Integer. Seed for the random number generator. Default: NULL, meaning no reproducibility}
 }
 \value{
 \code{adproclus} returns a list with the following
@@ -110,7 +113,7 @@ clust <- adproclus(data = x, nclusters = 3,
 
 # Saving the results of all starts
 clust <- adproclus(data = x, ncluster = 3,
-                   nrandomstart = 2, nsemirandomstart = 2, SaveAllStarts = TRUE)
+                   nrandomstart = 2, nsemirandomstart = 2, saveAllStarts = TRUE)
 
 # Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
 start <- getRational(x,x[1:4,])$A

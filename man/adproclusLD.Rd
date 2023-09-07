@@ -11,7 +11,8 @@ adproclusLD(
   start_allocation = NULL,
   nrandomstart = 3,
   nsemirandomstart = 3,
-  SaveAllStarts = FALSE
+  saveAllStarts = FALSE,
+  seed = NULL
 )
 }
 \arguments{
@@ -30,8 +31,10 @@ Some research finds 500 starts to be a useful reference.}
 \item{nsemirandomstart}{Number of semi-random starts (see \code{\link{getSemiRandom}})). Can be zero. Increase for better results, though longer computation time.
 Some research finds 500 starts to be a useful reference.}
 
-\item{SaveAllStarts}{logical. If \code{TRUE}, the results of all algorithm
+\item{saveAllStarts}{logical. If \code{TRUE}, the results of all algorithm
 starts are returned. By default, only the best solution is retained.}
+
+\item{seed}{Integer. Seed for the random number generator. Default: NULL, meaning no reproducibility}
 }
 \value{
 \code{adproclusLD} returns a list with the following

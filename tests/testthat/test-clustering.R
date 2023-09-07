@@ -6,7 +6,7 @@ test_that("ADPROCLUS base case normal input", {
         expect_no_error(adproclus(data = x, nclusters = 3,
                                   nrandomstart = 1, nsemirandomstart = 1, algorithm = "ALS1"))
         expect_no_error(adproclus(data = x, nclusters= 3,
-                                  nrandomstart = 2, nsemirandomstart = 2, SaveAllStarts = TRUE))
+                                  nrandomstart = 2, nsemirandomstart = 2, saveAllStarts = TRUE))
 })
 
 test_that("ADPROCLUS with start_allocation ", {
@@ -39,7 +39,7 @@ test_that("adproclusLD base case normal input", {
         expect_no_error(adproclusLD(data = x, nclusters = 3, ncomponents = 2,
                                   nrandomstart = 1, nsemirandomstart = 1))
         expect_no_error(adproclusLD(data = x, nclusters= 3, ncomponents = 2,
-                                  nrandomstart = 2, nsemirandomstart = 2, SaveAllStarts = TRUE))
+                                  nrandomstart = 2, nsemirandomstart = 2, saveAllStarts = TRUE))
 })
 
 test_that("adproclusLD with start_allocation ", {
@@ -67,18 +67,16 @@ test_that("adproclusLD illegal inputs", {
 })
 
 test_that("reproducibility both functions", {
-        withr::local_seed(1)
-        #set.seed(1)
-        x <- ADPROCLUS::CGdata
+        x <- ADPROCLUS::CGdata[1:100,]
         start <- getRational(x,x[1:4,])$A
-        expect_equal(adproclus(data = x, nclusters= 4, nrnadomstart = 3, nsemirandomstart = 3,
-                               start_allocation = start, SaveAllStarts = TRUE),
-                     adproclus(data = x, nclusters= 4, nrnadomstart = 3, nsemirandomstart = 3,
-                               start_allocation = start, SaveAllStarts = TRUE))
-        expect_equal(adproclusLD(data = x, nclusters= 4, ncomponents = 1, nrnadomstart = 3, nsemirandomstart = 3,
-                               start_allocation = start, SaveAllStarts = TRUE),
-                     adproclusLD(data = x, nclusters= 4, ncomponents = 1, nrnadomstart = 3, nsemirandomstart = 3,
-                               start_allocation = start, SaveAllStarts = TRUE))
+        expect_equal(adproclus(data = x, nclusters= 4, nrandomstart = 1, nsemirandomstart = 1,
+                               start_allocation = start, saveAllStarts = TRUE, seed = 10)$model,
+                     adproclus(data = x, nclusters= 4, nrandomstart = 1, nsemirandomstart = 1,
+                               start_allocation = start, saveAllStarts = TRUE, seed = 10)$model)
+        expect_equal(adproclusLD(data = x, nclusters= 4, ncomponents = 1, nrandomstart = 1, nsemirandomstart = 1,
+                               start_allocation = start, saveAllStarts = TRUE, seed = 10)$model,
+                     adproclusLD(data = x, nclusters= 4, ncomponents = 1, nrandomstart = 1, nsemirandomstart = 1,
+                               start_allocation = start, saveAllStarts = TRUE, seed = 10)$model)
 })
 
 #other test ideas
