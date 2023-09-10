@@ -100,6 +100,7 @@ NULL
         result <- list(model = model, A = Membs, P = Profs,
                 sse = sum((model - x)^2), totvar = totvar,
                 explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns), initialStart = NULL)
+        class(result) <- "adpc"
 
         return(result)
 }
@@ -160,6 +161,7 @@ NULL
         result <- list(model = model, A = Membs, P = Profs,
                 sse = sum((model - x)^2), totvar = totvar,
                 explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initialStart = NULL)
+        class(result) <- "adpc"
 
         return(result)
 
@@ -237,6 +239,7 @@ NULL
         result <- list(model = model, A = Membs, P = Profs, C = ldProfs, B = ldBase,
                        sse = sum((model - x)^2), totvar = totvar,
                        explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initialStart = NULL)
+        class(result) <- "adpc"
 
         return(result)
 
@@ -567,6 +570,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 
     time <- (proc.time() - t)[1]
     .printoutput(nclusters,time, nrandomstart, nsemirandomstart, !is.null(start_allocation))
+
     return(results)
 }
 
