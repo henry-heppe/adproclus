@@ -44,7 +44,8 @@ starts are returned. By default, only the best solution is retained.}
   \item{\code{P}}{matrix. The profile matrix
   \strong{P} of the clustering model.}
   \item{\code{c}}{matrix. The profile values in terms of the low dimensional components.}
-  \item{\code{B}}{matrix. Base vectors connecting low dimensional components with original variables.}
+  \item{\code{B}}{matrix. Base vectors connecting low dimensional components with original variables.
+  Variables-by-components matrix. Warning: for computing P use B'}
   \item{\code{sse}}{numeric. The
   residual sum of squares of the clustering model, which is minimized by the
   ALS algorithm.}

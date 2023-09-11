@@ -4,7 +4,7 @@
 \alias{summary.adpc}
 \title{Summarize important information on ADPROCLUS solution}
 \usage{
-\method{summary}{adpc}(object, ...)
+\method{summary}{adpc}(object, title = "ADPROCLUS solution", ...)
 }
 \arguments{
 \item{object}{ADPROCLUS solution (class: \code{adpc})}

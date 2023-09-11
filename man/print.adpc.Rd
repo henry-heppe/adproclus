@@ -4,12 +4,25 @@
 \alias{print.adpc}
 \title{Print basic information on ADPROCLUS solution}
 \usage{
-\method{print}{adpc}(x, title = "ADPROCLUS solution", ...)
+\method{print}{adpc}(
+  x,
+  title = "ADPROCLUS solution",
+  digits = 3,
+  matrix_rows = 10,
+  matrix_cols = 15,
+  ...
+)
 }
 \arguments{
 \item{x}{ADPROCLUS solution (class: \code{adpc})}
 
 \item{title}{String. Default: "ADPROCLUS solution"}
+
+\item{digits}{Integer. The number of digits that all decimal numbers will be rounded to.}
+
+\item{matrix_rows}{Integer. The number of matrix rows to display. OPTIONAL}
+
+\item{matrix_cols}{Integer. The number of matrix columns to display. OPTIONAL}
 
 \item{...}{ignored}
 }
