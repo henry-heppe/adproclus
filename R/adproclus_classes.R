@@ -1,8 +1,8 @@
-#S3 methods for ADPROCLUS solution
+#S3 methods for ADPROCLUS solution representation, printing and plotting
 
-#' Constructor for a ADPROCLUS solution object
+#' Constructor for a (low dimensional) ADPROCLUS solution object
 #'
-#' Yields an object of class \code{adpc}.
+#' Yields an object of class \code{adpc}, which can be printed, plotted and summarized by the corresponding methods.
 #'
 #' @param model model
 #' @param A A
@@ -43,12 +43,16 @@ adpc <- function(model, A, P, sse, totvar, explvar, iterations, timer, initialSt
         object <- list(model = model, A = A, P = P)
         class(object) <- "adpc"
         return(object)
-
+        #issue: not done
 }
 
 #' Summarize important information on ADPROCLUS solution
 #'
 #' @param object ADPROCLUS solution (class: \code{adpc})
+#' @param title String. Default: "ADPROCLUS solution"
+#' @param digits Integer. The number of digits that all decimal numbers will be rounded to.
+#' @param matrix_rows Integer. The number of matrix rows to display. OPTIONAL
+#' @param matrix_cols Integer. The number of matrix columns to display. OPTIONAL
 #' @param ... ignored
 #'
 #' @return invisibly returns object of class \code{summary.adpc}
@@ -88,33 +92,36 @@ summary.adpc <- function(object, title = "ADPROCLUS solution", digits = 3, matri
         return(summary_res)
 }
 
+#' Print generic implementation for class \code{summary.adpc}
+#'
+#' Prints a set of summary statistics for a (low dimensional) ADPROCLUS solution as provided by the function \code{summary.adpc}.
+#' A number of parameters for how the results should be printed can be passed as an argument to \code{summary.adpc}
+#' which then passes it on to this method.
+#'
+#' @param x Object of class \code{summary.adpc}
+#' @param ... ignored
+#'
+#' @return \code{summary.adpc} object invisibly
+#' @export
+#'
+#' @examples
+#' x <- ADPROCLUS::CGdata[1:100,]
+#' model <- adproclus(x, 3)
+#' summary(model)
 print.summary.adpc <- function(x, ...) {
-        # object <- x$model_complete
-        # if(!is.null(object$C)) {
-        #         res <- paste("Low Dimensional ", title, "\n", sep = "")
-        #         res <- paste(res, "Setup:", "\n")
-        #         res <- paste(res, "   number of clusters: ", ncol(object$A), "\n")
-        #         res <- paste(res, "   data format: ", nrow(object$model), "x", ncol(object$model), "\n")
-        #         res <- paste(res, "   number of runs: ", object$parameters$nrandomstarts + object$parameters$nsemirandomstarts, "\n")
-        #         res <- paste(res, "Results:", "\n")
-        #         res <- paste(res, "   explained variance: ", object$explvar, "\n   time: ", object$timer, "\n   iterations: ", object$iterations, "\n")
-        #
-        #         res <- paste(res, "First few rows of A: ", object$A[1:5], "\n")
-        #         res <- paste(res, "First few profiles in terms of components: ", object$C[1:10], "\n")
-        #         res <- paste(res, "Components by variables matrix B: ", object$B, "\n")
-        # } else {
-        #         res <- title
-        #         res <- paste(res, "Setup:", "\n")
-        #         res <- paste(res, "   number of clusters:", ncol(object$A), "\n")
-        #         res <- paste(res, "   number of dimensions:", ncol(object$C), "\n")
-        #         res <- paste(res, "   data format: ", nrow(object$model), "x", ncol(object$model), "\n")
-        #         res <- paste(res, "   number of runs: ", object$parameters$nrandomstarts + object$parameters$nsemirandomstarts, "\n")
-        #         res <- paste(res, "Results:", "\n")
-        #         res <- paste(res, "explained variance:", object$explvar, "time:", object$timer, "iterations:", object$iterations, "\n")
-        #         res <- paste(res, "First few rows of A:", object$A[1:5], "\n")
-        #         res <- paste(res, "First few profiles:", object$P[1:5], "\n")
-        # }
-
+        print(x$model_complete,
+              digits = x$print_settings$digits,
+              matrix_rows = x$print_settings$matrix_rows,
+              matrix_cols = x$print_settings$matrix_cols)
+        cat("Cluster sizes and overlaps:\n")
+        print(x$cluster_sizes_overlaps)
+        cat(" [diagonal entries: number of observations in a cluster]\n")
+        cat(" [off-diagonal entry [i,j]:  number of observations both in cluster i and j]\n\n")
+        cat("Summary statistics of model variables per cluster:\n")
+        #lapply(x$cluster_characteristics, function(x) {print(names(x)); print(x)})
+        lapply(1:ncol(x$model_complete$A),
+               function(i) {cat(names(x$cluster_characteristics)[i], "\n"); print(x$cluster_characteristics[[i]])})
+        invisible(x)
 }
 
 
@@ -131,10 +138,10 @@ plot.adpc <- function() {
 #'
 #' @param x ADPROCLUS solution (class: \code{adpc})
 #' @param title String. Default: "ADPROCLUS solution"
-#' @param ... ignored
 #' @param digits Integer. The number of digits that all decimal numbers will be rounded to.
 #' @param matrix_rows Integer. The number of matrix rows to display. OPTIONAL
 #' @param matrix_cols Integer. The number of matrix columns to display. OPTIONAL
+#' @param ... ignored
 #'
 #' @export
 #'

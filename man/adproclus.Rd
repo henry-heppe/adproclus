@@ -60,7 +60,7 @@ starts are returned. By default, only the best solution is retained.}
   or \code{\link{getSemiRandom}})}
   \item{\code{runs}}{list. Each element represents one model obtained from one of the multiple starts.
   Each element contains all of the above information.}}
-  \item{\code{parameters}} {list. Containing the parameters used for the model.}
+  \item{\code{parameters}}{list. Containing the parameters used for the model.}
 }
 \description{
 Perform additive profile clustering (ADPROCLUS) on object by variable data.

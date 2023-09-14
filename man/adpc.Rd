@@ -2,7 +2,7 @@
 % Please edit documentation in R/adproclus_classes.R
 \name{adpc}
 \alias{adpc}
-\title{Constructor for a ADPROCLUS solution object}
+\title{Constructor for a (low dimensional) ADPROCLUS solution object}
 \usage{
 adpc(
   model,
@@ -48,7 +48,7 @@ adpc(
 Object of class \code{adpc}
 }
 \description{
-Yields an object of class \code{adpc}.
+Yields an object of class \code{adpc}, which can be printed, plotted and summarized by the corresponding methods.
 }
 \examples{
 #Create the information needed for an object of class adpc
