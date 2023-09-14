@@ -363,12 +363,13 @@ NULL
 #'   \item{\code{iterations}}{numeric. The number of iterations of the algorithm.}
 #'   \item{\code{timer}}{numeric. The amount of time (in seconds) the algorithm
 #'   ran for.}
-#'   \item{\code{initialStart}}{list. A list containing the initial
+#'   \item{\code{initialStart}}{list. Containing the initial
 #'   membership matrix, as well as the type of start that was used
 #'   to obtain the clustering solution. (as returned by \code{\link{getRandom}}
 #'   or \code{\link{getSemiRandom}})}
 #'   \item{\code{runs}}{list. Each element represents one model obtained from one of the multiple starts.
 #'   Each element contains all of the above information.}}
+#'   \item{\code{parameters}}{list. Containing the parameters used for the model.}
 #'
 #' @export
 #'
@@ -568,6 +569,10 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
             results <- BestSol
     }
 
+    parameters <- list(nclusters = nclusters,
+                       nrandomstart = nrandomstart, nsemirandomstart = nsemirandomstart, seed = seed)
+    results$parameters <- parameters
+
     time <- (proc.time() - t)[1]
     .printoutput(nclusters,time, nrandomstart, nsemirandomstart, !is.null(start_allocation))
 
@@ -644,6 +649,8 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #'   or \code{\link{getSemiRandom}})}
 #'   \item{\code{runs}}{list. Each element represents one model obtained from one of the multiple starts.
 #'   Each element contains all of the above information.}}
+#'   \item{\code{parameters}}{list. Containing the parameters used for the model.}
+#'
 #' @export
 #'
 #' @references Depril, D., Van Mechelen, I., & Wilderjans, T. F.
@@ -753,6 +760,9 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                 results <- best_sol
         }
 
+        parameters <- list(nclusters = nclusters, ncomponents = ncomponents,
+                           nrandomstart = nrandomstart, nsemirandomstart = nsemirandomstart, seed = seed)
+        results$parameters <- parameters
         time <- (proc.time() - t)[1]
         .LDprintoutput(nclusters, ncomponents, time, nrandomstart, nsemirandomstart, !is.null(start_allocation))
         return(results)

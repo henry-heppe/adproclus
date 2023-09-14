@@ -54,12 +54,13 @@ starts are returned. By default, only the best solution is retained.}
   \item{\code{iterations}}{numeric. The number of iterations of the algorithm.}
   \item{\code{timer}}{numeric. The amount of time (in seconds) the algorithm
   ran for.}
-  \item{\code{initialStart}}{list. A list containing the initial
+  \item{\code{initialStart}}{list. Containing the initial
   membership matrix, as well as the type of start that was used
   to obtain the clustering solution. (as returned by \code{\link{getRandom}}
   or \code{\link{getSemiRandom}})}
   \item{\code{runs}}{list. Each element represents one model obtained from one of the multiple starts.
   Each element contains all of the above information.}}
+  \item{\code{parameters}} {list. Containing the parameters used for the model.}
 }
 \description{
 Perform additive profile clustering (ADPROCLUS) on object by variable data.
