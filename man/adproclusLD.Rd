@@ -39,13 +39,14 @@ starts are returned. By default, only the best solution is retained.}
 \value{
 \code{adproclusLD} returns a list with the following
   components, which describe the best model (from the multiple starts): \describe{
-  \item{\code{model}}{matrix. The obtained low dimensional overlapping clustering model \strong{M} of the same size as \code{data}.}
-  \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering model.}
-  \item{\code{P}}{matrix. The profile matrix
-  \strong{P} of the clustering model.}
+  \item{\code{model}}{matrix. The obtained overlapping clustering model \eqn{\boldsymbol{M}} of the same size as \code{data}.}
+  \item{\code{model_lowdim}}{matrix. The obtained low dimensional clustering model \eqn{\boldsymbol{AC}}
+  of size \eqn{I \times S}}
+  \item{\code{A}}{matrix. The membership matrix \eqn{\boldsymbol{A}} of the clustering model.}
+  \item{\code{P}}{matrix. The profile matrix \eqn{\boldsymbol{P}} of the clustering model.}
   \item{\code{c}}{matrix. The profile values in terms of the low dimensional components.}
   \item{\code{B}}{matrix. Base vectors connecting low dimensional components with original variables.
-  Variables-by-components matrix. Warning: for computing P use B'}
+  Variables-by-components matrix. Warning: for computing \eqn{\boldsymbol{P}} use \eqn{\boldsymbol{B'}}}
   \item{\code{sse}}{numeric. The
   residual sum of squares of the clustering model, which is minimized by the
   ALS algorithm.}
@@ -61,8 +62,8 @@ starts are returned. By default, only the best solution is retained.}
   to obtain the clustering solution. (as returned by \code{\link{getRandom}}
   or \code{\link{getSemiRandom}})}
   \item{\code{runs}}{list. Each element represents one model obtained from one of the multiple starts.
-  Each element contains all of the above information.}}
-  \item{\code{parameters}}{list. Containing the parameters used for the model.}
+  Each element contains all of the above information.}
+  \item{\code{parameters}}{list. Containing the parameters used for the model.}}
 }
 \description{
 Perform \strong{low dimensional} additive profile clustering (ADPROCLUS) on object by variable data.
