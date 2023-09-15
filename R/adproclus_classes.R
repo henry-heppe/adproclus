@@ -190,7 +190,10 @@ print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows 
                 cat("Low Dimensional", title, "\n")
                 cat("   number of clusters:", ncol(x$A), "\n")
                 cat("   data format: ", nrow(x$model), "x", ncol(x$model), "\n")
-                cat("   number of runs:", x$parameters$nrandomstart + x$parameters$nsemirandomstart, "\n")
+                cat("   number of (semi-) random starts:", x$parameters$nrandomstart + x$parameters$nsemirandomstart, "\n")
+                if (!is.null(x$parameters$start_allocation)) {
+                        cat("   A rational start was also included.")
+                }
                 cat("Results:", "\n")
                 cat("   explained variance:", round(x$explvar, digits), "\n")
                 cat("   processing time:", round(x$timer, digits), "s", "\n")
@@ -218,7 +221,10 @@ print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows 
                 cat("Setup:", "\n")
                 cat("   number of clusters:", ncol(x$A), "\n")
                 cat("   data format: ", nrow(x$model), "x", ncol(x$model), "\n")
-                cat("   number of runs:", x$parameters$nrandomstart + x$parameters$nsemirandomstart, "\n")
+                cat("   number of (semi-) random starts:", x$parameters$nrandomstart + x$parameters$nsemirandomstart, "\n")
+                if (!is.null(x$parameters$start_allocation)) {
+                        cat("   A rational start was also included.")
+                }
                 cat("Results:", "\n")
                 cat("   explained variance:", round(x$explvar, digits), "\n")
                 cat("   processing time:", round(x$timer, digits), "s", "\n")

@@ -571,11 +571,14 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
     }
 
     parameters <- list(nclusters = nclusters,
-                       nrandomstart = nrandomstart, nsemirandomstart = nsemirandomstart, seed = seed)
+                       nrandomstart = nrandomstart,
+                       nsemirandomstart = nsemirandomstart,
+                       start_allocation = start_allocation,
+                       seed = seed)
     results$parameters <- parameters
 
     time <- (proc.time() - t)[1]
-    .printoutput(nclusters,time, nrandomstart, nsemirandomstart, !is.null(start_allocation))
+    .printoutput(nclusters, time, nrandomstart, nsemirandomstart, !is.null(start_allocation))
 
     return(results)
 }
@@ -762,8 +765,12 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                 results <- best_sol
         }
 
-        parameters <- list(nclusters = nclusters, ncomponents = ncomponents,
-                           nrandomstart = nrandomstart, nsemirandomstart = nsemirandomstart, seed = seed)
+        parameters <- list(nclusters = nclusters,
+                           ncomponents = ncomponents,
+                           nrandomstart = nrandomstart,
+                           nsemirandomstart = nsemirandomstart,
+                           start_allocation = start_allocation,
+                           seed = seed)
         results$parameters <- parameters
         time <- (proc.time() - t)[1]
         .LDprintoutput(nclusters, ncomponents, time, nrandomstart, nsemirandomstart, !is.null(start_allocation))
