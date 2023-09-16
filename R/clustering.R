@@ -297,6 +297,52 @@ NULL
 
 }
 
+.adjust_row_col_names <- function(input_model, data) {
+        results <- input_model
+        #row and column names
+        colnames(results$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
+        colnames(results$A) <- colnames(results$A, do.NULL = FALSE, prefix = "Cl")
+        rownames(results$P) <- rownames(results$P, do.NULL = FALSE, prefix = "Cl")
+
+        if (!is.null(results$runs)) {
+                for (i in 1:length(results$runs)) {
+                        colnames(results$runs[[i]]$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
+                        colnames(results$runs[[i]]$A) <- colnames(results$A, do.NULL = FALSE, prefix = "Cl")
+                        rownames(results$runs[[i]]$P) <- rownames(results$P, do.NULL = FALSE, prefix = "Cl")
+                }
+        }
+
+        return(results)
+}
+
+.adjust_row_col_names_LD <- function(input_model, data) {
+        results <- input_model
+        #row and column names
+        colnames(results$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
+        colnames(results$model_lowdim) <- colnames(results$model_lowdim, do.NULL = FALSE, prefix = "Comp")
+        colnames(results$A) <- colnames(results$A, do.NULL = FALSE, prefix = "Cl")
+        rownames(results$P) <- rownames(results$P, do.NULL = FALSE, prefix = "Cl")
+        colnames(results$C) <- colnames(results$C, do.NULL = FALSE, prefix = "Comp")
+        rownames(results$C) <- rownames(results$C, do.NULL = FALSE, prefix = "Cl")
+        colnames(results$B) <- colnames(results$B, do.NULL = FALSE, prefix = "Comp")
+        rownames(results$B) <- rownames(results$B, do.NULL = FALSE, prefix = "V")
+
+        if (!is.null(results$runs)) {
+                for (i in 1:length(results$runs)) {
+                        colnames(results$runs[[i]]$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
+                        colnames(results$runs[[i]]$model_lowdim) <- colnames(results$model_lowdim, do.NULL = FALSE, prefix = "Comp")
+                        colnames(results$runs[[i]]$A) <- colnames(results$A, do.NULL = FALSE, prefix = "Cl")
+                        rownames(results$runs[[i]]$P) <- rownames(results$P, do.NULL = FALSE, prefix = "Cl")
+                        colnames(results$runs[[i]]$C) <- colnames(results$C, do.NULL = FALSE, prefix = "Comp")
+                        rownames(results$runs[[i]]$C) <- rownames(results$C, do.NULL = FALSE, prefix = "Cl")
+                        colnames(results$runs[[i]]$B) <- colnames(results$B, do.NULL = FALSE, prefix = "Comp")
+                        rownames(results$runs[[i]]$B) <- rownames(results$B, do.NULL = FALSE, prefix = "V")
+                }
+        }
+
+        return(results)
+}
+
 #' Additive profile clustering
 #'
 #' Perform additive profile clustering (ADPROCLUS) on object by variable data.
@@ -425,6 +471,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
     checkmate::assertCount(nclusters, positive = TRUE, coerce = TRUE)
     checkmate::assertCount(nrandomstart, coerce = TRUE)
     checkmate::assertCount(nsemirandomstart, coerce = TRUE)
+    checkmate::assertInt(seed, null.ok = TRUE, coerce = TRUE)
     checkmate::assertFlag(saveAllStarts)
     checkmate::assertMatrix(data)
     checkmate::assertChoice(algorithm, c("ALS1", "ALS2"))
@@ -469,6 +516,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 
             }
             results$initialStart <- list(type = "Rational Start", initialA = start_allocation)
+
     }
     if (alg == 1) {
             if (nrandomstart > 0) {
@@ -579,6 +627,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 
     time <- (proc.time() - t)[1]
     .printoutput(nclusters, time, nrandomstart, nsemirandomstart, !is.null(start_allocation))
+    results <- .adjust_row_col_names(results, data)
 
     return(results)
 }
@@ -686,6 +735,7 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         checkmate::assertCount(ncomponents, positive = TRUE, coerce = TRUE)
         checkmate::assertCount(nrandomstart, coerce = TRUE)
         checkmate::assertCount(nsemirandomstart, coerce = TRUE)
+        checkmate::assertInt(seed, null.ok = TRUE, coerce = TRUE)
         checkmate::assertFlag(saveAllStarts)
         checkmate::assertMatrix(data)
 
@@ -774,6 +824,9 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         results$parameters <- parameters
         time <- (proc.time() - t)[1]
         .LDprintoutput(nclusters, ncomponents, time, nrandomstart, nsemirandomstart, !is.null(start_allocation))
+
+        results <- .adjust_row_col_names_LD(results, data)
+
         return(results)
 
 

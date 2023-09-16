@@ -1,6 +1,14 @@
 #Visualization functions for an ADPROCLUS model
 
-#' Plots a low dimensional ADPROCLUS solution as a network
+#helper function
+.extract_overlap <- function(edge, A) {
+        cluster1 <- edge[1] #vertex on one side of the edge
+        cluster2 <- edge[2] #vertex on the other side of the edge
+        overlap <- nrow(A[A[,cluster1] == 1 & A[,cluster2] == 1,]) #no. of rows in which both clusters (cols) are 1
+
+}
+
+#' Plots a (low dimensional) ADPROCLUS solution as a network
 #'
 #' @param model the model to visualized
 #' @param cluster_names optional: the names of the clusters
@@ -20,12 +28,13 @@
 #' clust <- adproclusLD(x, 3, 1)
 #'
 #' # Plot the overlapping the clusters
-#' plot_clusters_as_network(clust)
-plot_clusters_as_network <- function(model, cluster_names = NULL,
+#' plotClusterNetwork(clust)
+plotClusterNetwork <- function(model, cluster_names = NULL, component_names = NULL,
                                      relative_overlap = TRUE,
                                      vertex_color = "antiquewhite",
                                      edge_color_low = "lavenderblush2",
                                      edge_color_high = "lavenderblush4") {
+        #issue: implement input checks
 
         withr::local_seed(1)
 
@@ -81,9 +90,41 @@ plot_clusters_as_network <- function(model, cluster_names = NULL,
         }
 }
 
-.extract_overlap <- function(edge, A) {
-        cluster1 <- edge[1] #vertex on one side of the edge
-        cluster2 <- edge[2] #vertex on the other side of the edge
-        overlap <- nrow(A[A[,cluster1] == 1 & A[,cluster2] == 1,]) #no. of rows in which both clusters (cols) are 1
+#' Plot profile matrix of ADPROCLUS solution
+#'
+#' @param model Object of class \code{adpc}. (Low dimensional) ADPROCLUS solution
+#'
+#' @return Invisibly returns the input model.
+#' @export
+#'
+#' @examples
+#' #add exmple
+plotProfiles <- function(model, title = "Profiles of ADPROCLUS solution") {
+        if(is.null(model$C)) {
+                corrplot(model$P, is.corr = FALSE, title = title)
+        } else {
+                if (title == "Profiles of ADPROCLUS solution") {
+                        title = "Profiles of Low dimensional ADPROCLUS solution"
+                }
+                corrplot(model$C, is.corr = FALSE, title = title)
+        }
+        invisible(model)
 
+}
+
+#' Plot variable to component matrix of ADPROCLUS solution
+#'
+#' @param model Object of class \code{adpc}. Must be \strong{Low dimensional} ADPROCLUS solution
+#'
+#' @return Invisibly returns the input model.
+#' @export
+#'
+#' @examples
+#' #add examples
+plotVarsByComp <- function(model, title = "B' of Low Dimensional ADPROCLUS Solution") {
+        if (is.null(model$C)) {
+                stop("Model must be a low dimensional ADPROCLUS solution.")
+        }
+        corrplot(t(model$B), is.corr = FALSE, title = title)
+        invisible(model)
 }

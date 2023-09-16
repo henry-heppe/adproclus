@@ -79,6 +79,8 @@ test_that("reproducibility both functions", {
                                start_allocation = start, saveAllStarts = TRUE, seed = 10)$model)
 })
 
+#issue: add test for (re-) naming of columns/rows
+
 #other test ideas
 test_that("ADPROCLUS S3 functionality", {
 
@@ -87,3 +89,5 @@ test_that("ADPROCLUS S3 functionality", {
 test_that("ADPROCLUS edge cases", {
 
 })
+
+

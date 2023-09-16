@@ -153,8 +153,43 @@ print.summary.adpc <- function(x, ...) {
 }
 
 
-plot.adpc <- function() {
+#' Plotting a (low dimensional) ADPROCLUS solution
+#'
+#' @param x Object of class \code{adpc}. (Low dimensional) ADPROCLUS solution
+#' @param ... ignored
+#'
+#' @return invisibly returns the argument
+#' @export
+#'
+#' @examples
+#'#add example
+plot.adpc <- function(x, type = "Network", title = NULL, ...) {
+        checkmate::assertChoice(type, c("Network", "Profiles", "LowDimComponents"))
+        #issue: deal with choice of LowDimComponents for full dim model
+        if (type == "LowDimComponents") {
+                if (!is.null(title)) {
+                        plotVarsByComp(x, title)
+                } else {
+                        plotVarsByComp(x)
+                }
 
+        } else if (type == "Profiles") {
+                if (!is.null(title)) {
+                        plotProfiles(x, title)
+                } else {
+                        plotProfiles(x)
+                }
+
+        } else {
+                if (!is.null(title)) {
+                        plotClusterNetwork(x, title)
+                } else {
+                        plotClusterNetwork(x)
+                }
+
+        }
+
+        invisible(x)
 }
 
 
@@ -192,7 +227,7 @@ print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows 
                 cat("   data format: ", nrow(x$model), "x", ncol(x$model), "\n")
                 cat("   number of (semi-) random starts:", x$parameters$nrandomstart + x$parameters$nsemirandomstart, "\n")
                 if (!is.null(x$parameters$start_allocation)) {
-                        cat("   A rational start was also included.")
+                        cat("   A rational start was also included.\n")
                 }
                 cat("Results:", "\n")
                 cat("   explained variance:", round(x$explvar, digits), "\n")
@@ -223,7 +258,7 @@ print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows 
                 cat("   data format: ", nrow(x$model), "x", ncol(x$model), "\n")
                 cat("   number of (semi-) random starts:", x$parameters$nrandomstart + x$parameters$nsemirandomstart, "\n")
                 if (!is.null(x$parameters$start_allocation)) {
-                        cat("   A rational start was also included.")
+                        cat("   A rational start was also included.\n")
                 }
                 cat("Results:", "\n")
                 cat("   explained variance:", round(x$explvar, digits), "\n")
