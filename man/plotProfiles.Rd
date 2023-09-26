@@ -8,6 +8,8 @@ plotProfiles(model, title = "Profiles of ADPROCLUS solution")
 }
 \arguments{
 \item{model}{Object of class \code{adpc}. (Low dimensional) ADPROCLUS solution}
+
+\item{title}{String. Default: "Profiles of ADPROCLUS solution"}
 }
 \value{
 Invisibly returns the input model.

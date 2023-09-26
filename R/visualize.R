@@ -8,21 +8,32 @@
 
 }
 
-#' Plots a (low dimensional) ADPROCLUS solution as a network
+#' Network plot of a (low dimensional) ADPROCLUS solution
 #'
-#' @param model the model to visualized
-#' @param cluster_names optional: the names of the clusters
-#' @param relative_overlap optional: choose whether you want to absolute number of observations on the edges
-#' @param vertex_color optional: color of vertices
-#' @param edge_color_low optional: lower end of color spectrum for edges
-#' @param edge_color_high optional: upper end of color spectrum for edges
+#' Produce a representation of a (low dimensional) ADPROCLUS solution, where each cluster is a vertex and
+#' the edge between two vertices represents the overlap between the corresponding clusters.
+#' The size of a vertex corresponds to the cluster size. The overlap is represented
+#' through color, width and numerical label of the edge.
+#' The numerical edge-labels can be relative (number of overlap observations / total observations)
+#' or absolute (number of observations in both clusters).
+#' \strong{NOTE:} This function can be called through the \code{plot(model, type = "Network")} function.
 #'
-#' @return nothing, outputs a plot
+#' @param model ADPROCLUS solution (class: \code{adpc}). Low dimensional model possible.
+#' @param cluster_names Names of the clusters as list. OPTIONAL
+#' @param component_names Names of the variables (components if low dim model) as list. OPTIONAL
+#' @param relative_overlap Boolean value. If \code{TRUE} (default), the number of observations belonging to two clusters
+#' is divided by the total number of observations. If \code{FALSE}
+#' the number of observations in a cluster overlap will be displayed on the edges.
+#' @param vertex_color Color of the vertices as string. OPTIONAL
+#' @param edge_color_low Lower end of color spectrum for edges as string. OPTIONAL
+#' @param edge_color_high Upper end of color spectrum for edges as string. OPTIONAL
+#'
+#' @return Invisibly returns the input model.
 #' @export
 #'
 #' @examples
 #' # Loading a test dataset into the global environment
-#' x <- ADPROCLUS::CGdata
+#' x <- ADPROCLUS::CGdata[1:100,]
 #'
 #' # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
 #' clust <- adproclusLD(x, 3, 1)
@@ -34,14 +45,30 @@ plotClusterNetwork <- function(model, cluster_names = NULL, component_names = NU
                                      vertex_color = "antiquewhite",
                                      edge_color_low = "lavenderblush2",
                                      edge_color_high = "lavenderblush4") {
-        #issue: implement input checks
+
+        checkmate::assertClass(model, "adpc")
+        checkmate::assertFlag(relative_overlap)
+        checkmate::assertString(vertex_color)
+        checkmate::assertString(edge_color_low)
+        checkmate::assertString(edge_color_high)
+
+        model_temp <- model
+
+        if(!is.null(cluster_names)) {
+                model_temp <- name_clusters_adpc(model, cluster_names)
+
+        }
+
+        if(!is.null(component_names)) {
+                model_temp <- name_components_adpc(model, component_names)
+        }
 
         withr::local_seed(1)
 
-        data <- model$Model
-        A <- model$A
-        C <- model$C
-        B <- model$B
+        data <- model_temp$Model
+        A <- model_temp$A
+        C <- model_temp$C
+        B <- model_temp$B
 
         k <- ncol(A)
 
@@ -88,11 +115,13 @@ plotClusterNetwork <- function(model, cluster_names = NULL, component_names = NU
                      edge.color = edge_colors
                 )
         }
+
 }
 
 #' Plot profile matrix of ADPROCLUS solution
 #'
 #' @param model Object of class \code{adpc}. (Low dimensional) ADPROCLUS solution
+#' @param title String. Default: "Profiles of ADPROCLUS solution"
 #'
 #' @return Invisibly returns the input model.
 #' @export
@@ -101,12 +130,12 @@ plotClusterNetwork <- function(model, cluster_names = NULL, component_names = NU
 #' #add exmple
 plotProfiles <- function(model, title = "Profiles of ADPROCLUS solution") {
         if(is.null(model$C)) {
-                corrplot(model$P, is.corr = FALSE, title = title)
+                corrplot::corrplot(model$P, is.corr = FALSE, title = title)
         } else {
                 if (title == "Profiles of ADPROCLUS solution") {
                         title = "Profiles of Low dimensional ADPROCLUS solution"
                 }
-                corrplot(model$C, is.corr = FALSE, title = title)
+                corrplot::corrplot(model$C, is.corr = FALSE, title = title)
         }
         invisible(model)
 
@@ -115,6 +144,7 @@ plotProfiles <- function(model, title = "Profiles of ADPROCLUS solution") {
 #' Plot variable to component matrix of ADPROCLUS solution
 #'
 #' @param model Object of class \code{adpc}. Must be \strong{Low dimensional} ADPROCLUS solution
+#' @param title String. Default: "B' of Low Dimensional ADPROCLUS Solution"
 #'
 #' @return Invisibly returns the input model.
 #' @export
@@ -125,6 +155,6 @@ plotVarsByComp <- function(model, title = "B' of Low Dimensional ADPROCLUS Solut
         if (is.null(model$C)) {
                 stop("Model must be a low dimensional ADPROCLUS solution.")
         }
-        corrplot(t(model$B), is.corr = FALSE, title = title)
+        corrplot::corrplot(t(model$B), is.corr = FALSE, title = title)
         invisible(model)
 }

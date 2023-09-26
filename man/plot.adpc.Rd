@@ -9,13 +9,32 @@
 \arguments{
 \item{x}{Object of class \code{adpc}. (Low dimensional) ADPROCLUS solution}
 
+\item{type}{Choice for type of plot: one of "Network", "Profiles", "LowDimComponents". Default: "Network".}
+
+\item{title}{String. OPTIONAL.}
+
 \item{...}{ignored}
 }
 \value{
-invisibly returns the argument
+Invisibly returns the input model.
 }
 \description{
-Plotting a (low dimensional) ADPROCLUS solution
+When passing a (low dimensional) ADPROCLUS solution of class \code{adpc} to the generic \code{plot()},
+this method plots the solution in one of the following three ways:
+\describe{
+\item{\code{Network}}{Each cluster is a vertex and
+the edge between two vertices represents the overlap between the corresponding clusters.
+The size of a vertex corresponds to the cluster size. The overlap is represented
+through color, width and numerical label of the edge.
+The numerical edge-labels can be relative (number of overlap observations / total observations)
+or absolute (number of observations in both clusters).}
+\item{\code{Profiles}}{Plot the profile matrix (\eqn{\boldsymbol{P}} for full dimensional model,
+\eqn{\boldsymbol{C}} for low dimensional model)in the style of a correlation plot to visualize the
+relation of each cluster with each variable.}
+\item{code{Low Dimensional Components}}{Plot the low dimensional component-by-variable matrix \eqn{\boldsymbol{B'}}
+ in the style of a correlation plot to visualize the relation of each component with each original variable.
+ \strong{NOTE:} Only works for low dimensional ADPROCLUS.}
+}
 }
 \examples{
 #add example

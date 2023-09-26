@@ -23,6 +23,7 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
     checkmate,
+    corrplot,
     gtools,
     igraph,
     NMFN,

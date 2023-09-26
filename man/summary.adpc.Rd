@@ -14,7 +14,7 @@
 )
 }
 \arguments{
-\item{object}{ADPROCLUS solution (class: \code{adpc})}
+\item{object}{ADPROCLUS solution (class: \code{adpc}). Low dimensional model possible.}
 
 \item{title}{String. Default: "ADPROCLUS solution"}
 

@@ -8,6 +8,8 @@ plotVarsByComp(model, title = "B' of Low Dimensional ADPROCLUS Solution")
 }
 \arguments{
 \item{model}{Object of class \code{adpc}. Must be \strong{Low dimensional} ADPROCLUS solution}
+
+\item{title}{String. Default: "B' of Low Dimensional ADPROCLUS Solution"}
 }
 \value{
 Invisibly returns the input model.

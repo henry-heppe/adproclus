@@ -2,7 +2,7 @@
 % Please edit documentation in R/visualize.R
 \name{plotClusterNetwork}
 \alias{plotClusterNetwork}
-\title{Plots a (low dimensional) ADPROCLUS solution as a network}
+\title{Network plot of a (low dimensional) ADPROCLUS solution}
 \usage{
 plotClusterNetwork(
   model,
@@ -15,27 +15,37 @@ plotClusterNetwork(
 )
 }
 \arguments{
-\item{model}{the model to visualized}
+\item{model}{ADPROCLUS solution (class: \code{adpc}). Low dimensional model possible.}
 
-\item{cluster_names}{optional: the names of the clusters}
+\item{cluster_names}{Names of the clusters as list. OPTIONAL}
 
-\item{relative_overlap}{optional: choose whether you want to absolute number of observations on the edges}
+\item{component_names}{Names of the variables (components if low dim model) as list. OPTIONAL}
 
-\item{vertex_color}{optional: color of vertices}
+\item{relative_overlap}{Boolean value. If \code{TRUE} (default), the number of observations belonging to two clusters
+is divided by the total number of observations. If \code{FALSE}
+the number of observations in a cluster overlap will be displayed on the edges.}
 
-\item{edge_color_low}{optional: lower end of color spectrum for edges}
+\item{vertex_color}{Color of the vertices as string. OPTIONAL}
 
-\item{edge_color_high}{optional: upper end of color spectrum for edges}
+\item{edge_color_low}{Lower end of color spectrum for edges as string. OPTIONAL}
+
+\item{edge_color_high}{Upper end of color spectrum for edges as string. OPTIONAL}
 }
 \value{
-nothing, outputs a plot
+Invisibly returns the input model.
 }
 \description{
-Plots a (low dimensional) ADPROCLUS solution as a network
+Produce a representation of a (low dimensional) ADPROCLUS solution, where each cluster is a vertex and
+the edge between two vertices represents the overlap between the corresponding clusters.
+The size of a vertex corresponds to the cluster size. The overlap is represented
+through color, width and numerical label of the edge.
+The numerical edge-labels can be relative (number of overlap observations / total observations)
+or absolute (number of observations in both clusters).
+\strong{NOTE:} This function can be called through the \code{plot(model, type = "Network")} function.
 }
 \examples{
 # Loading a test dataset into the global environment
-x <- ADPROCLUS::CGdata
+x <- ADPROCLUS::CGdata[1:100,]
 
 # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
 clust <- adproclusLD(x, 3, 1)

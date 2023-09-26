@@ -48,7 +48,7 @@ adpc <- function(model, A, P, sse, totvar, explvar, iterations, timer, initialSt
 
 #' Summarize important information on ADPROCLUS solution
 #'
-#' @param object ADPROCLUS solution (class: \code{adpc})
+#' @param object ADPROCLUS solution (class: \code{adpc}). Low dimensional model possible.
 #' @param title String. Default: "ADPROCLUS solution"
 #' @param digits Integer. The number of digits that all decimal numbers will be rounded to.
 #' @param matrix_rows Integer. The number of matrix rows to display. OPTIONAL
@@ -155,17 +155,36 @@ print.summary.adpc <- function(x, ...) {
 
 #' Plotting a (low dimensional) ADPROCLUS solution
 #'
+#' When passing a (low dimensional) ADPROCLUS solution of class \code{adpc} to the generic \code{plot()},
+#' this method plots the solution in one of the following three ways:
+#' \describe{
+#' \item{\code{Network}}{Each cluster is a vertex and
+#' the edge between two vertices represents the overlap between the corresponding clusters.
+#' The size of a vertex corresponds to the cluster size. The overlap is represented
+#' through color, width and numerical label of the edge.
+#' The numerical edge-labels can be relative (number of overlap observations / total observations)
+#' or absolute (number of observations in both clusters).}
+#' \item{\code{Profiles}}{Plot the profile matrix (\eqn{\boldsymbol{P}} for full dimensional model,
+#' \eqn{\boldsymbol{C}} for low dimensional model)in the style of a correlation plot to visualize the
+#' relation of each cluster with each variable.}
+#' \item{code{Low Dimensional Components}}{Plot the low dimensional component-by-variable matrix \eqn{\boldsymbol{B'}}
+#'  in the style of a correlation plot to visualize the relation of each component with each original variable.
+#'  \strong{NOTE:} Only works for low dimensional ADPROCLUS.}
+#' }
+#'
 #' @param x Object of class \code{adpc}. (Low dimensional) ADPROCLUS solution
+#' @param type Choice for type of plot: one of "Network", "Profiles", "LowDimComponents". Default: "Network".
+#' @param title String. OPTIONAL.
 #' @param ... ignored
 #'
-#' @return invisibly returns the argument
+#' @return Invisibly returns the input model.
 #' @export
 #'
 #' @examples
 #'#add example
 plot.adpc <- function(x, type = "Network", title = NULL, ...) {
         checkmate::assertChoice(type, c("Network", "Profiles", "LowDimComponents"))
-        #issue: deal with choice of LowDimComponents for full dim model
+        #check for illegal choice of LowDimComponentes for full dim model is done in plotVarsByComp()
         if (type == "LowDimComponents") {
                 if (!is.null(title)) {
                         plotVarsByComp(x, title)
@@ -281,4 +300,43 @@ print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows 
                         cat("[", n_var_true - n_var_inc, " columns were omitted ]\n")
                 }
         }
+}
+
+#' Naming the clusters of an ADPROCLUS solution
+#'
+#' @param model ADPROCLUS solution (class: \code{adpc})
+#' @param cluster_names Names of the clusters as list.
+#'
+#' @return The input model  of class \code{adpc} with adjusted cluster names.
+#' @export
+#'
+#' @examples
+#' #example
+name_clusters_adpc <- function(model, cluster_names) {
+        result <- model
+        checkmate::assertVector(cluster_names, len = ncol(model$A))
+        #issue: implement the naming here
+        return(result)
+}
+
+#' Naming the components of a low dimensional ADPROCLUS solution
+#'
+#' @param model ADPROCLUS solution (class: \code{adpc})
+#' @param component_names Names of the components of the low dimensional model as list.
+#' Can be used to name variables for full dimensional model.
+#'
+#' @return The input model  of class \code{adpc} with adjusted component names.
+#' @export
+#'
+#' @examples
+#' #example
+name_components_adpc <- function(model, component_names) {
+        result <- model
+        if(is.null(model$C)) {
+                checkmate::assertVector(component_names, len = ncol(model$P))
+        } else {
+                checkmate::assertVector(component_names, len = ncol(model$C))
+        }
+        #issue: implement the naming here
+        return(result)
 }

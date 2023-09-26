@@ -219,7 +219,7 @@ NULL
 
         decomp <- svd(P)
 
-        ldBase <- decomp$v[,1:s] #B
+        ldBase <- as.matrix(decomp$v[,1:s]) #B
         U <- as.matrix(decomp$u[,1:s])
         if (s == 1) {
                 D <- diag(as.matrix(decomp$d[1:s]))
@@ -335,7 +335,7 @@ NULL
                         rownames(results$runs[[i]]$P) <- rownames(results$P, do.NULL = FALSE, prefix = "Cl")
                         colnames(results$runs[[i]]$C) <- colnames(results$C, do.NULL = FALSE, prefix = "Comp")
                         rownames(results$runs[[i]]$C) <- rownames(results$C, do.NULL = FALSE, prefix = "Cl")
-                        colnames(results$runs[[i]]$B) <- colnames(results$B, do.NULL = FALSE, prefix = "Comp")
+                         colnames(results$runs[[i]]$B) <- colnames(results$B, do.NULL = FALSE, prefix = "Comp")
                         rownames(results$runs[[i]]$B) <- rownames(results$B, do.NULL = FALSE, prefix = "V")
                 }
         }
@@ -492,12 +492,14 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
             stop("number of clusters cannot exceed number of objects in 'data'")
 
 
-    BestSol <- list(sse = Inf)
+
 
 
     alg <- switch(match.arg(algorithm, c("ALS1", "ALS2")),
         ALS1 = 1, ALS2 = 2)
 
+    BestSol <- list(sse = Inf)
+    results <- list()
     if (!is.null(start_allocation)) {
             start_allocation <- as.matrix(start_allocation)
             checkmate::assertMatrix(start_allocation)
@@ -509,14 +511,14 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
             }
 
             if (alg == 1) {
-                    results <- .adproclus_lf1(data, start_allocation)
+                    res <- .adproclus_lf1(data, start_allocation)
+            } else {
+                    res <- .adproclus_lf2(data, start_allocation)
             }
-            if (alg == 2) {
-                    results <- .adproclus_lf2(data, start_allocation)
 
-            }
-            results$initialStart <- list(type = "Rational Start", initialA = start_allocation)
-
+            res$initialStart <- list(type = "Rational Start", initialA = start_allocation)
+            results <- append(results, list(res))
+            BestSol <- res
     }
     if (alg == 1) {
             if (nrandomstart > 0) {
@@ -534,9 +536,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
                             if (res$sse < BestSol$sse) {
                                     BestSol <- res
                             }
-                            if (saveAllStarts == TRUE) {
                                     results <- append(results, list(res))
-                            }
                     }
                     remove(i)
 
@@ -556,9 +556,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
                             if (res$sse < BestSol$sse) {
                                     BestSol <- res
                             }
-                            if (saveAllStarts == TRUE) {
                                     results <- append(results, list(res))
-                            }
                     }
                     remove(i)
             }
@@ -580,9 +578,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
                             if (res$sse < BestSol$sse) {
                                     BestSol <- res
                             }
-                            if (saveAllStarts == TRUE) {
                                     results <- append(results, list(res))
-                            }
                     }
                     remove(i)
 
@@ -602,9 +598,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
                             if (res$sse < BestSol$sse) {
                                     BestSol <- res
                             }
-                            if (saveAllStarts == TRUE) {
                                     results <- append(results, list(res))
-                            }
                     }
                     remove(i)
             }
