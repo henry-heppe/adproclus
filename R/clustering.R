@@ -759,7 +759,7 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                 }
 
                 model_new <- .ldadproclus(data, start_allocation, ncomponents)
-                model_new$initialStart <- list(type = "rational_start_model", initialA = start_allocation)
+                model_new$initialStart <- list(type = "rational_start_model", A = start_allocation)
                 results <- append(results, list(model_new))
                 best_sol <- results[[1]]
         }
@@ -773,7 +773,7 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                         model_new <- .ldadproclus(data, random_start, ncomponents)
 
                         model_new$initialStart <- list(type = paste("random_start_no_", i),
-                                                       initialA = random_start)
+                                                       A = random_start)
 
                         results <- append(results, list(model_new))
                         if(model_new$sse < best_sol$sse) {
@@ -792,7 +792,7 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                         model_new <- .ldadproclus(data, semi_random_start, ncomponents)
 
                         model_new$initialStart <- list(type = paste("semi_random_start_no_", j),
-                                                       initialA = semi_random_start)
+                                                       A = semi_random_start)
 
                         results <- append(results, list(model_new))
                         if(model_new$sse < best_sol$sse) {

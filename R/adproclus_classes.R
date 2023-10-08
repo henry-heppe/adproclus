@@ -243,6 +243,7 @@ print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows 
         if(!is.null(x$C)) {
                 cat("Low Dimensional", title, "\n")
                 cat("   number of clusters:", ncol(x$A), "\n")
+                cat("   number of components: ", ncol(x$C), "\n")
                 cat("   data format: ", nrow(x$model), "x", ncol(x$model), "\n")
                 cat("   number of (semi-) random starts:", x$parameters$nrandomstart + x$parameters$nsemirandomstart, "\n")
                 if (!is.null(x$parameters$start_allocation)) {
@@ -252,6 +253,7 @@ print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows 
                 cat("   explained variance:", round(x$explvar, digits), "\n")
                 cat("   processing time:", round(x$timer, digits), "s", "\n")
                 cat("   iterations:", x$iterations, "\n")
+                cat("\n")
                 cat("A (cluster membership matrix):", "\n")
                 print(round(x$A[1:n_obs_inc,1:n_clust_inc_col], digits))
                 if (n_obs_true - n_obs_inc > 0) {
@@ -260,11 +262,13 @@ print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows 
                 if (n_clust_true - n_clust_inc_col > 0) {
                         cat("[", n_clust_true - n_clust_inc_col, " columns were omitted ]\n")
                 }
+                cat("\n")
                 cat("C (profiles in terms of components - cluster by component):", "\n")
                 print(round(x$C[1:n_clust_inc_row,], digits))
                 if (n_clust_true - n_clust_inc_row > 0) {
                         cat("[", n_clust_true - n_clust_inc_row, " rows were omitted ]\n")
                 }
+                cat("\n")
                 cat("B' (components by variables): ", "\n")
                 print(round(t(x$B)[,1:n_var_inc], digits))
                 if (n_var_true - n_var_inc > 0) {
@@ -316,6 +320,7 @@ name_clusters_adpc <- function(model, cluster_names) {
         result <- model
         checkmate::assertVector(cluster_names, len = ncol(model$A))
         #issue: implement the naming here
+        #issue: what about existing naming function? (as used for propagating names from input to output)
         return(result)
 }
 
@@ -338,5 +343,6 @@ name_components_adpc <- function(model, component_names) {
                 checkmate::assertVector(component_names, len = ncol(model$C))
         }
         #issue: implement the naming here
+        #issue: what about existing naming function? (as used for propagating names from input to output)
         return(result)
 }

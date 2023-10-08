@@ -65,7 +65,7 @@ plotClusterNetwork <- function(model, cluster_names = NULL, component_names = NU
 
         withr::local_seed(1)
 
-        data <- model_temp$Model
+        data <- model_temp$model
         A <- model_temp$A
         C <- model_temp$C
         B <- model_temp$B
