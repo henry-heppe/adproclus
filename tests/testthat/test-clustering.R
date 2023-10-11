@@ -40,6 +40,7 @@ test_that("adproclusLD base case normal input", {
                                   nrandomstart = 1, nsemirandomstart = 1))
         expect_no_error(adproclusLD(data = x, nclusters= 3, ncomponents = 2,
                                   nrandomstart = 2, nsemirandomstart = 2, saveAllStarts = TRUE))
+        expect_no_error(adproclusLD(data = x, nclusters = 1, ncomponents = 1))
 })
 
 test_that("adproclusLD with start_allocation ", {

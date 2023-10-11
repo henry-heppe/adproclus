@@ -27,7 +27,7 @@ NULL
 
                 minloss <- min(loss[, !is.na(loss)])
                 ind <- which.min(loss)
-                B[row, ] <- PossibA[ind, ]
+                B[row, ] <- PossibA[ind, , drop = FALSE]
         }
 
         if (any(colSums(B) == 0) == TRUE) {
@@ -49,7 +49,7 @@ NULL
                 nrow = nA/n, ncol = n)
 
         index <- apply(loss, 2, which.min)
-        A <- as.matrix(PossibA[index, ])
+        A <- as.matrix(PossibA[index, , drop = FALSE])
 
         return(A)
 
@@ -130,7 +130,7 @@ NULL
 
         replX <- data.frame()
         for (i in 1:n) {
-                reps <- matrix(.repmat(data[i, ], npos, 1),
+                reps <- matrix(.repmat(data[i, , drop = FALSE], npos, 1),
                         ncol = ncol(data), nrow = npos, byrow = TRUE)
                 replX <- rbind(replX, reps)
         }
@@ -195,7 +195,7 @@ NULL
 
         replX <- data.frame()
         for (i in 1:n) {
-                reps <- matrix(.repmat(data[i, ], npos, 1),
+                reps <- matrix(.repmat(data[i, , drop = FALSE], npos, 1),
                                ncol = ncol(data), nrow = npos, byrow = TRUE)
                 replX <- rbind(replX, reps)
         }
@@ -222,8 +222,8 @@ NULL
 
         decomp <- svd(P)
 
-        ldBase <- as.matrix(decomp$v[,1:s]) #B
-        U <- as.matrix(decomp$u[,1:s])
+        ldBase <- as.matrix(decomp$v[,1:s, drop = FALSE]) #B
+        U <- as.matrix(decomp$u[,1:s, drop = FALSE])
         if (s == 1) {
                 D <- diag(as.matrix(decomp$d[1:s]))
         } else {
@@ -255,7 +255,7 @@ NULL
 .ldfindP <- function (X, A, s) {
         Z <- A %*% NMFN::mpinv(A)
         U <- Z %*% X %*% t(X) %*% Z
-        Q <- eigen(U, symmetric = TRUE)[["vectors"]][,1:s]
+        Q <- eigen(U, symmetric = TRUE)[["vectors"]][,1:s, drop = FALSE]
 
         P <- NMFN::mpinv(A) %*% Q %*% t(Q) %*% X
 
@@ -320,12 +320,12 @@ NULL
 
 .adjust_row_col_names_LD <- function(input_model, data) {
         results <- input_model
-        print(input_model$model)
-        print(input_model$model_lowdim)
-        print(input_model$A)
-        print(input_model$P)
-        print(input_model$C)
-        print(input_model$B)
+        # print(input_model$model)
+        # print(input_model$model_lowdim)
+        # print(input_model$A)
+        # print(input_model$P)
+        # print(input_model$C)
+        # print(input_model$B)
         #row and column names
         colnames(results$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
         colnames(results$model_lowdim) <- colnames(results$model_lowdim, do.NULL = FALSE, prefix = "Comp")
