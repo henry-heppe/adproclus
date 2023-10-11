@@ -49,7 +49,7 @@ NULL
                 nrow = nA/n, ncol = n)
 
         index <- apply(loss, 2, which.min)
-        A <- PossibA[index, ]
+        A <- as.matrix(PossibA[index, ])
 
         return(A)
 
@@ -184,10 +184,13 @@ NULL
         iter <- 1
 
         PossibA <- gtools::permutations(2, k, v = c(0, 1), repeats.allowed = TRUE)
+        #PossibA <- PossibA[which(rowSums(PossibA) > 0),] #possible restriction against zero-rows
+        #npos <- npos - 1 #needed for restriction against zero-rows
         PossibA <- apply(PossibA, 2, rev)
         if (k > 1) {
                 PossibA <- t(apply(PossibA, 1, rev))
         }
+
         PossibA <- .repmat(PossibA, n, 1)
 
         replX <- data.frame()
@@ -227,7 +230,7 @@ NULL
                 D <- diag(decomp$d[1:s])
         }
 
-        ldProfs <- U %*%  D #C = U*D
+        ldProfs <- as.matrix(U %*%  D) #C = U*D
 
 
         timeruns <- (proc.time() - t)[1]
@@ -317,6 +320,12 @@ NULL
 
 .adjust_row_col_names_LD <- function(input_model, data) {
         results <- input_model
+        print(input_model$model)
+        print(input_model$model_lowdim)
+        print(input_model$A)
+        print(input_model$P)
+        print(input_model$C)
+        print(input_model$B)
         #row and column names
         colnames(results$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
         colnames(results$model_lowdim) <- colnames(results$model_lowdim, do.NULL = FALSE, prefix = "Comp")

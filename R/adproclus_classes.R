@@ -255,7 +255,7 @@ print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows 
                 cat("   iterations:", x$iterations, "\n")
                 cat("\n")
                 cat("A (cluster membership matrix):", "\n")
-                print(round(x$A[1:n_obs_inc,1:n_clust_inc_col], digits))
+                print(as.matrix(x$A[1:n_obs_inc,1:n_clust_inc_col]))
                 if (n_obs_true - n_obs_inc > 0) {
                         cat("[", n_obs_true - n_obs_inc, " rows were omitted ]\n")
                 }
@@ -288,7 +288,7 @@ print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows 
                 cat("   processing time:", round(x$timer, digits), "s", "\n")
                 cat("   iterations:", x$iterations, "\n")
                 cat("A (cluster membership matrix):", "\n")
-                print(round(x$A[1:n_obs_inc,1:n_clust_inc_col], digits))
+                print(as.matrix(x$A[1:n_obs_inc,1:n_clust_inc_col]))
                 if (n_obs_true - n_obs_inc > 0) {
                         cat("[", n_obs_true - n_obs_inc, " rows were omitted ]\n")
                 }
