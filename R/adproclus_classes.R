@@ -62,7 +62,7 @@ adpc <- function(model, A, P, sse, totvar, explvar, iterations, timer, initialSt
 #' x <- ADPROCLUS::CGdata[1:100,]
 #' model <- adproclus(x, 3)
 #' summary(model)
-summary.adpc <- function(object, title = "ADPROCLUS solution", digits = 3, matrix_rows = 10, matrix_cols = 15, ...) {
+summary.adpc <- function(object, title = "ADPROCLUS solution", digits = 3, matrix_rows = 10, matrix_cols = 5, ...) {
         #members per cluster
         #cluster overlaps
         #mean, st.dev, min, max, percentiles per cluster (use summary() on vector and select the relevant numbers)
@@ -74,25 +74,26 @@ summary.adpc <- function(object, title = "ADPROCLUS solution", digits = 3, matri
 
         for (i in 1:k) {
                 for (j in 1:k) {
-                        cluster_sizes_overlaps[i,j] <- nrow(A[A[,i] == 1 & A[,j] == 1,])
+                        cluster_sizes_overlaps[i,j] <- length(which(A[,i] == 1 & A[,j] == 1,))
+                        cluster_sizes_overlaps[j,i] <- cluster_sizes_overlaps[i,j]
                 }
         }
         cluster_characteristics <- list()
         if (is.null(object$C)) {
-                n_var_true <- ncol(object$model) #limit number of variables to include in summary statistics
-                n_var_inc <- min(matrix_cols, n_var_true)
+                #n_var_true <- ncol(object$model) #limit number of variables to include in summary statistics
+                #n_var_inc <- min(matrix_cols, n_var_true)
                 for (i in 1:k) {
                         members <- which(as.logical(A[,i]))
-                        cluster_characteristics <- append(cluster_characteristics, list(summary(data.frame(object$model[members,1:n_var_inc]))[c(1,4,6),]))
-                        names(cluster_characteristics)[i] <- paste("cluster_", i, sep = "")#issue: put cluster name here
+                        cluster_characteristics <- append(cluster_characteristics, list(summary(data.frame(object$model[members, , drop = FALSE]))[c(1,4,6),]))
+                        names(cluster_characteristics)[i] <- colnames(A)[i]#paste("cluster_", i, sep = "")#issue: put cluster name here
                 }
         } else {
-                n_var_true <- ncol(object$model_lowdim) #limit number of variables to include in summary statistics
-                n_var_inc <- min(matrix_cols, n_var_true)
+                #n_var_true <- ncol(object$model_lowdim) #limit number of variables to include in summary statistics
+                #n_var_inc <- min(matrix_cols, n_var_true)
                 for (i in 1:k) {
                         members <- which(as.logical(A[,i]))
-                        cluster_characteristics <- append(cluster_characteristics, list(summary(data.frame(object$model_lowdim[members,1:n_var_inc]))[c(1,4,6),]))
-                        names(cluster_characteristics)[i] <- paste("cluster_", i, sep = "")#issue: put cluster name here
+                        cluster_characteristics <- append(cluster_characteristics, list(summary(data.frame(object$model_lowdim[members, , drop = FALSE]))[c(1,4,6),]))
+                        names(cluster_characteristics)[i] <- colnames(A)[i]#paste("cluster_", i, sep = "")#issue: put cluster name here
                 }
         }
 
@@ -106,7 +107,7 @@ summary.adpc <- function(object, title = "ADPROCLUS solution", digits = 3, matri
         return(summary_res)
 }
 
-#' Printing (low dim) ADPROCLUS summary of class \code{summary.adpc}
+#' Printing (low dimensional) ADPROCLUS summary of class \code{summary.adpc}
 #'
 #' Prints a set of summary statistics for a (low dimensional) ADPROCLUS solution as provided by the function \code{summary.adpc()}.
 #' A number of parameters for how the results should be printed can be passed as an argument to \code{summary.adpc()}
@@ -115,7 +116,7 @@ summary.adpc <- function(object, title = "ADPROCLUS solution", digits = 3, matri
 #' @param x Object of class \code{summary.adpc}
 #' @param ... ignored
 #'
-#' @return \code{summary.adpc} object invisibly
+#' @return invisibly returns object of class \code{summary.adpc}
 #' @export
 #'
 #' @examples
@@ -123,7 +124,7 @@ summary.adpc <- function(object, title = "ADPROCLUS solution", digits = 3, matri
 #' model <- adproclus(x, 3)
 #' summary(model)
 print.summary.adpc <- function(x, ...) {
-        n_var_true <- ncol(x$model_complete$model) #limit number of variables to include in summary statistics
+        n_var_true <- ncol(x$model_complete$model) #limit number of variables to print for cluster summary stats
         n_var_inc <- min(x$print_settings$matrix_cols, n_var_true)
         print(x$model_complete,
               digits = x$print_settings$digits,
@@ -131,22 +132,22 @@ print.summary.adpc <- function(x, ...) {
               matrix_cols = x$print_settings$matrix_cols)
         cat("Cluster sizes and overlaps:\n")
         print(x$cluster_sizes_overlaps)
-        cat(" [diagonal entries: number of observations in a cluster]\n")
-        cat(" [off-diagonal entry [i,j]:  number of observations both in cluster i and j]\n\n")
+        cat(" (diagonal entries: number of observations in a cluster)\n")
+        cat(" (off-diagonal entry [i,j]:  number of observations both in cluster i and j)\n\n")
         if(is.null(x$model_complete$C)) {
                 cat("Summary statistics of model variables per cluster:\n")
                 if (n_var_true > n_var_inc) {
-                        cat("[", n_var_true - n_var_inc, "variables were omitted ]\n")
+                        cat("[", n_var_true - n_var_inc, "variables per cluster were omitted ]\n")
                 }
         } else {
                 cat("Summary statistics of low dimensional components per cluster:\n")
                 if (n_var_true > n_var_inc) {
-                        cat("[", n_var_true - n_var_inc, "components were omitted ]\n")
+                        cat("[", n_var_true - n_var_inc, "components per cluster were omitted ]\n")
                 }
         }
 
         lapply(1:ncol(x$model_complete$A),
-               function(i) {cat(names(x$cluster_characteristics)[i], "\n"); print(x$cluster_characteristics[[i]])})
+               function(i) {cat(names(x$cluster_characteristics)[i], "\n"); print(x$cluster_characteristics[[i]][, 1:n_var_inc, drop = FALSE])})
         invisible(x)
 
 
