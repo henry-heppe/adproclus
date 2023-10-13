@@ -2,14 +2,14 @@
 % Please edit documentation in R/adproclus_classes.R
 \name{summary.adpc}
 \alias{summary.adpc}
-\title{Summarize important information on ADPROCLUS solution}
+\title{Summary of ADPROCLUS solution}
 \usage{
 \method{summary}{adpc}(
   object,
   title = "ADPROCLUS solution",
   digits = 3,
   matrix_rows = 10,
-  matrix_cols = 15,
+  matrix_cols = 5,
   ...
 )
 }
@@ -30,10 +30,13 @@
 invisibly returns object of class \code{summary.adpc}
 }
 \description{
-Summarize important information on ADPROCLUS solution
+For an object of class \code{adpc} as input, this method yields a summary object of class \code{summary.adpc} including
+group characteristics of the clusters in the solution. Works for both full and low dimensional solutions.
+Adjust the parameters \code{digits, matrix_rows, matrix_cols} to change the level of detail for the printing of the summary.
 }
 \examples{
+#Obtain data, compute model, summarize model
 x <- ADPROCLUS::CGdata[1:100,]
 model <- adproclus(x, 3)
-summary(model)
+model_summary <- summary(model)
 }

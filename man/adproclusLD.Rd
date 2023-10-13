@@ -101,7 +101,7 @@ x <- ADPROCLUS::CGdata
 
 # Low dimensional clustering with K = 3 clusters
 # where the resulting profiles can be characterized in S = 1 dimensions (components)
-clust <- adproclusLD(x, ncluster = 3, ncomponents = 1)
+clust <- adproclusLD(x, nclusters = 3, ncomponents = 1)
 
 }
 \references{

@@ -449,7 +449,7 @@ NULL
 #' x <- ADPROCLUS::CGdata[1:100,]
 #'
 #' # Quick clustering with K = 2 clusters
-#' clust <- adproclus(data = x, ncluster = 2)
+#' clust <- adproclus(data = x, nclusters = 2)
 #'
 #' # Clustering with K = 3 clusters,
 #' # using the ALS2 algorithm,
@@ -458,12 +458,12 @@ NULL
 #'                    nrandomstart = 2, nsemirandomstart = 2, algorithm = "ALS2")
 #'
 #' # Saving the results of all starts
-#' clust <- adproclus(data = x, ncluster = 3,
+#' clust <- adproclus(data = x, nclusters = 3,
 #'                    nrandomstart = 2, nsemirandomstart = 2, saveAllStarts = TRUE)
 #'
 #' # Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
 #' start <- getRational(x,x[1:4,])$A
-#' clust <- adproclus(data = x, ncluster = 4, start_allocation = start)
+#' clust <- adproclus(data = x, nclusters = 4, start_allocation = start)
 #'
 #' @seealso \code{\link{adproclusLD}} for low dimensional ADPROCLUS, \code{\link{getRandom}},\code{\link{getSemiRandom}} and \code{\link{getRational}} for generating
 #'   (semi-)random and rational starts for ADPROCLUS.
@@ -482,7 +482,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
     checkmate::assertCount(nsemirandomstart, coerce = TRUE)
     checkmate::assertInt(seed, null.ok = TRUE, coerce = TRUE)
     checkmate::assertFlag(saveAllStarts)
-    checkmate::assertMatrix(data)
+    checkmate::assertMatrix(data, any.missing = FALSE)
     checkmate::assertChoice(algorithm, c("ALS1", "ALS2"))
 
     if (nrandomstart + nsemirandomstart > 50) {
@@ -720,7 +720,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #'
 #' # Low dimensional clustering with K = 3 clusters
 #' # where the resulting profiles can be characterized in S = 1 dimensions (components)
-#' clust <- adproclusLD(x, ncluster = 3, ncomponents = 1)
+#' clust <- adproclusLD(x, nclusters = 3, ncomponents = 1)
 #'
 #' @seealso \code{\link{adproclus}} for full dimensional ADPROCLUS, \code{\link{getRandom}},\code{\link{getSemiRandom}} and \code{\link{getRational}} for generating
 #'   (semi-)random and rational starts for (low dimensional) ADPROCLUS.
@@ -740,7 +740,7 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         checkmate::assertCount(nsemirandomstart, coerce = TRUE)
         checkmate::assertInt(seed, null.ok = TRUE, coerce = TRUE)
         checkmate::assertFlag(saveAllStarts)
-        checkmate::assertMatrix(data)
+        checkmate::assertMatrix(data, any.missing = FALSE)
 
         if (ncomponents > min(n,nclusters)) {
                 stop("'ncomponents' must be smaller than min(number of observations, number of clusters)")

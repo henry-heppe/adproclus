@@ -2,7 +2,7 @@
 % Please edit documentation in R/adproclus_classes.R
 \name{print.summary.adpc}
 \alias{print.summary.adpc}
-\title{Printing (low dim) ADPROCLUS summary of class \code{summary.adpc}}
+\title{Print (low dimensional) ADPROCLUS summary}
 \usage{
 \method{print}{summary.adpc}(x, ...)
 }
@@ -12,15 +12,16 @@
 \item{...}{ignored}
 }
 \value{
-\code{summary.adpc} object invisibly
+invisibly returns object of class \code{summary.adpc}
 }
 \description{
-Prints a set of summary statistics for a (low dimensional) ADPROCLUS solution as provided by the function \code{summary.adpc()}.
+Prints an object of class \code{summary.adpc} to represent and summarize a (low dimensional) ADPROCLUS solution.
 A number of parameters for how the results should be printed can be passed as an argument to \code{summary.adpc()}
-which then passes it on to this method.
+which then passes it on to this method. This method does not take a model of class \code{adpc} directly as input.
 }
 \examples{
+#Obtain data, compute model, print summary of model
 x <- ADPROCLUS::CGdata[1:100,]
 model <- adproclus(x, 3)
-summary(model)
+print(summary(model))
 }

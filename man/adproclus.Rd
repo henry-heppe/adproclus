@@ -104,7 +104,7 @@ multistart procedure.
 x <- ADPROCLUS::CGdata[1:100,]
 
 # Quick clustering with K = 2 clusters
-clust <- adproclus(data = x, ncluster = 2)
+clust <- adproclus(data = x, nclusters = 2)
 
 # Clustering with K = 3 clusters,
 # using the ALS2 algorithm,
@@ -113,12 +113,12 @@ clust <- adproclus(data = x, nclusters = 3,
                    nrandomstart = 2, nsemirandomstart = 2, algorithm = "ALS2")
 
 # Saving the results of all starts
-clust <- adproclus(data = x, ncluster = 3,
+clust <- adproclus(data = x, nclusters = 3,
                    nrandomstart = 2, nsemirandomstart = 2, saveAllStarts = TRUE)
 
 # Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
 start <- getRational(x,x[1:4,])$A
-clust <- adproclus(data = x, ncluster = 4, start_allocation = start)
+clust <- adproclus(data = x, nclusters = 4, start_allocation = start)
 
 }
 \references{

@@ -5,65 +5,67 @@
 \title{Constructor for a (low dimensional) ADPROCLUS solution object}
 \usage{
 adpc(
-  model,
   A,
   P,
-  sse,
-  totvar,
-  explvar,
-  iterations,
-  timer,
-  initialStart,
+  sse = NULL,
+  totvar = NULL,
+  explvar = NULL,
+  iterations = NULL,
+  timer = NULL,
+  initialStart = NULL,
   C = NULL,
   B = NULL,
-  runs = NULL
+  runs = NULL,
+  parameters = NULL
 )
 }
 \arguments{
-\item{model}{model}
+\item{A}{Membership matrix A.}
 
-\item{A}{A}
+\item{P}{Profile matrix P.}
 
-\item{P}{P}
+\item{sse}{sse Sum of Squared Error.}
 
-\item{sse}{sse}
+\item{totvar}{totvar Total variance.}
 
-\item{totvar}{totvar}
+\item{explvar}{explvar Explained variance.}
 
-\item{explvar}{explvar}
+\item{iterations}{iterations Number of iterations.}
 
-\item{iterations}{iterations}
+\item{timer}{timer Time of algorithm run.}
 
-\item{timer}{timer}
+\item{initialStart}{initialstart List of \code{type} of start and \code{start_allocation} matrix}
 
-\item{initialStart}{initialstart}
+\item{C}{Low dimensional profiles matrix C.}
 
-\item{C}{C}
+\item{B}{Matrix of base vectors connecting low dimensional components with original variables B.}
 
-\item{B}{B}
+\item{runs}{List of suboptimal models.}
 
-\item{runs}{runs}
+\item{parameters}{List of algorithm parameters.}
 }
 \value{
 Object of class \code{adpc}
 }
 \description{
 Yields an object of class \code{adpc}, which can be printed, plotted and summarized by the corresponding methods.
+Mandatory input are the membership matrix \eqn{\boldsymbol{A}} and the profile matrix \eqn{\boldsymbol{P}}
+(where the number of columns from \eqn{\boldsymbol{A}} corresponds to the number of rows in \eqn{\boldsymbol{P}}),
+if the object is to represent a full dimensional ADPROCLUS model.
+For a low dimensional ADPROCLUS model, the matrices \eqn{\boldsymbol{C}} and \eqn{\boldsymbol{B}}
+have to be provided and \eqn{\boldsymbol{P}} can be inferred from those.
+All other inputs are optional but may be included so that the output from the \code{summary(), print(), plot()} is complete.
+For further details on the (low dimensional) ADPROCLUS model and what every element of the objects means
+see \code{\link{adproclus}} and \code{\link{adproclusLD}}.
 }
 \examples{
-#Create the information needed for an object of class adpc
+#Create the information needed for a minimal object of class adpc
 x <- ADPROCLUS::CGdata[1:100,]
 result <- adproclus(x, 3)
-model <- result$model
 A <- result$A
 P <- result$P
-totvar <- result$totvar
-explvar <- result$explvar
-iterations <- result$iterations
-timer <- result$timer
-initialStart <- result$ initialStart
 
-#Create object of class adpc
-result_object <- adpc(model, A, P, sse, totvar, explvar, iterations, timer, initialStart)
+#Use constructor to obtain object of class adpc
+result_object <- adpc(A, P)
 
 }

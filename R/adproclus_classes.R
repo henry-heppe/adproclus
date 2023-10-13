@@ -3,50 +3,87 @@
 #' Constructor for a (low dimensional) ADPROCLUS solution object
 #'
 #' Yields an object of class \code{adpc}, which can be printed, plotted and summarized by the corresponding methods.
+#' Mandatory input are the membership matrix \eqn{\boldsymbol{A}} and the profile matrix \eqn{\boldsymbol{P}}
+#' (where the number of columns from \eqn{\boldsymbol{A}} corresponds to the number of rows in \eqn{\boldsymbol{P}}),
+#' if the object is to represent a full dimensional ADPROCLUS model.
+#' For a low dimensional ADPROCLUS model, the matrices \eqn{\boldsymbol{C}} and \eqn{\boldsymbol{B}}
+#' have to be provided and \eqn{\boldsymbol{P}} can be inferred from those.
+#' All other inputs are optional but may be included so that the output from the \code{summary(), print(), plot()} is complete.
+#' For further details on the (low dimensional) ADPROCLUS model and what every element of the objects means
+#' see \code{\link{adproclus}} and \code{\link{adproclusLD}}.
 #'
-#' @param model model
-#' @param A A
-#' @param P P
-#' @param sse sse
-#' @param totvar totvar
-#' @param explvar explvar
-#' @param iterations iterations
-#' @param timer timer
-#' @param initialStart initialstart
-#' @param C C
-#' @param B B
-#' @param runs runs
+#' @param A Membership matrix A.
+#' @param P Profile matrix P.
+#' @param sse sse Sum of Squared Error.
+#' @param totvar totvar Total variance.
+#' @param explvar explvar Explained variance.
+#' @param iterations iterations Number of iterations.
+#' @param timer timer Time of algorithm run.
+#' @param initialStart initialstart List of \code{type} of start and \code{start_allocation} matrix
+#' @param C Low dimensional profiles matrix C.
+#' @param B Matrix of base vectors connecting low dimensional components with original variables B.
+#' @param runs List of suboptimal models.
+#' @param parameters List of algorithm parameters.
 #'
 #' @return Object of class \code{adpc}
 #' @export
 #'
 #' @examples
-#' #Create the information needed for an object of class adpc
+#' #Create the information needed for a minimal object of class adpc
 #' x <- ADPROCLUS::CGdata[1:100,]
 #' result <- adproclus(x, 3)
-#' model <- result$model
 #' A <- result$A
 #' P <- result$P
-#' totvar <- result$totvar
-#' explvar <- result$explvar
-#' iterations <- result$iterations
-#' timer <- result$timer
-#' initialStart <- result$ initialStart
 #'
-#' #Create object of class adpc
-#' result_object <- adpc(model, A, P, sse, totvar, explvar, iterations, timer, initialStart)
+#' #Use constructor to obtain object of class adpc
+#' result_object <- adpc(A, P)
 #'
-adpc <- function(model, A, P, sse, totvar, explvar, iterations, timer, initialStart, C = NULL, B = NULL, runs = NULL) {
-        stopifnot(is.matrix(model))
-        stopifnot(is.matrix(A))
-        stopifnot(is.matrix(P))
-        object <- list(model = model, A = A, P = P)
+adpc <- function(A, P, sse = NULL, totvar = NULL, explvar = NULL, iterations = NULL, timer = NULL, initialStart = NULL, C = NULL, B = NULL, runs = NULL, parameters = NULL) {
+
+        checkmate::assert_matrix(A, any.missing = FALSE)
+        checkmate::assert_matrix(P, any.missing = FALSE)
+        checkmate::assert_number(sse, null.ok = TRUE)
+        checkmate::assert_number(totvar, null.ok = TRUE)
+        checkmate::assert_number(explvar, null.ok = TRUE)
+        checkmate::assert_count(iterations, null.ok = TRUE)
+        checkmate::assert_number(timer, null.ok = TRUE)
+        checkmate::assert_list(initialStart, types = c("character", "matrix"), null.ok = TRUE)
+        checkmate::assert_list(runs, null.ok = TRUE)
+        checkmate::assert_list(parameters, null.ok = TRUE)
+
+        model_lowdim <- NULL
+
+        if (!is.null(C) | !is.null(B)) {
+                stopifnot(!is.null(C))
+                stopifnot(!is.null(B))
+                checkmate::assert_matrix(B, any.missing = FALSE)
+                checkmate::assert_matrix(C, any.missing = FALSE)
+                model_lowdim <- A %*% C
+
+                if (!isTRUE(all.equal(P, C %*% t(B)))) {
+                        stopifnot(ncol(A) == nrow(C %*% t(B)))
+                        P <- C %*% t(B)
+                        warning("Inferred P as CB', as they were not equal.")
+                }
+
+
+        } else {
+                checkmate::assert_matrix(P, any.missing = FALSE)
+                stopifnot(ncol(A) == nrow(P))
+        }
+
+
+        object <- list(model = A %*% P, model_lowdim = model_lowdim, A = A, P = P, sse = sse, totvar = totvar, explvar = explvar,
+                       iterations = iterations, timer = timer, C = C, B = B, runs = runs, parameters = parameters)
         class(object) <- "adpc"
         return(object)
-        #issue: not done
 }
 
-#' Summarize important information on ADPROCLUS solution
+#' Summary of ADPROCLUS solution
+#'
+#' For an object of class \code{adpc} as input, this method yields a summary object of class \code{summary.adpc} including
+#' group characteristics of the clusters in the solution. Works for both full and low dimensional solutions.
+#' Adjust the parameters \code{digits, matrix_rows, matrix_cols} to change the level of detail for the printing of the summary.
 #'
 #' @param object ADPROCLUS solution (class: \code{adpc}). Low dimensional model possible.
 #' @param title String. Default: "ADPROCLUS solution"
@@ -59,14 +96,22 @@ adpc <- function(model, A, P, sse, totvar, explvar, iterations, timer, initialSt
 #' @export
 #'
 #' @examples
+#' #Obtain data, compute model, summarize model
 #' x <- ADPROCLUS::CGdata[1:100,]
 #' model <- adproclus(x, 3)
-#' summary(model)
+#' model_summary <- summary(model)
 summary.adpc <- function(object, title = "ADPROCLUS solution", digits = 3, matrix_rows = 10, matrix_cols = 5, ...) {
         #members per cluster
         #cluster overlaps
         #mean, st.dev, min, max, percentiles per cluster (use summary() on vector and select the relevant numbers)
         #inter-cluster variances?
+
+        checkmate::assert_class(object, "adpc")
+        checkmate::assert_string(title)
+        checkmate::assert_int(digits, lower = 1, coerce = TRUE)
+        checkmate::assert_int(matrix_rows, lower = 1, coerce = TRUE)
+        checkmate::assert_int(matrix_cols, lower = 1, coerce = TRUE)
+
         A <- object$A
         k <- ncol(A)
         cluster_sizes <- colSums(object$A)
@@ -107,11 +152,11 @@ summary.adpc <- function(object, title = "ADPROCLUS solution", digits = 3, matri
         return(summary_res)
 }
 
-#' Printing (low dimensional) ADPROCLUS summary of class \code{summary.adpc}
+#' Print (low dimensional) ADPROCLUS summary
 #'
-#' Prints a set of summary statistics for a (low dimensional) ADPROCLUS solution as provided by the function \code{summary.adpc()}.
+#' Prints an object of class \code{summary.adpc} to represent and summarize a (low dimensional) ADPROCLUS solution.
 #' A number of parameters for how the results should be printed can be passed as an argument to \code{summary.adpc()}
-#' which then passes it on to this method.
+#' which then passes it on to this method. This method does not take a model of class \code{adpc} directly as input.
 #'
 #' @param x Object of class \code{summary.adpc}
 #' @param ... ignored
@@ -120,11 +165,21 @@ summary.adpc <- function(object, title = "ADPROCLUS solution", digits = 3, matri
 #' @export
 #'
 #' @examples
+#' #Obtain data, compute model, print summary of model
 #' x <- ADPROCLUS::CGdata[1:100,]
 #' model <- adproclus(x, 3)
-#' summary(model)
+#' print(summary(model))
 print.summary.adpc <- function(x, ...) {
-        n_var_true <- ncol(x$model_complete$model) #limit number of variables to print for cluster summary stats
+
+        checkmate::assert_class(x, "summary.adpc")
+
+        if(is.null(x$model_complete$C)) {
+                n_var_true <- ncol(x$model_complete$model) #limit number of variables to print for cluster summary stats
+        } else {
+                n_var_true <- ncol(x$model_complete$model_lowdim)
+        }
+
+
         n_var_inc <- min(x$print_settings$matrix_cols, n_var_true)
         print(x$model_complete,
               digits = x$print_settings$digits,
@@ -216,8 +271,9 @@ plot.adpc <- function(x, type = "Network", title = NULL, ...) {
 
 #' Print basic information on ADPROCLUS solution
 #'
-#' For an object of class adpc as input, this method prints basic information
+#' For an object of class \code{adpc} as input, this method prints basic information
 #' about the ADPROCLUS solution represented by the object. Works for both full and low dimensional solutions.
+#' Adjust the parameters \code{digits, matrix_rows, matrix_cols} to change the level of detail printed.
 #'
 #' @param x ADPROCLUS solution (class: \code{adpc})
 #' @param title String. Default: "ADPROCLUS solution"
@@ -229,10 +285,18 @@ plot.adpc <- function(x, type = "Network", title = NULL, ...) {
 #' @export
 #'
 #' @examples
+#' #Obtain data, compute model, print model
 #' x <- ADPROCLUS::CGdata[1:100,]
 #' model <- adproclus(x, 3)
 #' print(model)
 print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows = 10, matrix_cols = 15, ...) {
+
+        checkmate::assert_class(x, "adpc")
+        checkmate::assert_string(title)
+        checkmate::assert_int(digits, lower = 1, coerce = TRUE)
+        checkmate::assert_int(matrix_rows, lower = 1, coerce = TRUE)
+        checkmate::assert_int(matrix_cols, lower = 1, coerce = TRUE)
+
         n_obs_true <- nrow(x$model)
         n_obs_inc <- min(matrix_rows, n_obs_true)
         n_clust_true <- ncol(x$A)
@@ -246,7 +310,9 @@ print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows 
                 cat("   number of clusters:", ncol(x$A), "\n")
                 cat("   number of components: ", ncol(x$C), "\n")
                 cat("   data format: ", nrow(x$model), "x", ncol(x$model), "\n")
-                cat("   number of (semi-) random starts:", x$parameters$nrandomstart + x$parameters$nsemirandomstart, "\n")
+                cat("   number of total starts:",
+                    x$parameters$nrandomstart + x$parameters$nsemirandomstart +
+                            1 * !is.null(x$parameters$start_allocation), "\n")
                 if (!is.null(x$parameters$start_allocation)) {
                         cat("   A rational start was also included.\n")
                 }
@@ -280,7 +346,7 @@ print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows 
                 cat("Setup:", "\n")
                 cat("   number of clusters:", ncol(x$A), "\n")
                 cat("   data format: ", nrow(x$model), "x", ncol(x$model), "\n")
-                cat("   number of (semi-) random starts:", x$parameters$nrandomstart + x$parameters$nsemirandomstart, "\n")
+                cat("   number of total starts:", x$parameters$nrandomstart + x$parameters$nsemirandomstart + 1 * !is.null(x$parameters$start_allocation), "\n")
                 if (!is.null(x$parameters$start_allocation)) {
                         cat("   A rational start was also included.\n")
                 }

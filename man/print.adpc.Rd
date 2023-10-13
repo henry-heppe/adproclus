@@ -27,10 +27,12 @@
 \item{...}{ignored}
 }
 \description{
-For an object of class adpc as input, this method prints basic information
+For an object of class \code{adpc} as input, this method prints basic information
 about the ADPROCLUS solution represented by the object. Works for both full and low dimensional solutions.
+Adjust the parameters \code{digits, matrix_rows, matrix_cols} to change the level of detail printed.
 }
 \examples{
+#Obtain data, compute model, print model
 x <- ADPROCLUS::CGdata[1:100,]
 model <- adproclus(x, 3)
 print(model)
