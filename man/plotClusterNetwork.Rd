@@ -6,30 +6,23 @@
 \usage{
 plotClusterNetwork(
   model,
-  cluster_names = NULL,
-  component_names = NULL,
+  title = "Cluster network of ADPROCLUS solution",
   relative_overlap = TRUE,
-  vertex_color = "antiquewhite",
-  edge_color_low = "lavenderblush2",
-  edge_color_high = "lavenderblush4"
+  filetype = NULL
 )
 }
 \arguments{
 \item{model}{ADPROCLUS solution (class: \code{adpc}). Low dimensional model possible.}
 
-\item{cluster_names}{Names of the clusters as list. OPTIONAL}
+\item{title}{String. Default: " Cluster network of ADPROCLUS solution"}
 
-\item{component_names}{Names of the variables (components if low dim model) as list. OPTIONAL}
-
-\item{relative_overlap}{Boolean value. If \code{TRUE} (default), the number of observations belonging to two clusters
+\item{relative_overlap}{Logical. If \code{TRUE} (default), the number of observations belonging to two clusters
 is divided by the total number of observations. If \code{FALSE}
 the number of observations in a cluster overlap will be displayed on the edges.}
 
-\item{vertex_color}{Color of the vertices as string. OPTIONAL}
-
-\item{edge_color_low}{Lower end of color spectrum for edges as string. OPTIONAL}
-
-\item{edge_color_high}{Upper end of color spectrum for edges as string. OPTIONAL}
+\item{filetype}{Optional. Choose type of file to save the plot.
+Possible choices: \code{"R", "pdf", "svg", "tex", "jpg", "tiff", "png", ""}
+Default: \code{NULL} does not create a file.}
 }
 \value{
 Invisibly returns the input model.
@@ -39,9 +32,11 @@ Produce a representation of a (low dimensional) ADPROCLUS solution, where each c
 the edge between two vertices represents the overlap between the corresponding clusters.
 The size of a vertex corresponds to the cluster size. The overlap is represented
 through color, width and numerical label of the edge.
-The numerical edge-labels can be relative (number of overlap observations / total observations)
+The numerical edge labels can be relative (number of overlap observations / total observations)
 or absolute (number of observations in both clusters).
-\strong{NOTE:} This function can be called through the \code{plot(model, type = "Network")} function.
+\strong{NOTE:} This function can be called through the \code{plot(model, type = "Network")} function with model an object of class \code{adpc}.
+\strong{NOTE:} The cluster names can be changed efficiently via the respective functions
+\code{\link{name_clusters_adpc}}.
 }
 \examples{
 # Loading a test dataset into the global environment

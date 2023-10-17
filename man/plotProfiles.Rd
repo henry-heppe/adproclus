@@ -15,8 +15,18 @@ plotProfiles(model, title = "Profiles of ADPROCLUS solution")
 Invisibly returns the input model.
 }
 \description{
-Plot profile matrix of ADPROCLUS solution
+Produce a representation of profile matrix \eqn{\boldsymbol{P}} of a (low dimensional) ADPROCLUS solution
+of class \code{adpc}. The plot displays the profiles in the style of a correlation plot.
+\strong{NOTE:} This function can also be called through the \code{plot(model, type = "Profiles")} function
+with model an object of class \code{adpc}.
 }
 \examples{
-#add exmple
+# Loading a test dataset into the global environment
+x <- ADPROCLUS::CGdata[1:100,]
+
+# Quick clustering with K = 3 clusters
+clust <- adproclus(x, 3)
+
+# Plot the profile scores of each cluster
+plotProfiles(clust)
 }

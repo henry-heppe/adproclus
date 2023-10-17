@@ -229,38 +229,45 @@ print.summary.adpc <- function(x, ...) {
 #' }
 #'
 #' @param x Object of class \code{adpc}. (Low dimensional) ADPROCLUS solution
-#' @param type Choice for type of plot: one of "Network", "Profiles", "LowDimComponents". Default: "Network".
+#' @param type Choice for type of plot: one of "Network", "Profiles", "VarsByComp". Default: "Network".
 #' @param title String. OPTIONAL.
+#' @param relative_overlap Logical, only applies to plot of \code{type = "Network"}. If \code{TRUE} (default), the number of observations belonging to two clusters
+#' is divided by the total number of observations. If \code{FALSE}
 #' @param ... ignored
 #'
 #' @return Invisibly returns the input model.
 #' @export
 #'
 #' @examples
-#'#add example
-plot.adpc <- function(x, type = "Network", title = NULL, ...) {
-        checkmate::assertChoice(type, c("Network", "Profiles", "LowDimComponents"))
-        #check for illegal choice of LowDimComponentes for full dim model is done in plotVarsByComp()
-        if (type == "LowDimComponents") {
-                if (!is.null(title)) {
-                        plotVarsByComp(x, title)
-                } else {
-                        plotVarsByComp(x)
-                }
+#' # Loading a test dataset into the global environment
+#' x <- ADPROCLUS::CGdata[1:100,]
+#'
+#' # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
+#' clust <- adproclusLD(x, 3, 1)
+#'
+#' # Produce three plots of the model
+#' plot(clust, type = "Network")
+#' plot(clust, type = "Profiles")
+#' plot(clust, type = "VarsByComp")
+plot.adpc <- function(x,
+                      type = "Network",
+                      title = NULL,
+                      relative_overlap = TRUE,
+                      ...) {
+        checkmate::assertClass(x, "adpc")
+        checkmate::assertChoice(type, c("Network", "Profiles", "VarsByComp"))
+        checkmate::assertString(title, null.ok = TRUE)
+        checkmate::assertFlag(relative_overlap)
+
+        #check for illegal choice of VarsByComp for full dim model is done in plotVarsByComp()
+        if (type == "VarsByComp") {
+                plotVarsByComp(model = x, title = title)
 
         } else if (type == "Profiles") {
-                if (!is.null(title)) {
-                        plotProfiles(x, title)
-                } else {
-                        plotProfiles(x)
-                }
+                plotProfiles(model = x, title = title)
 
         } else {
-                if (!is.null(title)) {
-                        plotClusterNetwork(x, title)
-                } else {
-                        plotClusterNetwork(x)
-                }
+                plotClusterNetwork(model = x, title = title, relative_overlap = relative_overlap)
 
         }
 
@@ -385,6 +392,7 @@ print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows 
 #' #example
 name_clusters_adpc <- function(model, cluster_names) {
         result <- model
+        #checkmate::assert_vector(component_names, any.missing = FALSE, len = ncol(model$C), null.ok = TRUE)
         checkmate::assertVector(cluster_names, len = ncol(model$A))
         #issue: implement the naming here
         #issue: what about existing naming function? (as used for propagating names from input to output)
@@ -404,6 +412,7 @@ name_clusters_adpc <- function(model, cluster_names) {
 #' #example
 name_components_adpc <- function(model, component_names) {
         result <- model
+        #checkmate::assert_vector(component_names, any.missing = FALSE, len = ncol(model$C), null.ok = TRUE)
         if(is.null(model$C)) {
                 checkmate::assertVector(component_names, len = ncol(model$P))
         } else {

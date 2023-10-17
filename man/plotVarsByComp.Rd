@@ -15,8 +15,18 @@ plotVarsByComp(model, title = "B' of Low Dimensional ADPROCLUS Solution")
 Invisibly returns the input model.
 }
 \description{
-Plot variable to component matrix of ADPROCLUS solution
+Produce a representation of variable to component matrix \eqn{\boldsymbol{B'}} of a \strong{low dimensional} ADPROCLUS solution
+of class \code{adpc}. The plot displays the scores in the style of a correlation plot.
+\strong{NOTE:} This function can be called through the \code{plot(model, type = "VarsByComp")} function
+with model an object of class \code{adpc}.
 }
 \examples{
-#add examples
+# Loading a test dataset into the global environment
+x <- ADPROCLUS::CGdata[1:100,]
+
+# Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
+clust <- adproclusLD(x, 3, 1)
+
+# Plot the matrix B', connecting components with variables
+plotVarsByComp(clust)
 }

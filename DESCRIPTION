@@ -27,6 +27,7 @@ Imports:
     gtools,
     igraph,
     NMFN,
+    qgraph,
     stats,
     withr
 RoxygenNote: 7.2.3

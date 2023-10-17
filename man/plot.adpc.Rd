@@ -4,14 +4,17 @@
 \alias{plot.adpc}
 \title{Plotting a (low dimensional) ADPROCLUS solution}
 \usage{
-\method{plot}{adpc}(x, type = "Network", title = NULL, ...)
+\method{plot}{adpc}(x, type = "Network", title = NULL, relative_overlap = TRUE, ...)
 }
 \arguments{
 \item{x}{Object of class \code{adpc}. (Low dimensional) ADPROCLUS solution}
 
-\item{type}{Choice for type of plot: one of "Network", "Profiles", "LowDimComponents". Default: "Network".}
+\item{type}{Choice for type of plot: one of "Network", "Profiles", "VarsByComp". Default: "Network".}
 
 \item{title}{String. OPTIONAL.}
+
+\item{relative_overlap}{Logical, only applies to plot of \code{type = "Network"}. If \code{TRUE} (default), the number of observations belonging to two clusters
+is divided by the total number of observations. If \code{FALSE}}
 
 \item{...}{ignored}
 }
@@ -37,5 +40,14 @@ relation of each cluster with each variable.}
 }
 }
 \examples{
-#add example
+# Loading a test dataset into the global environment
+x <- ADPROCLUS::CGdata[1:100,]
+
+# Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
+clust <- adproclusLD(x, 3, 1)
+
+# Produce three plots of the model
+plot(clust, type = "Network")
+plot(clust, type = "Profiles")
+plot(clust, type = "VarsByComp")
 }

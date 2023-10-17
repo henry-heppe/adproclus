@@ -48,6 +48,23 @@ test_that("print.summary.adpc test", {
         expect_equal(print(sum_resLD), print.summary.adpc(sum_resLD))
 })
 
+test_that("plot test", {
+        x <- CGdata[1:100,]
+        model <- adproclus(data = x, nclusters = 2)
+        modelLD <- adproclusLD(data = x, nclusters = 3, ncomponents = 2)
+
+        expect_no_condition(plot(model))
+        expect_no_condition(plot(modelLD))
+        expect_no_condition(plot(model, type = "Network"))
+        expect_no_condition(plot(modelLD, type = "Network"))
+        expect_no_condition(plot(model, type = "Profiles"))
+        expect_no_condition(plot(modelLD, type = "Profiles"))
+        expect_error(plot(model, type = "VarsByComp"))
+        expect_no_condition(plot(modelLD, type = "VarsByComp"))
+        expect_equal(plot(model), plot.adpc(model))
+        expect_equal(plot(modelLD), plot.adpc(modelLD))
+})
+
 #important case: check input s.t. when adpc object is passed to print.summary.adpc() an appropriate error is thrown
 #include a case, where a start_allocation is included
 #check that number of starts in printing is there/ is correct
