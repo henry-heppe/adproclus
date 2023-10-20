@@ -445,7 +445,7 @@ NULL
 #'   analysis models. \emph{Journal of Classification}, 7(2):167-195.
 #'
 #' @examples
-#' # Loading a (subset of a) test dataset into the global environment
+#' # Loading a test dataset into the global environment
 #' x <- ADPROCLUS::CGdata
 #'
 #' # Quick clustering with K = 2 clusters
@@ -482,7 +482,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
     checkmate::assertCount(nsemirandomstart, coerce = TRUE)
     checkmate::assertInt(seed, null.ok = TRUE, coerce = TRUE)
     checkmate::assertFlag(saveAllStarts)
-    checkmate::assertMatrix(data, any.missing = FALSE)
+    checkmate::assertMatrix(data, mode = "numeric", any.missing = FALSE)
     checkmate::assertChoice(algorithm, c("ALS1", "ALS2"))
 
     if (nrandomstart + nsemirandomstart > 50) {
@@ -545,7 +545,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
                             if (res$sse < BestSol$sse) {
                                     BestSol <- res
                             }
-                                    results <- append(results, list(res))
+                            results <- append(results, list(res))
                     }
                     remove(i)
 
@@ -740,7 +740,7 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         checkmate::assertCount(nsemirandomstart, coerce = TRUE)
         checkmate::assertInt(seed, null.ok = TRUE, coerce = TRUE)
         checkmate::assertFlag(saveAllStarts)
-        checkmate::assertMatrix(data, any.missing = FALSE)
+        checkmate::assertMatrix(data, mode = "numeric", any.missing = FALSE)
 
         if (ncomponents > min(n,nclusters)) {
                 stop("'ncomponents' must be smaller than min(number of observations, number of clusters)")

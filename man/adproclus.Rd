@@ -100,8 +100,8 @@ of a single start for each specific dataset and \eqn{K} before employing a
 multistart procedure.
 }
 \examples{
-# Loading a (subset of a) test dataset into the global environment
-x <- ADPROCLUS::CGdata[1:100,]
+# Loading a test dataset into the global environment
+x <- ADPROCLUS::CGdata
 
 # Quick clustering with K = 2 clusters
 clust <- adproclus(data = x, nclusters = 2)

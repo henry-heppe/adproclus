@@ -22,7 +22,7 @@ with model an object of class \code{adpc}.
 }
 \examples{
 # Loading a test dataset into the global environment
-x <- ADPROCLUS::CGdata[1:100,]
+x <- ADPROCLUS::CGdata
 
 # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
 clust <- adproclusLD(x, 3, 1)

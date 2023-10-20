@@ -36,7 +36,7 @@ Adjust the parameters \code{digits, matrix_rows, matrix_cols} to change the leve
 }
 \examples{
 #Obtain data, compute model, summarize model
-x <- ADPROCLUS::CGdata[1:100,]
+x <- ADPROCLUS::CGdata
 model <- adproclus(x, 3)
 model_summary <- summary(model)
 }

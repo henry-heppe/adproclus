@@ -21,7 +21,7 @@ which then passes it on to this method. This method does not take a model of cla
 }
 \examples{
 #Obtain data, compute model, print summary of model
-x <- ADPROCLUS::CGdata[1:100,]
+x <- ADPROCLUS::CGdata
 model <- adproclus(x, 3)
 print(summary(model))
 }
