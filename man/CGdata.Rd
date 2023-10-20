@@ -5,7 +5,7 @@
 \alias{CGdata}
 \title{Randomly generated data with underlying overlapping clusters.}
 \format{
-A data frame with 400 rows and 15 variables
+A data frame with 100 rows and 15 variables
 }
 \usage{
 CGdata

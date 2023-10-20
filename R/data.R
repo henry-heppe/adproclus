@@ -4,5 +4,5 @@
 #' nonrestricted overlapping clustering structure. For illustrative purposes
 #' within the ADPROCLUS package only.
 #'
-#' @format A data frame with 400 rows and 15 variables
+#' @format A data frame with 100 rows and 15 variables
 "CGdata"

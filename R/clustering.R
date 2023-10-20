@@ -446,7 +446,7 @@ NULL
 #'
 #' @examples
 #' # Loading a (subset of a) test dataset into the global environment
-#' x <- ADPROCLUS::CGdata[1:100,]
+#' x <- ADPROCLUS::CGdata
 #'
 #' # Quick clustering with K = 2 clusters
 #' clust <- adproclus(data = x, nclusters = 2)
