@@ -444,7 +444,7 @@ NULL
 #'
 #' @examples
 #' # Loading a test dataset into the global environment
-#' x <- ADPROCLUS::CGdata
+#' x <- stackloss
 #'
 #' # Quick clustering with K = 2 clusters
 #' clust <- adproclus(data = x, nclusters = 2)
@@ -714,7 +714,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #'
 #' @examples
 #' # Loading a test dataset into the global environment
-#' x <- ADPROCLUS::CGdata
+#' x <- stackloss
 #'
 #' # Low dimensional clustering with K = 3 clusters
 #' # where the resulting profiles can be characterized in S = 1 dimensions (components)

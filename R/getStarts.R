@@ -41,7 +41,8 @@
 #' \emph{Journal of classification, 29,} 297-320.
 #'
 #' @examples
-#' start_allocation <- getRandom(ADPROCLUS::CGdata, 3)$A
+#' # Obtain data from standard data set "Stackloss" and generate start allocation
+#' start_allocation <- getRandom(data = stackloss, 3)$A
 #'
 #' @seealso \code{\link{getSemiRandom}} for generating semi-random starts,
 #' \code{\link{getRational}} for generating rational starts and
@@ -111,7 +112,8 @@ getRandom <- function(data, nclusters, seed = NULL) {
 #'   \emph{Journal of classification, 29,} 297-320.
 #'
 #' @examples
-#' start_allocation <- getSemiRandom(ADPROCLUS::CGdata, 3)$A
+#' # Obtain data from standard data set "Stackloss" and generate start allocation
+#' start_allocation <- getSemiRandom(data = stackloss, 3)$A
 #'
 #' @seealso \code{\link{getRandom}} for generating random starts,
 #' \code{\link{getRational}} for generating rational starts and
@@ -183,7 +185,8 @@ getSemiRandom <- function(data, nclusters, seed = NULL) {
 #'   \emph{Journal of classification, 29,} 297-320.
 #'
 #' @examples
-#' x <- ADPROCLUS::CGdata
+#' # Obtain data from standard data set "Stackloss"
+#' x <- stackloss
 #'
 #' # Obtaining a user-defined rational start profile matrix (here the first 4 rows of the data)
 #' start_allocation <- getRational(x,x[1:4,])$A

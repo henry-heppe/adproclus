@@ -30,7 +30,7 @@
 #'
 #' @examples
 #' #Create the information needed for a minimal object of class adpc
-#' x <- ADPROCLUS::CGdata
+#' x <- stackloss
 #' result <- adproclus(x, 3)
 #' A <- result$A
 #' P <- result$P
@@ -97,7 +97,7 @@ adpc <- function(A, P, sse = NULL, totvar = NULL, explvar = NULL, iterations = N
 #'
 #' @examples
 #' #Obtain data, compute model, summarize model
-#' x <- ADPROCLUS::CGdata
+#' x <- stackloss
 #' model <- adproclus(x, 3)
 #' model_summary <- summary(model)
 summary.adpc <- function(object, title = "ADPROCLUS solution", digits = 3, matrix_rows = 10, matrix_cols = 5, ...) {
@@ -166,7 +166,7 @@ summary.adpc <- function(object, title = "ADPROCLUS solution", digits = 3, matri
 #'
 #' @examples
 #' #Obtain data, compute model, print summary of model
-#' x <- ADPROCLUS::CGdata
+#' x <- stackloss
 #' model <- adproclus(x, 3)
 #' print(summary(model))
 print.summary.adpc <- function(x, ...) {
@@ -240,7 +240,7 @@ print.summary.adpc <- function(x, ...) {
 #'
 #' @examples
 #' # Loading a test dataset into the global environment
-#' x <- ADPROCLUS::CGdata
+#' x <- stackloss
 #'
 #' # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
 #' clust <- adproclusLD(x, 3, 1)
@@ -293,7 +293,7 @@ plot.adpc <- function(x,
 #'
 #' @examples
 #' #Obtain data, compute model, print model
-#' x <- ADPROCLUS::CGdata
+#' x <- stackloss
 #' model <- adproclus(x, 3)
 #' print(model)
 print.adpc <- function(x, title = "ADPROCLUS solution", digits = 3, matrix_rows = 10, matrix_cols = 15, ...) {
