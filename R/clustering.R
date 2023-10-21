@@ -130,8 +130,7 @@ NULL
 
         replX <- data.frame()
         for (i in 1:n) {
-                reps <- matrix(.repmat(data[i, , drop = FALSE], npos, 1),
-                        ncol = ncol(data), nrow = npos, byrow = TRUE)
+                reps <- .repmat(data[i, , drop = FALSE], npos, 1)
                 replX <- rbind(replX, reps)
         }
         replX <- as.matrix(replX)
@@ -195,8 +194,7 @@ NULL
 
         replX <- data.frame()
         for (i in 1:n) {
-                reps <- matrix(.repmat(data[i, , drop = FALSE], npos, 1),
-                               ncol = ncol(data), nrow = npos, byrow = TRUE)
+                reps <- .repmat(data[i, , drop = FALSE], npos, 1)
                 replX <- rbind(replX, reps)
         }
         replX <- as.matrix(replX)
