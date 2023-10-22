@@ -35,7 +35,8 @@ For generating an initial start based on a specific set of initial cluster cente
 perform aditive profile clustering, see \code{\link{adproclus}}.
 }
 \examples{
-start_allocation <- getRandom(ADPROCLUS::CGdata, 3)$A
+# Obtain data from standard data set "Stackloss" and generate start allocation
+start_allocation <- getRandom(data = stackloss, 3)$A
 
 }
 \references{

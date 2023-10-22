@@ -41,7 +41,7 @@ relation of each cluster with each variable.}
 }
 \examples{
 # Loading a test dataset into the global environment
-x <- ADPROCLUS::CGdata
+x <- stackloss
 
 # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
 clust <- adproclusLD(x, 3, 1)

@@ -97,7 +97,7 @@ multistart procedure.
 }
 \examples{
 # Loading a test dataset into the global environment
-x <- ADPROCLUS::CGdata
+x <- stackloss
 
 # Low dimensional clustering with K = 3 clusters
 # where the resulting profiles can be characterized in S = 1 dimensions (components)

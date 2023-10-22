@@ -60,7 +60,7 @@ see \code{\link{adproclus}} and \code{\link{adproclusLD}}.
 }
 \examples{
 #Create the information needed for a minimal object of class adpc
-x <- ADPROCLUS::CGdata
+x <- stackloss
 result <- adproclus(x, 3)
 A <- result$A
 P <- result$P

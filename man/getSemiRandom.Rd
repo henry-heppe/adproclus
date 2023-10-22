@@ -36,7 +36,8 @@ details, see Depril et al., 2012).
 perform aditive profile clustering, see \code{\link{adproclus}}.
 }
 \examples{
-start_allocation <- getSemiRandom(ADPROCLUS::CGdata, 3)$A
+# Obtain data from standard data set "Stackloss" and generate start allocation
+start_allocation <- getSemiRandom(data = stackloss, 3)$A
 
 }
 \references{

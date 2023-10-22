@@ -32,7 +32,8 @@ does to find the next conditionally optimal membership matrix A. (for details, s
 perform additive profile clustering, see \code{\link{adproclus}}.
 }
 \examples{
-x <- ADPROCLUS::CGdata
+# Obtain data from standard data set "Stackloss"
+x <- stackloss
 
 # Obtaining a user-defined rational start profile matrix (here the first 4 rows of the data)
 start_allocation <- getRational(x,x[1:4,])$A

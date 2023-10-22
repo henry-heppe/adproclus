@@ -5,6 +5,7 @@ test_that("network plot, basic functionality", {
         expect_no_error(plotClusterNetwork(model, title = "Test network", relative_overlap = FALSE, filetype = "pdf"))
         expect_no_condition(plotClusterNetwork(modelLD))
         expect_no_error(plotClusterNetwork(modelLD, title = "Test network", relative_overlap = FALSE, filetype = "pdf"))
+        expect_no_condition(plot(adproclusLD(stackloss, 3, 1, seed = 1), type = "Network"))
 })
 
 test_that("profile plot, basic functionality", {

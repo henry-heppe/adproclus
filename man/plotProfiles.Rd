@@ -22,7 +22,7 @@ with model an object of class \code{adpc}.
 }
 \examples{
 # Loading a test dataset into the global environment
-x <- ADPROCLUS::CGdata
+x <- stackloss
 
 # Quick clustering with K = 3 clusters
 clust <- adproclus(x, 3)

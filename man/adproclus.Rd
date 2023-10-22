@@ -101,7 +101,7 @@ multistart procedure.
 }
 \examples{
 # Loading a test dataset into the global environment
-x <- ADPROCLUS::CGdata
+x <- stackloss
 
 # Quick clustering with K = 2 clusters
 clust <- adproclus(data = x, nclusters = 2)

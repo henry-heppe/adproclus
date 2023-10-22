@@ -5,9 +5,11 @@
         cluster1 <- edge[1] #vertex on one side of the edge
         cluster2 <- edge[2] #vertex on the other side of the edge
         overlap <- nrow(A[A[,cluster1] == 1 & A[,cluster2] == 1,]) #no. of rows in which both clusters (cols) are 1
-        if (overlap == 0) {
-                overlap <- 0.0000001 #add this for fr algorithm
-        }
+        # if (overlap == 0) {
+        #         overlap <- 0.0000001 #add this for fr algorithm
+        #         overlap <- 0.1
+        # }
+        #overlap <- overlap + 1 #add this for fr algorithm
         return(overlap)
 }
 
@@ -79,42 +81,50 @@ plotClusterNetwork <- function(model,
 
         network <- igraph::graph_from_adjacency_matrix(adjacency_matrix, mode = "undirected")
         edgelist <- data.frame(t(igraph::as_edgelist(network)))
+        #weights <- sapply(edgelist, .extract_overlap, A = A, simplify = "array")
         weights <- sapply(edgelist, .extract_overlap, A = A)
 
         #compute cluster sizes and then add to string of node label
-        labels <- list()
+        labels <- c()
         for (i in 1:k) {
                 labels[i] <- paste(colnames(A)[i], "\n ", "obs: ", colSums(A)[i], sep = "")
         }
 
+        weights_internal <- weights
+        weights_internal[which(weights == 0)] <- 0.9 #this is to make the fr layout algorithm work
+        if (sum(weights) == 0) {
+                weights_internal <- weights_internal + 1 #display edges, when there is no overlap at all
+        }
+
         if(relative_overlap) {#relative overlap: overlapping obs / totals observations
-                qgraph::qgraph(input = cbind(igraph::as_edgelist(network), weights),
-                       mar = c(7,7,7,7),
-                       layout = "spring",
-                       minimum = 1,
-                       theme = "TeamFortress",
-                       colFactor = 0.6,
-                       filetype = filetype,
-                       node.width = 1 + 1.5 * (sizes / sqrt(sum(sizes^2))),
-                       title = title,
-                       labels = labels,
-                       label.scale = TRUE,
-                       edge.labels = round(weights/nrow(A), digits = 4),
-                       edge.label.cex = 1.5,
-                       edge.label.color = "black",
-                       edge.label.bg = FALSE,
-                       edge.label.position = 0.3,
-                       edge.width = 1.5 + (weights /sqrt(sum(weights^2)))^0.01,
-                       directed = FALSE,
-                       nNodes = k,
-                       edgelist = TRUE
+                qgraph::qgraph(input = cbind(igraph::as_edgelist(network), weights_internal),
+                               mar = c(7,7,7,7),
+                               layout = "spring",
+                               minimum = 0.9,
+                               theme = "TeamFortress",
+                               colFactor = 0.6,
+                               filetype = filetype,
+                               node.width = 1 + 1.5 * (sizes / sqrt(sum(sizes^2))),
+                               title = title,
+                               labels = labels,
+                               label.scale = TRUE,
+                               edge.labels = round(weights/nrow(A), digits = 4),
+                               edge.label.cex = 1.5,
+                               edge.label.color = "black",
+                               edge.label.bg = FALSE,
+                               edge.label.position = 0.3,
+                               edge.width = 1.5 + (weights /sqrt(sum(weights^2)+0.001))^0.01,
+                               directed = FALSE,
+                               nNodes = k,
+                               weighted = TRUE,
+                               edgelist = TRUE
                 )
 
         } else {
-                qgraph::qgraph(input = cbind(igraph::as_edgelist(network), weights),
+                qgraph::qgraph(input = cbind(igraph::as_edgelist(network), weights_internal),
                        mar = c(7,7,7,7),
                        layout = "spring",
-                       minimum = 1,
+                       minimum = 0.9,
                        theme = "TeamFortress",
                        colFactor = 0.6,
                        filetype = filetype,
@@ -122,14 +132,15 @@ plotClusterNetwork <- function(model,
                        title = title,
                        labels = labels,
                        label.scale = TRUE,
-                       edge.labels = TRUE,
+                       edge.labels = weights,
                        edge.label.cex = 1.5,
                        edge.label.color = "black",
                        edge.label.bg = FALSE,
                        edge.label.position = 0.3,
-                       edge.width = 1.5 + (weights /sqrt(sum(weights^2)))^0.01,
+                       edge.width = 1.5 + (weights /sqrt(sum(weights^2)+0.001))^0.01,
                        directed = FALSE,
                        nNodes = k,
+                       weighted = TRUE,
                        edgelist = TRUE
                 )
 

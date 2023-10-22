@@ -33,7 +33,7 @@ Adjust the parameters \code{digits, matrix_rows, matrix_cols} to change the leve
 }
 \examples{
 #Obtain data, compute model, print model
-x <- ADPROCLUS::CGdata
+x <- stackloss
 model <- adproclus(x, 3)
 print(model)
 }
