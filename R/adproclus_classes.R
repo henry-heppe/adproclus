@@ -125,20 +125,20 @@ summary.adpc <- function(object, title = "ADPROCLUS solution", digits = 3, matri
         }
         cluster_characteristics <- list()
         if (is.null(object$C)) {
-                #n_var_true <- ncol(object$model) #limit number of variables to include in summary statistics
-                #n_var_inc <- min(matrix_cols, n_var_true)
+
                 for (i in 1:k) {
                         members <- which(as.logical(A[,i]))
-                        cluster_characteristics <- append(cluster_characteristics, list(summary(data.frame(object$model[members, , drop = FALSE]))[c(1,4,6),]))
-                        names(cluster_characteristics)[i] <- colnames(A)[i]#paste("cluster_", i, sep = "")#issue: put cluster name here
+                        cluster_characteristics <- append(cluster_characteristics,
+                                                          list(summary(object$model[members, , drop = FALSE])[c(1,4,6), , drop = FALSE]))
+                        names(cluster_characteristics)[i] <- colnames(A)[i]
                 }
         } else {
-                #n_var_true <- ncol(object$model_lowdim) #limit number of variables to include in summary statistics
-                #n_var_inc <- min(matrix_cols, n_var_true)
+
                 for (i in 1:k) {
                         members <- which(as.logical(A[,i]))
-                        cluster_characteristics <- append(cluster_characteristics, list(summary(data.frame(object$model_lowdim[members, , drop = FALSE]))[c(1,4,6),]))
-                        names(cluster_characteristics)[i] <- colnames(A)[i]#paste("cluster_", i, sep = "")#issue: put cluster name here
+                        cluster_characteristics <- append(cluster_characteristics,
+                                                          list(summary(object$model_lowdim[members, , drop = FALSE])[c(1,4,6), , drop = FALSE]))
+                        names(cluster_characteristics)[i] <- colnames(A)[i]
                 }
         }
 
@@ -202,7 +202,11 @@ print.summary.adpc <- function(x, ...) {
         }
 
         lapply(1:ncol(x$model_complete$A),
-               function(i) {cat(names(x$cluster_characteristics)[i], "\n"); print(x$cluster_characteristics[[i]][, 1:n_var_inc, drop = FALSE])})
+               function(i) {
+                       cat(names(x$cluster_characteristics)[i], "\n");
+                       print(x$cluster_characteristics[[i]][, 1:n_var_inc, drop = FALSE])})
+
+
         invisible(x)
 
 
