@@ -41,7 +41,7 @@ starts are returned. By default, only the best solution is retained.}
 \code{adproclus} returns a list with the following
   components, which describe the best model (from the multiple starts): \describe{
   \item{\code{model}}{matrix. The obtained overlapping clustering model \strong{M} of the same size as \code{data}.}
-  \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering model.}
+  \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering model. Clusters are sorted by size.}
   \item{\code{P}}{matrix. The profile matrix
   \strong{P} of the clustering model.}
   \item{\code{sse}}{numeric. The

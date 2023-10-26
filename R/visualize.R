@@ -81,7 +81,6 @@ plotClusterNetwork <- function(model,
 
         network <- igraph::graph_from_adjacency_matrix(adjacency_matrix, mode = "undirected")
         edgelist <- data.frame(t(igraph::as_edgelist(network)))
-        #weights <- sapply(edgelist, .extract_overlap, A = A, simplify = "array")
         weights <- sapply(edgelist, .extract_overlap, A = A)
 
         #compute cluster sizes and then add to string of node label

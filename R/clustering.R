@@ -94,6 +94,11 @@ NULL
         sse <- fold
         explvar <- 1 - (fold/totvar)
 
+        #sort A columns and P rows by decreasing cluster size
+        order <- order(colSums(Membs), decreasing = TRUE)
+        Membs <- Membs[, order , drop = FALSE]
+        Profs <- Profs[order, , drop = FALSE]
+
         timeruns <- (proc.time() - t)[1]
 
         model <- Membs %*% Profs
@@ -155,6 +160,12 @@ NULL
         explvar <- 1 - (f/totvar)
 
         timeruns <- (proc.time() - t)[1]
+
+        #sort A columns and P rows by decreasing cluster size
+        order <- order(colSums(Membs), decreasing = TRUE)
+        Membs <- Membs[, order , drop = FALSE]
+        Profs <- Profs[order, , drop = FALSE]
+
 
         model <- Membs %*% Profs
         result <- list(model = model, A = Membs, P = Profs,
@@ -218,7 +229,13 @@ NULL
         sse <- f
         explvar <- 1 - (f/totvar)
 
-        decomp <- svd(P)
+        #sort A columns and P rows by decreasing cluster size
+        order <- order(colSums(Membs), decreasing = TRUE)
+        Membs <- Membs[, order , drop = FALSE]
+        Profs <- Profs[order, , drop = FALSE]
+
+
+        decomp <- svd(Profs)
 
         ldBase <- as.matrix(decomp$v[,1:s, drop = FALSE]) #B
         U <- as.matrix(decomp$u[,1:s, drop = FALSE])
@@ -404,7 +421,7 @@ NULL
 #' @return \code{adproclus} returns a list with the following
 #'   components, which describe the best model (from the multiple starts): \describe{
 #'   \item{\code{model}}{matrix. The obtained overlapping clustering model \strong{M} of the same size as \code{data}.}
-#'   \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering model.}
+#'   \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering model. Clusters are sorted by size.}
 #'   \item{\code{P}}{matrix. The profile matrix
 #'   \strong{P} of the clustering model.}
 #'   \item{\code{sse}}{numeric. The
@@ -683,7 +700,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #'   \item{\code{model}}{matrix. The obtained overlapping clustering model \eqn{\boldsymbol{M}} of the same size as \code{data}.}
 #'   \item{\code{model_lowdim}}{matrix. The obtained low dimensional clustering model \eqn{\boldsymbol{AC}}
 #'   of size \eqn{I \times S}}
-#'   \item{\code{A}}{matrix. The membership matrix \eqn{\boldsymbol{A}} of the clustering model.}
+#'   \item{\code{A}}{matrix. The membership matrix \eqn{\boldsymbol{A}} of the clustering model. Clusters are sorted by size.}
 #'   \item{\code{P}}{matrix. The profile matrix \eqn{\boldsymbol{P}} of the clustering model.}
 #'   \item{\code{c}}{matrix. The profile values in terms of the low dimensional components.}
 #'   \item{\code{B}}{matrix. Base vectors connecting low dimensional components with original variables.

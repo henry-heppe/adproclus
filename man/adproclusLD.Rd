@@ -42,7 +42,7 @@ starts are returned. By default, only the best solution is retained.}
   \item{\code{model}}{matrix. The obtained overlapping clustering model \eqn{\boldsymbol{M}} of the same size as \code{data}.}
   \item{\code{model_lowdim}}{matrix. The obtained low dimensional clustering model \eqn{\boldsymbol{AC}}
   of size \eqn{I \times S}}
-  \item{\code{A}}{matrix. The membership matrix \eqn{\boldsymbol{A}} of the clustering model.}
+  \item{\code{A}}{matrix. The membership matrix \eqn{\boldsymbol{A}} of the clustering model. Clusters are sorted by size.}
   \item{\code{P}}{matrix. The profile matrix \eqn{\boldsymbol{P}} of the clustering model.}
   \item{\code{c}}{matrix. The profile values in terms of the low dimensional components.}
   \item{\code{B}}{matrix. Base vectors connecting low dimensional components with original variables.

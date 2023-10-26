@@ -82,9 +82,20 @@ test_that("reproducibility both functions", {
 
 #issue: add test for (re-) naming of columns/rows
 
-#other test ideas
-test_that("ADPROCLUS S3 functionality", {
-
+test_that("order of clusters", {
+        x <- ADPROCLUS::CGdata[1:100,]
+        model <- adproclus(data = x, nclusters= 4, nrandomstart = 1, nsemirandomstart = 1,
+                           saveAllStarts = TRUE, seed = 10)
+        expect_equal(unname(rank((-1) * colSums(model$A), ties.method = "first")),
+                     1:ncol(model$A))
+        model2 <- adproclus(data = x, nclusters= 4, nrandomstart = 1, nsemirandomstart = 1,
+                           saveAllStarts = TRUE, seed = 10, algorithm = "ALS2")
+        expect_equal(unname(rank((-1) * colSums(model2$A), ties.method = "first")),
+                     1:ncol(model2$A))
+        modelLD <- adproclusLD(data = x, nclusters= 4, ncomponents = 2, nrandomstart = 1, nsemirandomstart = 1,
+                           saveAllStarts = TRUE, seed = 10)
+        expect_equal(unname(rank((-1) * colSums(modelLD$A), ties.method = "first")),
+                     1:ncol(modelLD$A))
 })
 
 test_that("ADPROCLUS edge cases", {
