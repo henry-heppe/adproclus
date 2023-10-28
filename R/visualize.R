@@ -5,11 +5,6 @@
         cluster1 <- edge[1] #vertex on one side of the edge
         cluster2 <- edge[2] #vertex on the other side of the edge
         overlap <- nrow(A[A[,cluster1] == 1 & A[,cluster2] == 1,]) #no. of rows in which both clusters (cols) are 1
-        # if (overlap == 0) {
-        #         overlap <- 0.0000001 #add this for fr algorithm
-        #         overlap <- 0.1
-        # }
-        #overlap <- overlap + 1 #add this for fr algorithm
         return(overlap)
 }
 

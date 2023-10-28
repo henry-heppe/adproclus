@@ -1,4 +1,4 @@
-Package: ADPROCLUS
+Package: adproclus
 Title: Additive Profile Clustering Algorithms for R
 Version: 1.0.0
 Authors@R: c(person("Henry", "Heppe",
@@ -32,7 +32,7 @@ Imports:
     withr
 RoxygenNote: 7.2.3
 Collate: 
-    'ADPROCLUS-package.R'
+    'adproclus-package.R'
     'adproclus_classes.R'
     'clustering.R'
     'data.R'

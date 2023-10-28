@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(ADPROCLUS)
+library(adproclus)
 
-test_check("ADPROCLUS")
+test_check("adproclus")

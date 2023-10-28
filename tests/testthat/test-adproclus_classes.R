@@ -1,7 +1,7 @@
 
 test_that("adpc constructor test", {
-        model_complete <- adproclus(CGdata[1:100,], 2)
-        model_completeLD <- adproclusLD(CGdata[1:100,], 3, 2)
+        model_complete <- adproclus(adproclus::CGdata[1:100,], 2)
+        model_completeLD <- adproclusLD(adproclus::CGdata[1:100,], 3, 2)
         expect_no_condition(adpc(model_complete$A, model_complete$P))
         expect_no_condition(adpc(A = model_completeLD$A, P = model_completeLD$P,
                              C = model_completeLD$C, B = model_completeLD$B))
@@ -11,7 +11,7 @@ test_that("adpc constructor test", {
 })
 
 test_that("print test", {
-        x <- CGdata[1:100,]
+        x <- adproclus::CGdata[1:100,]
         model <- adproclus(data = x, nclusters = 2)
         modelLD <- adproclusLD(data = x, nclusters = 3, ncomponents = 2)
         expect_no_error(print.adpc(model))
@@ -23,7 +23,7 @@ test_that("print test", {
 })
 
 test_that("summary.adpc test", {
-        x <- CGdata[1:100,]
+        x <- adproclus::CGdata[1:100,]
         model <- adproclus(data = x, nclusters = 2)
         modelLD <- adproclusLD(data = x, nclusters = 3, ncomponents = 2)
 
@@ -36,7 +36,7 @@ test_that("summary.adpc test", {
 })
 
 test_that("print.summary.adpc test", {
-        x <- CGdata[1:100,]
+        x <- adproclus::CGdata[1:100,]
         model <- adproclus(data = x, nclusters = 2)
         modelLD <- adproclusLD(data = x, nclusters = 3, ncomponents = 2)
         sum_res <- summary(model, digits = 2, matrix_rows = 1, matrix_cols = 4)
@@ -49,7 +49,7 @@ test_that("print.summary.adpc test", {
 })
 
 test_that("plot test", {
-        x <- CGdata[1:100,]
+        x <- adproclus::CGdata[1:100,]
         model <- adproclus(data = x, nclusters = 2)
         modelLD <- adproclusLD(data = x, nclusters = 3, ncomponents = 2)
 
