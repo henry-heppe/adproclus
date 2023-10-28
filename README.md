@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ADPROCLUS
+# adproclus
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -21,13 +21,13 @@ You can install the development version of ADPROCLUS from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("henry-heppe/ADPROCLUS")
+devtools::install_github("henry-heppe/adproclus")
 ```
 
 Or install the latest version from CRAN:
 
 ``` r
-install.packages("ADPROCLUS")
+install.packages("adproclus")
 ```
 
 ## Example
@@ -36,22 +36,22 @@ This is a basic example which shows you how to use the regular ADPROCLUS
 and the low dimensional ADPROCLUS:
 
 ``` r
-library(ADPROCLUS)
+library(adproclus)
 #import data
-our_data <- ADPROCLUS::CGdata
+our_data <- adproclus::CGdata
 
 #perform ADPROCLUS to get an overlapping clustering model
 model_full <- adproclus(data = our_data, nclusters = 2)
 #> [1] "Clustering completed."
 #> [1] "Additive Profile Clustering with 2 overlapping clusters."
-#> [1] "Total processing time: 11.9 seconds."
+#> [1] "Total processing time: 1.4 seconds."
 #> [1] "Algorithm starts: 3 random and 3 semi random"
 
 #perform low dimensional ADPROCLUS to get an overlapping clustering model in terms of a smaller number of variables
 model_lowdim <- adproclusLD(data = our_data, nclusters = 3, ncomponents = 2)
 #> [1] "Clustering completed."
 #> [1] "Low dimensional Additive Profile Clustering with  3  overlapping clusters, and  2 components (dimensions)."
-#> [1] "Total processing time:  11.4  seconds."
+#> [1] "Total processing time:  0.5  seconds."
 #> [1] "Algorithm starts:  3 random and  3  semi-random."
 ```
 
@@ -62,9 +62,9 @@ semi-random and rational (see respective function documentation for
 details).
 
 ``` r
-library(ADPROCLUS)
+library(adproclus)
 #import data
-our_data <- ADPROCLUS::CGdata
+our_data <- adproclus::CGdata
 #Obtaining a membership matrix were the entries are randomly assigned values of 0 or 1
 start_allocation1 <- getRandom(our_data, 3)
 #Obtaining a membership matrix based on a profile matrix consisting of randomly selected rows of the data

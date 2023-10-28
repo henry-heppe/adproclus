@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ADPROCLUS
+# adproclus
 
 <!-- badges: start -->
 ```{r, include = FALSE}
@@ -30,11 +30,11 @@ You can install the development version of ADPROCLUS from [GitHub](https://githu
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("henry-heppe/ADPROCLUS")
+devtools::install_github("henry-heppe/adproclus")
 ```
 Or install the latest version from CRAN:
 ``` r
-install.packages("ADPROCLUS")
+install.packages("adproclus")
 ```
 
 ## Example
@@ -42,9 +42,9 @@ install.packages("ADPROCLUS")
 This is a basic example which shows you how to use the regular ADPROCLUS and the low dimensional ADPROCLUS:
 
 ```{r example 1}
-library(ADPROCLUS)
+library(adproclus)
 #import data
-our_data <- ADPROCLUS::CGdata
+our_data <- adproclus::CGdata
 
 #perform ADPROCLUS to get an overlapping clustering model
 model_full <- adproclus(data = our_data, nclusters = 2)
@@ -55,9 +55,9 @@ model_lowdim <- adproclusLD(data = our_data, nclusters = 3, ncomponents = 2)
 
 The package also provides functionality to obtain membership matrices, that the algorithm can start the alternating least squares procedure on. There are three different possibilities to obtain such matrices: random, semi-random and rational (see respective function documentation for details).
 ```{r example 2}
-library(ADPROCLUS)
+library(adproclus)
 #import data
-our_data <- ADPROCLUS::CGdata
+our_data <- adproclus::CGdata
 #Obtaining a membership matrix were the entries are randomly assigned values of 0 or 1
 start_allocation1 <- getRandom(our_data, 3)
 #Obtaining a membership matrix based on a profile matrix consisting of randomly selected rows of the data

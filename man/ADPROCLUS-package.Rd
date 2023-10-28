@@ -2,7 +2,6 @@
 % Please edit documentation in R/adproclus-package.R
 \docType{package}
 \name{adproclus-package}
-\alias{adproclus}
 \alias{adproclus-package}
 \title{adproclus: Additive Profile Clustering Algorithms for R}
 \description{
