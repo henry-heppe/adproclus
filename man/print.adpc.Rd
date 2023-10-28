@@ -32,7 +32,7 @@ about the ADPROCLUS solution represented by the object. Works for both full and 
 Adjust the parameters \code{digits, matrix_rows, matrix_cols} to change the level of detail printed.
 }
 \examples{
-#Obtain data, compute model, print model
+# Obtain data, compute model, print model
 x <- stackloss
 model <- adproclus(x, 3)
 print(model)

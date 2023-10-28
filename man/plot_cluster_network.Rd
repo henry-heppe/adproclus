@@ -41,7 +41,7 @@ or absolute (number of observations in both clusters).
 x <- stackloss
 
 # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
-clust <- adproclusLD(x, 3, 1)
+clust <- adproclus_low_dim(x, 3, 1)
 
 # Plot the overlapping the clusters
 plot_cluster_network(clust)

@@ -1,12 +1,4 @@
-#Visualization functions for an ADPROCLUS model
-
-#helper function
-.extract_overlap <- function(edge, A) {
-        cluster1 <- edge[1] #vertex on one side of the edge
-        cluster2 <- edge[2] #vertex on the other side of the edge
-        overlap <- nrow(A[A[,cluster1] == 1 & A[,cluster2] == 1,]) #no. of rows in which both clusters (cols) are 1
-        return(overlap)
-}
+# Visualization functions for an ADPROCLUS model
 
 #' Network plot of a (low dimensional) ADPROCLUS solution
 #'
@@ -36,7 +28,7 @@
 #' x <- stackloss
 #'
 #' # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
-#' clust <- adproclusLD(x, 3, 1)
+#' clust <- adproclus_low_dim(x, 3, 1)
 #'
 #' # Plot the overlapping the clusters
 #' plot_cluster_network(clust)
@@ -68,8 +60,8 @@ plot_cluster_network <- function(model,
 
         sizes <- colSums(A)
 
-        #create adjacency matrix for graph, where each cluster is a node.
-        #all nodes are connected to all nodes except themselves
+        # Create adjacency matrix for graph, where each cluster is a node
+        # All nodes are connected to all nodes except themselves
         adjacency_matrix <- matrix(rep(1,k^2),k,k)
         diag(adjacency_matrix) <- rep(0,k)
 
@@ -77,19 +69,22 @@ plot_cluster_network <- function(model,
         edgelist <- data.frame(t(igraph::as_edgelist(network)))
         weights <- sapply(edgelist, .extract_overlap, A = A)
 
-        #compute cluster sizes and then add to string of node label
+        # Compute cluster sizes and then add to string of node label
         labels <- c()
         for (i in 1:k) {
                 labels[i] <- paste(colnames(A)[i], "\n ", "obs: ", colSums(A)[i], sep = "")
         }
 
         weights_internal <- weights
-        weights_internal[which(weights == 0)] <- 0.9 #this is to make the fr layout algorithm work
+        #Fr layout algorithm cannot deal with zero-weights
+        weights_internal[which(weights == 0)] <- 0.9
+
+        # Display edges, when there is no overlap at all
         if (sum(weights) == 0) {
-                weights_internal <- weights_internal + 1 #display edges, when there is no overlap at all
+                weights_internal <- weights_internal + 1
         }
 
-        if(relative_overlap) {#relative overlap: overlapping obs / totals observations
+        if(relative_overlap) {
                 qgraph::qgraph(input = cbind(igraph::as_edgelist(network), weights_internal),
                                mar = c(7,7,7,7),
                                layout = "spring",
@@ -167,7 +162,6 @@ plot_cluster_network <- function(model,
 plot_profiles <- function(model, title = "Profiles of ADPROCLUS solution") {
         checkmate::assertClass(model, "adpc")
         checkmate::assertString(title, null.ok = TRUE)
-        #issue: cluster- and profile names displayed correctly?
 
         if (is.null(title)) {
                 title = "Profiles of ADPROCLUS solution"
@@ -202,15 +196,13 @@ plot_profiles <- function(model, title = "Profiles of ADPROCLUS solution") {
 #' x <- stackloss
 #'
 #' # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
-#' clust <- adproclusLD(x, 3, 1)
+#' clust <- adproclus_low_dim(x, 3, 1)
 #'
 #' # Plot the matrix B', connecting components with variables
 #' plot_vars_by_comp(clust)
 plot_vars_by_comp <- function(model, title = "B' of Low Dimensional ADPROCLUS Solution") {
         checkmate::assertClass(model, "adpc")
         checkmate::assertString(title, null.ok = TRUE)
-
-        #issue: component- and variable names displayed correctly?
 
         if (is.null(title)) {
                 title = "B' of Low Dimensional ADPROCLUS Solution"
@@ -220,4 +212,19 @@ plot_vars_by_comp <- function(model, title = "B' of Low Dimensional ADPROCLUS So
         }
         corrplot::corrplot(t(model$B), is.corr = FALSE, title = title, mar = c(0,0,2,0))
         invisible(model)
+}
+
+# Helper function
+#' Calculate the number of observations in the overlap of two clusters
+#'
+#' @param edge Pair of cluster numbers.
+#' @param A Cluster membership matrix.
+#'
+#' @return Number of observations that are in both clusters simultaneously.
+#'
+#' @noRd
+.extract_overlap <- function(edge, A) {
+        cluster1 <- edge[1] #vertex on one side of the edge
+        cluster2 <- edge[2] #vertex on the other side of the edge
+        overlap <- nrow(A[A[,cluster1] == 1 & A[,cluster2] == 1,]) #no. of rows in which both clusters (cols) are 1
 }

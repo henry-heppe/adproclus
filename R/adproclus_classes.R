@@ -1,4 +1,4 @@
-#S3 methods for ADPROCLUS solution representation, printing and plotting
+# S3 methods for ADPROCLUS solution representation, printing and plotting
 
 #' Constructor for a (low dimensional) ADPROCLUS solution object
 #'
@@ -10,7 +10,7 @@
 #' have to be provided and \eqn{\boldsymbol{P}} can be inferred from those.
 #' All other inputs are optional but may be included so that the output from the \code{summary(), print(), plot()} is complete.
 #' For further details on the (low dimensional) ADPROCLUS model and what every element of the objects means
-#' see \code{\link{adproclus}} and \code{\link{adproclusLD}}.
+#' see \code{\link{adproclus}} and \code{\link{adproclus_low_dim}}.
 #'
 #' @param A Membership matrix A.
 #' @param P Profile matrix P.
@@ -29,13 +29,13 @@
 #' @export
 #'
 #' @examples
-#' #Create the information needed for a minimal object of class adpc
+#' # Create the information needed for a minimal object of class adpc
 #' x <- stackloss
 #' result <- adproclus(x, 3)
 #' A <- result$A
 #' P <- result$P
 #'
-#' #Use constructor to obtain object of class adpc
+#' # Use constructor to obtain object of class adpc
 #' result_object <- adpc(A, P)
 #'
 adpc <- function(A, P, sse = NULL, totvar = NULL, explvar = NULL, iterations = NULL, timer = NULL, initial_start = NULL, C = NULL, B = NULL, runs = NULL, parameters = NULL) {
@@ -63,7 +63,7 @@ adpc <- function(A, P, sse = NULL, totvar = NULL, explvar = NULL, iterations = N
                 if (!isTRUE(all.equal(P, C %*% t(B)))) {
                         stopifnot(ncol(A) == nrow(C %*% t(B)))
                         P <- C %*% t(B)
-                        warning("Inferred P as CB', as they were not equal.")
+                        warning("Inferred P as CB', since they were not equal.")
                 }
 
 
@@ -76,7 +76,7 @@ adpc <- function(A, P, sse = NULL, totvar = NULL, explvar = NULL, iterations = N
         object <- list(model = A %*% P, model_lowdim = model_lowdim, A = A, P = P, sse = sse, totvar = totvar, explvar = explvar,
                        iterations = iterations, timer = timer, C = C, B = B, runs = runs, parameters = parameters)
         class(object) <- "adpc"
-        return(object)
+        object
 }
 
 #' Summary of ADPROCLUS solution
@@ -149,7 +149,7 @@ summary.adpc <- function(object, title = "ADPROCLUS solution", digits = 3, matri
         print_settings <- list(digits = digits, matrix_rows = matrix_rows, matrix_cols = matrix_cols, title = title)
         summary_res <- append(summary_res, list(print_settings = print_settings))
         class(summary_res) <- "summary.adpc"
-        return(summary_res)
+        summary_res
 }
 
 #' Print (low dimensional) ADPROCLUS summary
@@ -247,7 +247,7 @@ print.summary.adpc <- function(x, ...) {
 #' x <- stackloss
 #'
 #' # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
-#' clust <- adproclusLD(x, 3, 1)
+#' clust <- adproclus_low_dim(x, 3, 1)
 #'
 #' # Produce three plots of the model
 #' plot(clust, type = "Network")
@@ -263,7 +263,7 @@ plot.adpc <- function(x,
         checkmate::assertString(title, null.ok = TRUE)
         checkmate::assertFlag(relative_overlap)
 
-        #check for illegal choice of VarsByComp for full dim x is done in plotVarsByComp()
+        # The check for illegal choice of VarsByComp for full dim x is done in plotVarsByComp()
         if (type == "vars_by_comp") {
                 plot_vars_by_comp(model = x, title = title)
 
@@ -296,7 +296,7 @@ plot.adpc <- function(x,
 #' @export
 #'
 #' @examples
-#' #Obtain data, compute model, print model
+#' # Obtain data, compute model, print model
 #' x <- stackloss
 #' model <- adproclus(x, 3)
 #' print(model)

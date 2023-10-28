@@ -1,369 +1,6 @@
 #' @include adproclus_classes.R
 NULL
 
-.updateA_lf1 <- function(A, PossibA, data) {
-
-        B <- A
-        npos <- nrow(PossibA)
-        n <- nrow(A)
-        loss <- matrix(0, 1, npos)
-
-        for (row in 1:n) {
-
-                for (r in 1:npos) {
-
-                        Apos <- B
-                        Apos[row, ] <- PossibA[r, ]
-                        if (any(colSums(Apos) == 0) == FALSE) {
-                                Gpos <- NMFN::mpinv(Apos) %*% data
-                                respos <- data - (Apos %*% Gpos)
-                                loss[r] <- .lossL2(respos)
-                        } else {
-                                loss[r] <- NA
-                        }
-
-                }
-
-
-                minloss <- min(loss[, !is.na(loss)])
-                ind <- which.min(loss)
-                B[row, ] <- PossibA[ind, , drop = FALSE]
-        }
-
-        if (any(colSums(B) == 0) == TRUE) {
-                zerocols <- 0
-        } else {
-                zerocols <- 1
-        }
-        result <- list(B, minloss, zerocols)
-        return(result)
-}
-
-.updateA_lf2 <- function(n, P, replX, PossibA) {
-
-        nA <- nrow(PossibA)
-
-        posrec <- PossibA %*% P
-
-        loss <- matrix(as.numeric(rowSums((replX - posrec)^2)),
-                nrow = nA/n, ncol = n)
-
-        index <- apply(loss, 2, which.min)
-        A <- as.matrix(PossibA[index, , drop = FALSE])
-
-        return(A)
-
-}
-
-.adproclus_lf1 <- function(x, A) {
-
-        t <- proc.time()
-
-        data <- x
-        n <- nrow(x)
-        totvar <- norm(data - mean(data), "f")^2
-        k <- ncol(A)
-
-        PossibA <- gtools::permutations(2, k, v = c(0, 1), repeats.allowed = TRUE)
-        PossibA <- apply(PossibA, 2, rev)
-        if (k > 1) {
-                PossibA <- t(apply(PossibA, 1, rev))
-        }
-
-        G <- NMFN::mpinv(A) %*% data
-        res <- data - (A %*% G)
-        f <- .lossL2(res)
-        fold <- f + 1
-        iter <- 1
-
-        while (fold > f) {
-
-                fold = f
-                Aold = A
-
-                update <- .updateA_lf1(Aold, PossibA, data)
-                A <- update[[1]]
-                f <- update[[2]]
-
-                iter <- iter + 1
-        }
-
-        runs <- iter - 1
-        Membs <- Aold
-        Profs <- NMFN::mpinv(Aold) %*% data
-        sse <- fold
-        explvar <- 1 - (fold/totvar)
-
-        #sort A columns and P rows by decreasing cluster size
-        order <- order(colSums(Membs), decreasing = TRUE)
-        Membs <- Membs[, order , drop = FALSE]
-        Profs <- Profs[order, , drop = FALSE]
-
-        timeruns <- (proc.time() - t)[1]
-
-        model <- Membs %*% Profs
-        result <- list(model = model, A = Membs, P = Profs,
-                sse = sum((model - x)^2), totvar = totvar,
-                explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initial_start = NULL)
-        class(result) <- "adpc"
-
-        return(result)
-}
-
-.adproclus_lf2 <- function(x, A) {
-
-        t <- proc.time()
-
-        data <- x
-        n <- nrow(x)
-        totvar <- norm(data - mean(data), "f")^2
-        k <- ncol(A)
-        npos <- 2^k
-
-        P <- NMFN::mpinv(A) %*% data
-        res <- data - (A %*% P)
-        f <- .lossL2(res)
-        fold <- f + 1
-        iter <- 1
-
-        PossibA <- gtools::permutations(2, k, v = c(0, 1), repeats.allowed = TRUE)
-        PossibA <- apply(PossibA, 2, rev)
-        if (k > 1) {
-                PossibA <- t(apply(PossibA, 1, rev))
-        }
-        PossibA <- .repmat(PossibA, n, 1)
-
-        replX <- data.frame()
-        for (i in 1:n) {
-                reps <- .repmat(data[i, , drop = FALSE], npos, 1)
-                replX <- rbind(replX, reps)
-        }
-        replX <- as.matrix(replX)
-
-        while (fold > f) {
-
-                fold = f
-                Aold = A
-                Pold = P
-
-                A <- .updateA_lf2(n, Pold, replX, PossibA)
-                P <- NMFN::mpinv(A) %*% data
-                f <- .lossL2(x - (A %*% P))
-
-                iter <- iter + 1
-        }
-
-        runs <- iter - 1
-        Membs <- A
-        Profs <- P
-        sse <- f
-        explvar <- 1 - (f/totvar)
-
-        timeruns <- (proc.time() - t)[1]
-
-        #sort A columns and P rows by decreasing cluster size
-        order <- order(colSums(Membs), decreasing = TRUE)
-        Membs <- Membs[, order , drop = FALSE]
-        Profs <- Profs[order, , drop = FALSE]
-
-
-        model <- Membs %*% Profs
-        result <- list(model = model, A = Membs, P = Profs,
-                sse = sum((model - x)^2), totvar = totvar,
-                explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initial_start = NULL)
-        class(result) <- "adpc"
-
-        return(result)
-
-}
-
-
-.ldadproclus <- function (x, A, s) {
-        t <- proc.time()
-
-        data <- x
-        n <- nrow(x)
-        totvar <- norm(data - mean(data), "f")^2
-        k <- ncol(A)
-        npos <- 2^k
-
-        P <- .ldfindP(x, A, s)
-
-        f <- .lossL2(x - (A %*% P))
-        fold <- f + 1
-        iter <- 1
-
-        PossibA <- gtools::permutations(2, k, v = c(0, 1), repeats.allowed = TRUE)
-        #PossibA <- PossibA[which(rowSums(PossibA) > 0),] #possible restriction against zero-rows
-        #npos <- npos - 1 #needed for restriction against zero-rows
-        PossibA <- apply(PossibA, 2, rev)
-        if (k > 1) {
-                PossibA <- t(apply(PossibA, 1, rev))
-        }
-
-        PossibA <- .repmat(PossibA, n, 1)
-
-        replX <- data.frame()
-        for (i in 1:n) {
-                reps <- .repmat(data[i, , drop = FALSE], npos, 1)
-                replX <- rbind(replX, reps)
-        }
-        replX <- as.matrix(replX)
-
-        while (fold > f) {
-
-                fold = f
-                Aold = A
-                Pold = P
-
-                A <- .updateA_lf2(n, Pold, replX, PossibA)
-                P <- .ldfindP(data, A, s)
-                f <- .lossL2(x - (A %*% P))
-
-                iter <- iter + 1
-        }
-
-        runs <- iter - 1
-        Membs <- A
-        Profs <- P
-        sse <- f
-        explvar <- 1 - (f/totvar)
-
-        #sort A columns and P rows by decreasing cluster size
-        order <- order(colSums(Membs), decreasing = TRUE)
-        Membs <- Membs[, order , drop = FALSE]
-        Profs <- Profs[order, , drop = FALSE]
-
-
-        decomp <- svd(Profs)
-
-        ldBase <- as.matrix(decomp$v[,1:s, drop = FALSE]) #B
-        U <- as.matrix(decomp$u[,1:s, drop = FALSE])
-        if (s == 1) {
-                D <- diag(as.matrix(decomp$d[1:s]))
-        } else {
-                D <- diag(decomp$d[1:s])
-        }
-
-        ldProfs <- as.matrix(U %*%  D) #C = U*D
-
-
-        timeruns <- (proc.time() - t)[1]
-
-        model <- Membs %*% Profs
-        model_lowdim <- Membs %*% ldProfs
-        result <- list(model = model, model_lowdim = model_lowdim, A = Membs, P = Profs, C = ldProfs, B = ldBase,
-                       sse = sum((model - x)^2), totvar = totvar,
-                       explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initial_start = NULL)
-        class(result) <- "adpc"
-
-        return(result)
-
-
-
-
-}
-
-.ldfindP <- function (X, A, s) {
-        Z <- A %*% NMFN::mpinv(A)
-        U <- Z %*% X %*% t(X) %*% Z
-        Q <- eigen(U, symmetric = TRUE)[["vectors"]][,1:s, drop = FALSE]
-
-        P <- NMFN::mpinv(A) %*% Q %*% t(Q) %*% X
-
-        return(P)
-}
-
-
-
-
-
-
-
-
-
-.printoutput <- function (k, time, nrandomstart, nsemirandomstart, rationalStart) {
-
-        print ("Clustering completed.")
-        print (paste ("Additive Profile Clustering with",
-                k, "overlapping clusters."))
-        print (paste ("Total processing time:",
-                round (time, digits = 1), "seconds."))
-        print (paste ("Algorithm starts:", nrandomstart, "random and",
-                nsemirandomstart, "semi random"))
-        if (rationalStart) {
-                print("A rational start was included as the first run.")
-        }
-
-}
-
-.LDprintoutput <- function (k, s, time, nrandomstart, nsemirandomstart, rationalStart) {
-
-        print ("Clustering completed.")
-        print (paste ("Low dimensional Additive Profile Clustering with ",
-                      k, " overlapping clusters, and ", s, "components (dimensions)."))
-        print (paste ("Total processing time: ",
-                      round (time, digits = 1), " seconds."))
-        print (paste ("Algorithm starts: ", nrandomstart, "random and ",
-                      nsemirandomstart, " semi-random."))
-        if (rationalStart) {
-                print("A rational start was included as the first run.")
-        }
-
-}
-
-.adjust_row_col_names <- function(input_model, data) {
-        results <- input_model
-        #row and column names
-        colnames(results$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
-        colnames(results$A) <- colnames(results$A, do.NULL = FALSE, prefix = "Cl")
-        rownames(results$P) <- rownames(results$P, do.NULL = FALSE, prefix = "Cl")
-
-        if (!is.null(results$runs)) {
-                for (i in 1:length(results$runs)) {
-                        colnames(results$runs[[i]]$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
-                        colnames(results$runs[[i]]$A) <- colnames(results$A, do.NULL = FALSE, prefix = "Cl")
-                        rownames(results$runs[[i]]$P) <- rownames(results$P, do.NULL = FALSE, prefix = "Cl")
-                }
-        }
-
-        return(results)
-}
-
-.adjust_row_col_names_LD <- function(input_model, data) {
-        results <- input_model
-        # print(input_model$model)
-        # print(input_model$model_lowdim)
-        # print(input_model$A)
-        # print(input_model$P)
-        # print(input_model$C)
-        # print(input_model$B)
-        #row and column names
-        colnames(results$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
-        colnames(results$model_lowdim) <- colnames(results$model_lowdim, do.NULL = FALSE, prefix = "Comp")
-        colnames(results$A) <- colnames(results$A, do.NULL = FALSE, prefix = "Cl")
-        rownames(results$P) <- rownames(results$P, do.NULL = FALSE, prefix = "Cl")
-        colnames(results$C) <- colnames(results$C, do.NULL = FALSE, prefix = "Comp")
-        rownames(results$C) <- rownames(results$C, do.NULL = FALSE, prefix = "Cl")
-        colnames(results$B) <- colnames(results$B, do.NULL = FALSE, prefix = "Comp")
-        rownames(results$B) <- rownames(results$B, do.NULL = FALSE, prefix = "V")
-
-        if (!is.null(results$runs)) {
-                for (i in 1:length(results$runs)) {
-                        colnames(results$runs[[i]]$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
-                        colnames(results$runs[[i]]$model_lowdim) <- colnames(results$model_lowdim, do.NULL = FALSE, prefix = "Comp")
-                        colnames(results$runs[[i]]$A) <- colnames(results$A, do.NULL = FALSE, prefix = "Cl")
-                        rownames(results$runs[[i]]$P) <- rownames(results$P, do.NULL = FALSE, prefix = "Cl")
-                        colnames(results$runs[[i]]$C) <- colnames(results$C, do.NULL = FALSE, prefix = "Comp")
-                        rownames(results$runs[[i]]$C) <- rownames(results$C, do.NULL = FALSE, prefix = "Cl")
-                         colnames(results$runs[[i]]$B) <- colnames(results$B, do.NULL = FALSE, prefix = "Comp")
-                        rownames(results$runs[[i]]$B) <- rownames(results$B, do.NULL = FALSE, prefix = "V")
-                }
-        }
-
-        return(results)
-}
-
 #' Additive profile clustering
 #'
 #' Perform additive profile clustering (ADPROCLUS) on object by variable data.
@@ -416,7 +53,8 @@ NULL
 #' @param seed Integer. Seed for the random number generator. Default: NULL, meaning no reproducibility
 #'
 #' @return \code{adproclus} returns a list with the following
-#'   components, which describe the best model (from the multiple starts): \describe{
+#'   components, which describe the best model (from the multiple starts):
+#'   \describe{
 #'   \item{\code{model}}{matrix. The obtained overlapping clustering model \strong{M} of the same size as \code{data}.}
 #'   \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering model. Clusters are sorted by size.}
 #'   \item{\code{P}}{matrix. The profile matrix
@@ -466,185 +104,184 @@ NULL
 #' # Clustering with K = 3 clusters,
 #' # using the ALS2 algorithm,
 #' # with 2 random and 2 semi-random starts
-#' clust <- adproclus(data = x, nclusters = 3,
+#' clust <- adproclus(x, 3,
 #'                    nrandomstart = 2, nsemirandomstart = 2, algorithm = "ALS2")
 #'
 #' # Saving the results of all starts
-#' clust <- adproclus(data = x, nclusters = 3,
+#' clust <- adproclus(x, 3,
 #'                    nrandomstart = 2, nsemirandomstart = 2, save_all_starts = TRUE)
 #'
 #' # Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
-#' start <- get_rational(x,x[1:4,])$A
-#' clust <- adproclus(data = x, nclusters = 4, start_allocation = start)
+#' start <- get_rational(x, x[1:4, ])$A
+#' clust <- adproclus(x, 4, start_allocation = start)
 #'
-#' @seealso \code{\link{adproclusLD}} for low dimensional ADPROCLUS, \code{\link{get_random}},\code{\link{get_semirandom}} and \code{\link{get_rational}} for generating
-#'   (semi-)random and rational starts for ADPROCLUS.
+#' @seealso
+#' \describe{
+#'   \item{\code{\link{adproclus_low_dim}}}{for low dimensional ADPROCLUS}
+#'   \item{\code{\link{get_random}}}{for generating random starts}
+#'   \item{\code{\link{get_semirandom}}}{for generating semi-random starts}
+#'   \item{\code{\link{get_rational}}}{for generating rational starts}
+#' }
 adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3, nsemirandomstart = 3,
-        algorithm = "ALS1", save_all_starts = FALSE, seed = NULL) {
+                      algorithm = "ALS1", save_all_starts = FALSE, seed = NULL) {
 
-    t <- proc.time()
-    results <- list()
+        t <- proc.time()
+        results <- list()
 
-    data <- as.matrix(data)
-    n <- as.integer(nrow(data))
-    p <- as.integer(ncol(data))
+        data <- as.matrix(data)
+        n <- as.integer(nrow(data))
+        p <- as.integer(ncol(data))
 
-    checkmate::assertCount(nclusters, positive = TRUE, coerce = TRUE)
-    checkmate::assertCount(nrandomstart, coerce = TRUE)
-    checkmate::assertCount(nsemirandomstart, coerce = TRUE)
-    checkmate::assertInt(seed, null.ok = TRUE, coerce = TRUE)
-    checkmate::assertFlag(save_all_starts)
-    checkmate::assertMatrix(data, mode = "numeric", any.missing = FALSE)
-    checkmate::assertChoice(algorithm, c("ALS1", "ALS2"))
-
-    if (nrandomstart + nsemirandomstart > 50) {
-            warning("Number of starts is larger than 50. Computation might take a while")
-    }
-
-    if (n < nclusters)
-            stop("number of clusters cannot exceed number of objects in 'data'")
-    if (is.null(start_allocation) & nrandomstart == 0 & nsemirandomstart == 0) {
-            stop("need either start allocation matrix or a non-zero number of (semi-) random starts")
-    }
-    if (nclusters > ncol(data)) {
-            stop("Cannot have more clusters than variables")
-    }
-    if (n < nclusters)
-            stop("number of clusters cannot exceed number of objects in 'data'")
+        checkmate::assertCount(nclusters, positive = TRUE, coerce = TRUE)
+        checkmate::assertCount(nrandomstart, coerce = TRUE)
+        checkmate::assertCount(nsemirandomstart, coerce = TRUE)
+        checkmate::assertInt(seed, null.ok = TRUE, coerce = TRUE)
+        checkmate::assertFlag(save_all_starts)
+        checkmate::assertMatrix(data, mode = "numeric", any.missing = FALSE)
+        checkmate::assertChoice(algorithm, c("ALS1", "ALS2"))
 
 
+        if (nrandomstart + nsemirandomstart > 50) {
+                warning("Number of starts is larger than 50. Computation might take a while")
+        }
 
+        if (n < nclusters)
+                stop("Number of clusters must be less or equal the number of objects in 'data'.")
+        if (is.null(start_allocation) & nrandomstart == 0 & nsemirandomstart == 0) {
+                stop("Must have either start allocation matrix or a non-zero number of (semi-) random starts")
+        }
+        if (nclusters > ncol(data)) {
+                stop("Number of clusters must be less or equal the number of variables.")
+        }
 
+        alg <- switch(match.arg(algorithm, c("ALS1", "ALS2")),
+                      ALS1 = 1, ALS2 = 2)
 
-    alg <- switch(match.arg(algorithm, c("ALS1", "ALS2")),
-        ALS1 = 1, ALS2 = 2)
-
-    BestSol <- list(sse = Inf)
-    results <- list()
-    if (!is.null(start_allocation)) {
-            start_allocation <- as.matrix(start_allocation)
-            checkmate::assertMatrix(start_allocation)
-            m <- as.integer(nrow(start_allocation))
-            q <- as.integer(ncol(start_allocation))
-            if (!all(start_allocation %in% c(0,1)) || m != n || q != nclusters) {
-                    stop("invalid start allocation matrix: either non-binary matrix,
+        BestSol <- list(sse = Inf)
+        results <- list()
+        if (!is.null(start_allocation)) {
+                start_allocation <- as.matrix(start_allocation)
+                checkmate::assertMatrix(start_allocation)
+                m <- as.integer(nrow(start_allocation))
+                q <- as.integer(ncol(start_allocation))
+                if (!all(start_allocation %in% c(0,1)) || m != n || q != nclusters) {
+                        stop("invalid start allocation matrix: either non-binary matrix,
                          or number of rows or columns do not match data")
-            }
+                }
 
-            if (alg == 1) {
-                    res <- .adproclus_lf1(data, start_allocation)
-            } else {
-                    res <- .adproclus_lf2(data, start_allocation)
-            }
+                if (alg == 1) {
+                        res <- .adproclus_lf1(data, start_allocation)
+                } else {
+                        res <- .adproclus_lf2(data, start_allocation)
+                }
 
-            res$initial_start <- list(type = "Rational Start", initialA = start_allocation)
-            results <- append(results, list(res))
-            BestSol <- res
-    }
-    if (alg == 1) {
-            if (nrandomstart > 0) {
-                    seed_local <- seed
-                    for (i in 1:nrandomstart) {
-                            if(!is.null(seed)) {
-                                    seed_local <- seed_local + 1
-                            }
-                            initial_start <- get_random(data,
-                                                      nclusters,
-                                                      seed = seed_local)
-                            initial_start$type <- paste("random_start_no_", i)
-                            res <- .adproclus_lf1(data, initial_start$A)
-                            res$initial_start <- initial_start
-                            if (res$sse < BestSol$sse) {
-                                    BestSol <- res
-                            }
-                            results <- append(results, list(res))
-                    }
-                    remove(i)
+                res$initial_start <- list(type = "Rational Start", initialA = start_allocation)
+                results <- append(results, list(res))
+                BestSol <- res
+        }
+        if (alg == 1) {
+                if (nrandomstart > 0) {
+                        seed_local <- seed
+                        for (i in 1:nrandomstart) {
+                                if(!is.null(seed)) {
+                                        seed_local <- seed_local + 1
+                                }
+                                initial_start <- get_random(data,
+                                                            nclusters,
+                                                            seed = seed_local)
+                                initial_start$type <- paste("random_start_no_", i)
+                                res <- .adproclus_lf1(data, initial_start$A)
+                                res$initial_start <- initial_start
+                                if (res$sse < BestSol$sse) {
+                                        BestSol <- res
+                                }
+                                results <- append(results, list(res))
+                        }
+                        remove(i)
 
-            }
-            if (nsemirandomstart > 0) {
-                    seed_local <- seed
-                    for (i in 1:nsemirandomstart) {
-                            if(!is.null(seed)) {
-                                    seed_local <- seed_local + 1
-                            }
-                            initial_start <- get_semirandom(data,
-                                                          nclusters,
-                                                          seed = seed_local)
-                            initial_start$type <- paste("semi_random_start_no_", i)
-                            res <- .adproclus_lf1(data, initial_start$A)
-                            res$initial_start <- initial_start
-                            if (res$sse < BestSol$sse) {
-                                    BestSol <- res
-                            }
-                                    results <- append(results, list(res))
-                    }
-                    remove(i)
-            }
+                }
+                if (nsemirandomstart > 0) {
+                        seed_local <- seed
+                        for (i in 1:nsemirandomstart) {
+                                if(!is.null(seed)) {
+                                        seed_local <- seed_local + 1
+                                }
+                                initial_start <- get_semirandom(data,
+                                                                nclusters,
+                                                                seed = seed_local)
+                                initial_start$type <- paste("semi_random_start_no_", i)
+                                res <- .adproclus_lf1(data, initial_start$A)
+                                res$initial_start <- initial_start
+                                if (res$sse < BestSol$sse) {
+                                        BestSol <- res
+                                }
+                                results <- append(results, list(res))
+                        }
+                        remove(i)
+                }
 
 
-    } else { #alg == 2
-            if (nrandomstart > 0) {
-                    seed_local <- seed
-                    for (i in 1:nrandomstart) {
-                            if(!is.null(seed)) {
-                                    seed_local <- seed_local + 1
-                            }
-                            initial_start <- get_random(data,
-                                                      nclusters,
-                                                      seed = seed_local)
-                            initial_start$type <- paste("random_start_no_", i)
-                            res <- .adproclus_lf2(data, initial_start$A)
-                            res$initial_start <- initial_start
-                            if (res$sse < BestSol$sse) {
-                                    BestSol <- res
-                            }
-                                    results <- append(results, list(res))
-                    }
-                    remove(i)
+        } else {
+                if (nrandomstart > 0) {
+                        seed_local <- seed
+                        for (i in 1:nrandomstart) {
+                                if(!is.null(seed)) {
+                                        seed_local <- seed_local + 1
+                                }
+                                initial_start <- get_random(data,
+                                                            nclusters,
+                                                            seed = seed_local)
+                                initial_start$type <- paste("random_start_no_", i)
+                                res <- .adproclus_lf2(data, initial_start$A)
+                                res$initial_start <- initial_start
+                                if (res$sse < BestSol$sse) {
+                                        BestSol <- res
+                                }
+                                results <- append(results, list(res))
+                        }
+                        remove(i)
 
-            }
-            if (nsemirandomstart > 0) {
-                    seed_local <- seed
-                    for (i in 1:nsemirandomstart) {
-                            if(!is.null(seed)) {
-                                    seed_local <- seed_local + 1
-                            }
-                            initial_start <- get_semirandom(data,
-                                                          nclusters,
-                                                          seed = seed_local)
-                            initial_start$type <- paste("semi_random_start_no_", i)
-                            res <- .adproclus_lf2(data, initial_start$A)
-                            res$initial_start <- initial_start
-                            if (res$sse < BestSol$sse) {
-                                    BestSol <- res
-                            }
-                                    results <- append(results, list(res))
-                    }
-                    remove(i)
-            }
-    }
+                }
+                if (nsemirandomstart > 0) {
+                        seed_local <- seed
+                        for (i in 1:nsemirandomstart) {
+                                if(!is.null(seed)) {
+                                        seed_local <- seed_local + 1
+                                }
+                                initial_start <- get_semirandom(data,
+                                                                nclusters,
+                                                                seed = seed_local)
+                                initial_start$type <- paste("semi_random_start_no_", i)
+                                res <- .adproclus_lf2(data, initial_start$A)
+                                res$initial_start <- initial_start
+                                if (res$sse < BestSol$sse) {
+                                        BestSol <- res
+                                }
+                                results <- append(results, list(res))
+                        }
+                        remove(i)
+                }
+        }
 
-    if (save_all_starts == TRUE) {
-            BestSol$runs <- results
-            results <- BestSol
-            names(results$runs) <- as.character(c(1:length(results$runs)))
-    } else {
-            results <- BestSol
-    }
+        if (save_all_starts == TRUE) {
+                BestSol$runs <- results
+                results <- BestSol
+                names(results$runs) <- as.character(c(1:length(results$runs)))
+        } else {
+                results <- BestSol
+        }
 
-    parameters <- list(nclusters = nclusters,
-                       nrandomstart = nrandomstart,
-                       nsemirandomstart = nsemirandomstart,
-                       start_allocation = start_allocation,
-                       seed = seed)
-    results$parameters <- parameters
+        parameters <- list(nclusters = nclusters,
+                           nrandomstart = nrandomstart,
+                           nsemirandomstart = nsemirandomstart,
+                           start_allocation = start_allocation,
+                           seed = seed)
+        results$parameters <- parameters
 
-    time <- (proc.time() - t)[1]
-    .printoutput(nclusters, time, nrandomstart, nsemirandomstart, !is.null(start_allocation))
-    results <- .adjust_row_col_names(results, data)
+        time <- (proc.time() - t)[1]
+        results <- .adjust_row_col_names(results, data)
+        results
 
-    return(results)
 }
 
 
@@ -692,7 +329,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #'   starts are returned. By default, only the best solution is retained.
 #' @param seed Integer. Seed for the random number generator. Default: NULL, meaning no reproducibility
 #'
-#' @return \code{adproclusLD} returns a list with the following
+#' @return \code{adproclus_low_dim} returns a list with the following
 #'   components, which describe the best model (from the multiple starts): \describe{
 #'   \item{\code{model}}{matrix. The obtained overlapping clustering model \eqn{\boldsymbol{M}} of the same size as \code{data}.}
 #'   \item{\code{model_lowdim}}{matrix. The obtained low dimensional clustering model \eqn{\boldsymbol{AC}}
@@ -732,12 +369,17 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #'
 #' # Low dimensional clustering with K = 3 clusters
 #' # where the resulting profiles can be characterized in S = 1 dimensions (components)
-#' clust <- adproclusLD(x, nclusters = 3, ncomponents = 1)
+#' clust <- adproclus_low_dim(x, 3, ncomponents = 1)
 #'
-#' @seealso \code{\link{adproclus}} for full dimensional ADPROCLUS, \code{\link{get_random}},\code{\link{get_semirandom}} and \code{\link{get_rational}} for generating
-#'   (semi-)random and rational starts for (low dimensional) ADPROCLUS.
-adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, nrandomstart = 3,
-                      nsemirandomstart = 3, save_all_starts = FALSE, seed = NULL) {
+#' @seealso
+#' \describe{
+#'   \item{\code{\link{adproclus}}}{for full dimensional ADPROCLUS}
+#'   \item{\code{\link{get_random}}}{for generating random starts}
+#'   \item{\code{\link{get_semirandom}}}{for generating semi-random starts}
+#'   \item{\code{\link{get_rational}}}{for generating rational starts}
+#' }
+adproclus_low_dim <- function(data, nclusters, ncomponents, start_allocation = NULL, nrandomstart = 3,
+                              nsemirandomstart = 3, save_all_starts = FALSE, seed = NULL) {
 
         t <- proc.time()
         results <- list()
@@ -754,14 +396,15 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         checkmate::assertFlag(save_all_starts)
         checkmate::assertMatrix(data, mode = "numeric", any.missing = FALSE)
 
+
         if (ncomponents > min(n,nclusters)) {
-                stop("'ncomponents' must be smaller than min(number of observations, number of clusters)")
+                stop("'ncomponents' must be smaller than min(number of observations, number of clusters).")
         }
         if (is.null(start_allocation) & nrandomstart == 0 & nsemirandomstart == 0) {
-                stop("need either start allocation matrix or a non-zero number of (semi-) random starts")
+                stop("Must have either start allocation matrix or a non-zero number of (semi-) random starts")
         }
         if (n < nclusters) {
-                stop("number of clusters cannot exceed number of objects in 'data'")
+                stop("Number of clusters must be less or equal the number of objects in 'data'.")
         }
         if (nrandomstart + nsemirandomstart > 50) {
                 warning("Number of starts is larger than 50. Computation might take a while")
@@ -794,7 +437,7 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                         model_new <- .ldadproclus(data, random_start, ncomponents)
 
                         model_new$initial_start <- list(type = paste("random_start_no_", i),
-                                                       A = random_start)
+                                                        A = random_start)
 
                         results <- append(results, list(model_new))
                         if(model_new$sse < best_sol$sse) {
@@ -813,7 +456,7 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                         model_new <- .ldadproclus(data, semi_random_start, ncomponents)
 
                         model_new$initial_start <- list(type = paste("semi_random_start_no_", j),
-                                                       A = semi_random_start)
+                                                        A = semi_random_start)
 
                         results <- append(results, list(model_new))
                         if(model_new$sse < best_sol$sse) {
@@ -838,11 +481,396 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                            seed = seed)
         results$parameters <- parameters
         time <- (proc.time() - t)[1]
-        .LDprintoutput(nclusters, ncomponents, time, nrandomstart, nsemirandomstart, !is.null(start_allocation))
-
         results <- .adjust_row_col_names_LD(results, data)
+        results
+}
 
-        return(results)
+#' Update A for full dim ADPROCLUS ALS 1
+#'
+#' @param A Last A.
+#' @param PossibA All possibilities for A.
+#' @param data Input data.
+#'
+#' @return Updated A.
+#'
+#' @noRd
+.updateA_lf1 <- function(A, PossibA, data) {
+
+        B <- A
+        npos <- nrow(PossibA)
+        n <- nrow(A)
+        loss <- matrix(0, 1, npos)
+
+        for (row in 1:n) {
+
+                for (r in 1:npos) {
+
+                        Apos <- B
+                        Apos[row, ] <- PossibA[r, ]
+                        if (any(colSums(Apos) == 0) == FALSE) {
+                                Gpos <- NMFN::mpinv(Apos) %*% data
+                                respos <- data - (Apos %*% Gpos)
+                                loss[r] <- .lossL2(respos)
+                        } else {
+                                loss[r] <- NA
+                        }
+
+                }
 
 
+                minloss <- min(loss[, !is.na(loss)])
+                ind <- which.min(loss)
+                B[row, ] <- PossibA[ind, , drop = FALSE]
+        }
+
+        if (any(colSums(B) == 0) == TRUE) {
+                zerocols <- 0
+        } else {
+                zerocols <- 1
+        }
+        result <- list(B, minloss, zerocols)
+        result
+}
+
+#' Update A for full dim ADPROCLUS ALS 1
+#'
+#' @param n Number of observations.
+#' @param P Profile matrix.
+#' @param replX Original data, where each row is multiplicated 2^k times, for k clusters.
+#' @param PossibA All possibilities for A.
+#'
+#' @return Updated A.
+#'
+#' @noRd
+.updateA_lf2 <- function(n, P, replX, PossibA) {
+
+        nA <- nrow(PossibA)
+
+        posrec <- PossibA %*% P
+
+        loss <- matrix(as.numeric(rowSums((replX - posrec)^2)),
+                nrow = nA/n, ncol = n)
+
+        index <- apply(loss, 2, which.min)
+        A <- as.matrix(PossibA[index, , drop = FALSE])
+        A
+
+
+}
+
+#' ADPROCLUS internal for ALS 1
+#'
+#' @param x Input Data.
+#' @param A Starting cluster membership matrix.
+#'
+#' @return Object of class \code{"adpc"}.
+#'
+#' @noRd
+.adproclus_lf1 <- function(x, A) {
+
+        t <- proc.time()
+
+        data <- x
+        n <- nrow(x)
+        totvar <- norm(data - mean(data), "f")^2
+        k <- ncol(A)
+
+        PossibA <- gtools::permutations(2, k, v = c(0, 1), repeats.allowed = TRUE)
+        PossibA <- apply(PossibA, 2, rev)
+        if (k > 1) {
+                PossibA <- t(apply(PossibA, 1, rev))
+        }
+
+        G <- NMFN::mpinv(A) %*% data
+        res <- data - (A %*% G)
+        f <- .lossL2(res)
+        fold <- f + 1
+        iter <- 1
+
+        while (fold > f) {
+
+                fold = f
+                Aold = A
+
+                update <- .updateA_lf1(Aold, PossibA, data)
+                A <- update[[1]]
+                f <- update[[2]]
+
+                iter <- iter + 1
+        }
+
+        runs <- iter - 1
+        Membs <- Aold
+        Profs <- NMFN::mpinv(Aold) %*% data
+        sse <- fold
+        explvar <- 1 - (fold/totvar)
+
+        # sort A columns and P rows by decreasing cluster size
+        order <- order(colSums(Membs), decreasing = TRUE)
+        Membs <- Membs[, order , drop = FALSE]
+        Profs <- Profs[order, , drop = FALSE]
+
+        timeruns <- (proc.time() - t)[1]
+
+        model <- Membs %*% Profs
+        result <- list(model = model, A = Membs, P = Profs,
+                sse = sum((model - x)^2), totvar = totvar,
+                explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initial_start = NULL)
+        class(result) <- "adpc"
+        result
+}
+
+#' ADPROCLUS internal for ALS 2
+#'
+#' @param x Input Data.
+#' @param A Starting cluster membership matrix.
+#'
+#' @return Object of class \code{"adpc"}.
+#'
+#' @noRd
+.adproclus_lf2 <- function(x, A) {
+
+        t <- proc.time()
+
+        data <- x
+        n <- nrow(x)
+        totvar <- norm(data - mean(data), "f")^2
+        k <- ncol(A)
+        npos <- 2^k
+
+        P <- NMFN::mpinv(A) %*% data
+        res <- data - (A %*% P)
+        f <- .lossL2(res)
+        fold <- f + 1
+        iter <- 1
+
+        PossibA <- gtools::permutations(2, k, v = c(0, 1), repeats.allowed = TRUE)
+        PossibA <- apply(PossibA, 2, rev)
+        if (k > 1) {
+                PossibA <- t(apply(PossibA, 1, rev))
+        }
+        PossibA <- .repmat(PossibA, n, 1)
+
+        replX <- data.frame()
+        for (i in 1:n) {
+                reps <- .repmat(data[i, , drop = FALSE], npos, 1)
+                replX <- rbind(replX, reps)
+        }
+        replX <- as.matrix(replX)
+
+        while (fold > f) {
+
+                fold = f
+                Aold = A
+                Pold = P
+
+                A <- .updateA_lf2(n, Pold, replX, PossibA)
+                P <- NMFN::mpinv(A) %*% data
+                f <- .lossL2(x - (A %*% P))
+
+                iter <- iter + 1
+        }
+
+        runs <- iter - 1
+        Membs <- A
+        Profs <- P
+        sse <- f
+        explvar <- 1 - (f/totvar)
+
+        timeruns <- (proc.time() - t)[1]
+
+        # sort A columns and P rows by decreasing cluster size
+        order <- order(colSums(Membs), decreasing = TRUE)
+        Membs <- Membs[, order , drop = FALSE]
+        Profs <- Profs[order, , drop = FALSE]
+
+
+        model <- Membs %*% Profs
+        result <- list(model = model, A = Membs, P = Profs,
+                sse = sum((model - x)^2), totvar = totvar,
+                explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initial_start = NULL)
+        class(result) <- "adpc"
+
+        result
+}
+
+
+#' Low dimensional ADPROCLUS internal
+#'
+#' @param x Input Data.
+#' @param A Starting cluster membership matrix.
+#' @param s Number of dimensions.
+#'
+#' @return Object of class \code{"adpc"}.
+#'
+#' @noRd
+.ldadproclus <- function (x, A, s) {
+        t <- proc.time()
+
+        data <- x
+        n <- nrow(x)
+        totvar <- norm(data - mean(data), "f")^2
+        k <- ncol(A)
+        npos <- 2^k
+
+        P <- .ldfindP(x, A, s)
+
+        f <- .lossL2(x - (A %*% P))
+        fold <- f + 1
+        iter <- 1
+
+        PossibA <- gtools::permutations(2, k, v = c(0, 1), repeats.allowed = TRUE)
+
+        # PossibA <- PossibA[which(rowSums(PossibA) > 0),] #possible restriction against zero-rows
+        # npos <- npos - 1 #needed for restriction against zero-rows
+
+        PossibA <- apply(PossibA, 2, rev)
+        if (k > 1) {
+                PossibA <- t(apply(PossibA, 1, rev))
+        }
+
+        PossibA <- .repmat(PossibA, n, 1)
+
+        replX <- data.frame()
+        for (i in 1:n) {
+                reps <- .repmat(data[i, , drop = FALSE], npos, 1)
+                replX <- rbind(replX, reps)
+        }
+        replX <- as.matrix(replX)
+
+        while (fold > f) {
+
+                fold = f
+                Aold = A
+                Pold = P
+
+                A <- .updateA_lf2(n, Pold, replX, PossibA)
+                P <- .ldfindP(data, A, s)
+                f <- .lossL2(x - (A %*% P))
+
+                iter <- iter + 1
+        }
+
+        runs <- iter - 1
+        Membs <- A
+        Profs <- P
+        sse <- f
+        explvar <- 1 - (f/totvar)
+
+        # sort A columns and P rows by decreasing cluster size
+        order <- order(colSums(Membs), decreasing = TRUE)
+        Membs <- Membs[, order , drop = FALSE]
+        Profs <- Profs[order, , drop = FALSE]
+
+
+        decomp <- svd(Profs)
+
+        # B
+        ldBase <- as.matrix(decomp$v[,1:s, drop = FALSE])
+        U <- as.matrix(decomp$u[,1:s, drop = FALSE])
+        if (s == 1) {
+                D <- diag(as.matrix(decomp$d[1:s]))
+        } else {
+                D <- diag(decomp$d[1:s])
+        }
+
+        # C = U*D
+        ldProfs <- as.matrix(U %*%  D)
+
+
+        timeruns <- (proc.time() - t)[1]
+
+        model <- Membs %*% Profs
+        model_lowdim <- Membs %*% ldProfs
+        result <- list(model = model, model_lowdim = model_lowdim, A = Membs, P = Profs, C = ldProfs, B = ldBase,
+                       sse = sum((model - x)^2), totvar = totvar,
+                       explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initial_start = NULL)
+        class(result) <- "adpc"
+
+        result
+
+
+
+}
+
+#' Update P for low dimensional ADPROCLUS
+#'
+#' @param X Input data.
+#' @param A Last cluster membership matrix.
+#' @param s Number of dimensions.
+#'
+#' @return New P.
+#'
+#' @noRd
+.ldfindP <- function (X, A, s) {
+        Z <- A %*% NMFN::mpinv(A)
+        U <- Z %*% X %*% t(X) %*% Z
+        Q <- eigen(U, symmetric = TRUE)[["vectors"]][,1:s, drop = FALSE]
+
+        P <- NMFN::mpinv(A) %*% Q %*% t(Q) %*% X
+        P
+
+}
+
+
+#' Propagate input variable names to output
+#'
+#' @param object ADPROCLUS solution.
+#' @param data Input data.
+#'
+#' @return ADPROCLUS solution with updated variable names.
+#'
+#' @noRd
+.adjust_row_col_names <- function(object, data) {
+        results <- object
+        #row and column names
+        colnames(results$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
+        colnames(results$A) <- colnames(results$A, do.NULL = FALSE, prefix = "Cl")
+        rownames(results$P) <- rownames(results$P, do.NULL = FALSE, prefix = "Cl")
+
+        if (!is.null(results$runs)) {
+                for (i in 1:length(results$runs)) {
+                        colnames(results$runs[[i]]$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
+                        colnames(results$runs[[i]]$A) <- colnames(results$A, do.NULL = FALSE, prefix = "Cl")
+                        rownames(results$runs[[i]]$P) <- rownames(results$P, do.NULL = FALSE, prefix = "Cl")
+                }
+        }
+        results
+}
+
+#' Propagate input variable names to output for low dimensional model
+#'
+#' @param object Low dimensional ADPROCLUS solution.
+#' @param data Input data.
+#'
+#' @return Low dimensional ADPROCLUS solution with updated variable names.
+#'
+#' @noRd
+.adjust_row_col_names_LD <- function(object, data) {
+        results <- object
+
+        #row and column names
+        colnames(results$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
+        colnames(results$model_lowdim) <- colnames(results$model_lowdim, do.NULL = FALSE, prefix = "Comp")
+        colnames(results$A) <- colnames(results$A, do.NULL = FALSE, prefix = "Cl")
+        rownames(results$P) <- rownames(results$P, do.NULL = FALSE, prefix = "Cl")
+        colnames(results$C) <- colnames(results$C, do.NULL = FALSE, prefix = "Comp")
+        rownames(results$C) <- rownames(results$C, do.NULL = FALSE, prefix = "Cl")
+        colnames(results$B) <- colnames(results$B, do.NULL = FALSE, prefix = "Comp")
+        rownames(results$B) <- rownames(results$B, do.NULL = FALSE, prefix = "V")
+
+        if (!is.null(results$runs)) {
+                for (i in 1:length(results$runs)) {
+                        colnames(results$runs[[i]]$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
+                        colnames(results$runs[[i]]$model_lowdim) <- colnames(results$model_lowdim, do.NULL = FALSE, prefix = "Comp")
+                        colnames(results$runs[[i]]$A) <- colnames(results$A, do.NULL = FALSE, prefix = "Cl")
+                        rownames(results$runs[[i]]$P) <- rownames(results$P, do.NULL = FALSE, prefix = "Cl")
+                        colnames(results$runs[[i]]$C) <- colnames(results$C, do.NULL = FALSE, prefix = "Comp")
+                        rownames(results$runs[[i]]$C) <- rownames(results$C, do.NULL = FALSE, prefix = "Cl")
+                         colnames(results$runs[[i]]$B) <- colnames(results$B, do.NULL = FALSE, prefix = "Comp")
+                        rownames(results$runs[[i]]$B) <- rownames(results$B, do.NULL = FALSE, prefix = "V")
+                }
+        }
+
+        results
 }

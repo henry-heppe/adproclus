@@ -25,7 +25,7 @@ with model an object of class \code{adpc}.
 x <- stackloss
 
 # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
-clust <- adproclusLD(x, 3, 1)
+clust <- adproclus_low_dim(x, 3, 1)
 
 # Plot the matrix B', connecting components with variables
 plot_vars_by_comp(clust)

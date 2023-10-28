@@ -44,7 +44,7 @@ relation of each cluster with each variable.}
 x <- stackloss
 
 # Quick low dimensional clustering with K = 3 clusters and S = 1 dimensions
-clust <- adproclusLD(x, 3, 1)
+clust <- adproclus_low_dim(x, 3, 1)
 
 # Produce three plots of the model
 plot(clust, type = "Network")

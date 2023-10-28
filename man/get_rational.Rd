@@ -22,7 +22,7 @@ get_rational(data, starting_profiles)
 \description{
 If cluster profiles are given a priori, this function can be used to compute the conditionally optimal
 cluster membership matrix A which can then be used as a rational starting allocation for the (low dimensional) ADPROCLUS
-procedure (see \code{\link{adproclus}} and \code{\link{adproclusLD}}).
+procedure (see \code{\link{adproclus}} and \code{\link{adproclus_low_dim}}).
 }
 \details{
 The function uses the same quadratic loss function and minimization method as the (low dimensional) ADPROCLUS procedure
@@ -36,7 +36,7 @@ perform additive profile clustering, see \code{\link{adproclus}}.
 x <- stackloss
 
 # Obtaining a user-defined rational start profile matrix (here the first 4 rows of the data)
-start_allocation <- get_rational(x,x[1:4,])$A
+start_allocation <- get_rational(x, x[1:4, ])$A
 
 }
 \references{
@@ -45,7 +45,9 @@ Depril, D., Van Mechelen, I., & Wilderjans, T. F.
   \emph{Journal of classification, 29,} 297-320.
 }
 \seealso{
-\code{\link{get_random}} for generating random starts,
-\code{\link{get_semirandom}} for generating semi-random starts and
-\code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
+\describe{
+  \item{\code{\link{adproclus}}, \code{\link{adproclus_low_dim}}}{for details about membership and profile matrices}
+  \item{\code{\link{get_random}}}{for generating random starts}
+  \item{\code{\link{get_semirandom}}}{for generating semi-random starts}
+}
 }

@@ -1,7 +1,7 @@
 
 test_that("adpc constructor test", {
         model_complete <- adproclus(adproclus::CGdata[1:100,], 2)
-        model_completeLD <- adproclusLD(adproclus::CGdata[1:100,], 3, 2)
+        model_completeLD <- adproclus_low_dim(adproclus::CGdata[1:100,], 3, 2)
         expect_no_condition(adpc(model_complete$A, model_complete$P))
         expect_no_condition(adpc(A = model_completeLD$A, P = model_completeLD$P,
                              C = model_completeLD$C, B = model_completeLD$B))
@@ -12,8 +12,8 @@ test_that("adpc constructor test", {
 
 test_that("print test", {
         x <- adproclus::CGdata[1:100,]
-        model <- adproclus(data = x, nclusters = 2)
-        modelLD <- adproclusLD(data = x, nclusters = 3, ncomponents = 2)
+        model <- adproclus(x, nclusters = 2)
+        modelLD <- adproclus_low_dim(x, nclusters = 3, ncomponents = 2)
         expect_no_error(print.adpc(model))
         expect_no_error(print.adpc(modelLD))
         expect_equal(print(model, digits = 2, matrix_rows = 1, matrix_cols = 4),
@@ -24,8 +24,8 @@ test_that("print test", {
 
 test_that("summary.adpc test", {
         x <- adproclus::CGdata[1:100,]
-        model <- adproclus(data = x, nclusters = 2)
-        modelLD <- adproclusLD(data = x, nclusters = 3, ncomponents = 2)
+        model <- adproclus(x, nclusters = 2)
+        modelLD <- adproclus_low_dim(x, nclusters = 3, ncomponents = 2)
 
         expect_no_error(summary.adpc(model))
         expect_no_error(summary.adpc(modelLD))
@@ -37,8 +37,8 @@ test_that("summary.adpc test", {
 
 test_that("print.summary.adpc test", {
         x <- adproclus::CGdata[1:100,]
-        model <- adproclus(data = x, nclusters = 2)
-        modelLD <- adproclusLD(data = x, nclusters = 3, ncomponents = 2)
+        model <- adproclus(x, nclusters = 2)
+        modelLD <- adproclus_low_dim(x, nclusters = 3, ncomponents = 2)
         sum_res <- summary(model, digits = 2, matrix_rows = 1, matrix_cols = 4)
         sum_resLD <- summary(modelLD, digits = 2, matrix_rows = 1, matrix_cols = 4)
         expect_error(print.summary.adpc(model))
@@ -50,8 +50,8 @@ test_that("print.summary.adpc test", {
 
 test_that("plot test", {
         x <- adproclus::CGdata[1:100,]
-        model <- adproclus(data = x, nclusters = 2)
-        modelLD <- adproclusLD(data = x, nclusters = 3, ncomponents = 2)
+        model <- adproclus(x, nclusters = 2)
+        modelLD <- adproclus_low_dim(x, nclusters = 3, ncomponents = 2)
 
         expect_no_condition(plot(model))
         expect_no_condition(plot(modelLD))
@@ -64,7 +64,3 @@ test_that("plot test", {
         expect_equal(plot(model), plot.adpc(model))
         expect_equal(plot(modelLD), plot.adpc(modelLD))
 })
-
-#important case: check input s.t. when adpc object is passed to print.summary.adpc() an appropriate error is thrown
-#include a case, where a start_allocation is included
-#check that number of starts in printing is there/ is correct

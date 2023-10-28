@@ -39,7 +39,8 @@ starts are returned. By default, only the best solution is retained.}
 }
 \value{
 \code{adproclus} returns a list with the following
-  components, which describe the best model (from the multiple starts): \describe{
+  components, which describe the best model (from the multiple starts):
+  \describe{
   \item{\code{model}}{matrix. The obtained overlapping clustering model \strong{M} of the same size as \code{data}.}
   \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering model. Clusters are sorted by size.}
   \item{\code{P}}{matrix. The profile matrix
@@ -109,16 +110,16 @@ clust <- adproclus(data = x, nclusters = 2)
 # Clustering with K = 3 clusters,
 # using the ALS2 algorithm,
 # with 2 random and 2 semi-random starts
-clust <- adproclus(data = x, nclusters = 3,
+clust <- adproclus(x, 3,
                    nrandomstart = 2, nsemirandomstart = 2, algorithm = "ALS2")
 
 # Saving the results of all starts
-clust <- adproclus(data = x, nclusters = 3,
+clust <- adproclus(x, 3,
                    nrandomstart = 2, nsemirandomstart = 2, save_all_starts = TRUE)
 
 # Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
-start <- get_rational(x,x[1:4,])$A
-clust <- adproclus(data = x, nclusters = 4, start_allocation = start)
+start <- get_rational(x, x[1:4, ])$A
+clust <- adproclus(x, 4, start_allocation = start)
 
 }
 \references{
@@ -138,6 +139,10 @@ Wilderjans, T. F., Ceulemans, E., Van Mechelen, I., & Depril, D.
   analysis models. \emph{Journal of Classification}, 7(2):167-195.
 }
 \seealso{
-\code{\link{adproclusLD}} for low dimensional ADPROCLUS, \code{\link{get_random}},\code{\link{get_semirandom}} and \code{\link{get_rational}} for generating
-  (semi-)random and rational starts for ADPROCLUS.
+\describe{
+  \item{\code{\link{adproclus_low_dim}}}{for low dimensional ADPROCLUS}
+  \item{\code{\link{get_random}}}{for generating random starts}
+  \item{\code{\link{get_semirandom}}}{for generating semi-random starts}
+  \item{\code{\link{get_rational}}}{for generating rational starts}
+}
 }

@@ -21,7 +21,7 @@ get_random(data, nclusters, seed = NULL)
 }
 \description{
 Generate an initial random start for the (low dimensional) Additive Profile Clustering
-algorithm (see \code{\link{adproclus}} and \code{\link{adproclusLD}}).
+algorithm (see \code{\link{adproclus}} and \code{\link{adproclus_low_dim}}).
 }
 \details{
 \code{get_random} generates a random initial binary membership matrix
@@ -36,7 +36,7 @@ perform aditive profile clustering, see \code{\link{adproclus}}.
 }
 \examples{
 # Obtain data from standard data set "Stackloss" and generate start allocation
-start_allocation <- get_random(data = stackloss, 3)$A
+start_allocation <- get_random(stackloss, 3)$A
 
 }
 \references{
@@ -54,7 +54,9 @@ Depril, D., Van Mechelen, I., & Wilderjans, T. F.
 \emph{Journal of classification, 29,} 297-320.
 }
 \seealso{
-\code{\link{get_semirandom}} for generating semi-random starts,
-\code{\link{get_rational}} for generating rational starts and
-\code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
+\describe{
+  \item{\code{\link{adproclus}}, \code{\link{adproclus_low_dim}}}{for details about membership and profile matrices}
+  \item{\code{\link{get_semirandom}}}{for generating semi-random starts}
+  \item{\code{\link{get_rational}}}{for generating rational starts}
+}
 }

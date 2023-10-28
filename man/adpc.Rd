@@ -56,16 +56,16 @@ For a low dimensional ADPROCLUS model, the matrices \eqn{\boldsymbol{C}} and \eq
 have to be provided and \eqn{\boldsymbol{P}} can be inferred from those.
 All other inputs are optional but may be included so that the output from the \code{summary(), print(), plot()} is complete.
 For further details on the (low dimensional) ADPROCLUS model and what every element of the objects means
-see \code{\link{adproclus}} and \code{\link{adproclusLD}}.
+see \code{\link{adproclus}} and \code{\link{adproclus_low_dim}}.
 }
 \examples{
-#Create the information needed for a minimal object of class adpc
+# Create the information needed for a minimal object of class adpc
 x <- stackloss
 result <- adproclus(x, 3)
 A <- result$A
 P <- result$P
 
-#Use constructor to obtain object of class adpc
+# Use constructor to obtain object of class adpc
 result_object <- adpc(A, P)
 
 }
