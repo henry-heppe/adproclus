@@ -22,8 +22,7 @@
 #' The numerical edge labels can be relative (number of overlap observations / total observations)
 #' or absolute (number of observations in both clusters).
 #' \strong{NOTE:} This function can be called through the \code{plot(model, type = "Network")} function with model an object of class \code{adpc}.
-#' \strong{NOTE:} The cluster names can be changed efficiently via the respective functions
-#' \code{\link{name_clusters_adpc}}.
+#'
 #'
 #' @param model ADPROCLUS solution (class: \code{adpc}). Low dimensional model possible.
 #' @param relative_overlap Logical. If \code{TRUE} (default), the number of observations belonging to two clusters

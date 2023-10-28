@@ -35,8 +35,6 @@ through color, width and numerical label of the edge.
 The numerical edge labels can be relative (number of overlap observations / total observations)
 or absolute (number of observations in both clusters).
 \strong{NOTE:} This function can be called through the \code{plot(model, type = "Network")} function with model an object of class \code{adpc}.
-\strong{NOTE:} The cluster names can be changed efficiently via the respective functions
-\code{\link{name_clusters_adpc}}.
 }
 \examples{
 # Loading a test dataset into the global environment
