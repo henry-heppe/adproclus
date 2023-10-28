@@ -6,12 +6,12 @@
 #' Generate an initial random start for the (low dimensional) Additive Profile Clustering
 #' algorithm (see \code{\link{adproclus}} and \code{\link{adproclusLD}}).
 #'
-#' \code{getRandom} generates a random initial binary membership matrix
+#' \code{get_random} generates a random initial binary membership matrix
 #' \strong{A} by drawing entries from a Bernoulli Distribution with \eqn{\pi =
 #' 0.5}.
 #'
-#' For generating an initial start from random draws from the data, see \code{\link{getSemiRandom}}
-#' For generating an initial start based on a specific set of initial cluster centers, see \code{\link{getRational}}.
+#' For generating an initial start from random draws from the data, see \code{\link{get_semirandom}}
+#' For generating an initial start based on a specific set of initial cluster centers, see \code{\link{get_rational}}.
 #'
 #' \strong{Warning:} This function does \emph{not} obtain an ADPRCOLUS model. To
 #' perform aditive profile clustering, see \code{\link{adproclus}}.
@@ -20,7 +20,7 @@
 #' @param nclusters Number of clusters to be used. Must be a positive integer.
 #' @param seed Integer. Seed for the random number generator. Default: NULL
 #'
-#' @return \code{getRandom} returns a list with the following components:
+#' @return \code{get_random} returns a list with the following components:
 #'   \describe{ \item{\code{type}}{A character string denoting the type of start
 #'   ('Random Start')} \item{\code{A}}{A randomly generated initial Membership
 #'   matrix}}
@@ -42,12 +42,12 @@
 #'
 #' @examples
 #' # Obtain data from standard data set "Stackloss" and generate start allocation
-#' start_allocation <- getRandom(data = stackloss, 3)$A
+#' start_allocation <- get_random(data = stackloss, 3)$A
 #'
-#' @seealso \code{\link{getSemiRandom}} for generating semi-random starts,
-#' \code{\link{getRational}} for generating rational starts and
+#' @seealso \code{\link{get_semirandom}} for generating semi-random starts,
+#' \code{\link{get_rational}} for generating rational starts and
 #' \code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
-getRandom <- function(data, nclusters, seed = NULL) {
+get_random <- function(data, nclusters, seed = NULL) {
         if ( !is.null(seed)) {
                 withr::local_seed(seed = seed)
         }
@@ -90,7 +90,7 @@ getRandom <- function(data, nclusters, seed = NULL) {
 #' @param nclusters Number of clusters to be used. Must be a positive integer.
 #' @param seed Integer. Seed for the random number generator. Default: NULL
 #'
-#' @return \code{getSemiRandom} returns a list with the following components:
+#' @return \code{get_semirandom} returns a list with the following components:
 #'   \describe{
 #'   \item{\code{type}}{A character string denoting the type of start
 #'   ('Semi-random Start')}
@@ -113,12 +113,12 @@ getRandom <- function(data, nclusters, seed = NULL) {
 #'
 #' @examples
 #' # Obtain data from standard data set "Stackloss" and generate start allocation
-#' start_allocation <- getSemiRandom(data = stackloss, 3)$A
+#' start_allocation <- get_semirandom(data = stackloss, 3)$A
 #'
-#' @seealso \code{\link{getRandom}} for generating random starts,
-#' \code{\link{getRational}} for generating rational starts and
+#' @seealso \code{\link{get_random}} for generating random starts,
+#' \code{\link{get_rational}} for generating rational starts and
 #' \code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
-getSemiRandom <- function(data, nclusters, seed = NULL) {
+get_semirandom <- function(data, nclusters, seed = NULL) {
         if ( !is.null(seed)) {
                 withr::local_seed(seed = seed)
         }
@@ -173,7 +173,7 @@ getSemiRandom <- function(data, nclusters, seed = NULL) {
 #'   \code{data.frame}.
 #' @param starting_profiles A matrix where each row represents the profile values for a cluster
 #'
-#' @return \code{getRational} returns a list with the following components:
+#' @return \code{get_rational} returns a list with the following components:
 #'   \describe{
 #'   \item{\code{type}}{A character string denoting the type of start
 #'   ('Rational Start')}
@@ -189,12 +189,12 @@ getSemiRandom <- function(data, nclusters, seed = NULL) {
 #' x <- stackloss
 #'
 #' # Obtaining a user-defined rational start profile matrix (here the first 4 rows of the data)
-#' start_allocation <- getRational(x,x[1:4,])$A
+#' start_allocation <- get_rational(x,x[1:4,])$A
 #'
-#' @seealso \code{\link{getRandom}} for generating random starts,
-#' \code{\link{getSemiRandom}} for generating semi-random starts and
+#' @seealso \code{\link{get_random}} for generating random starts,
+#' \code{\link{get_semirandom}} for generating semi-random starts and
 #' \code{\link{adproclus}}, \code{\link{adproclusLD}} for details about membership and profile matrices.
-getRational <- function(data, starting_profiles) {
+get_rational <- function(data, starting_profiles) {
         #determine the conditionally optimal A, to be used as a starting allocation in (ld) Adproclus
         #use case: when we have some initial idea about the profile values and thus want one run with
         #seeded on this

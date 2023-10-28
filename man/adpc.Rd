@@ -12,7 +12,7 @@ adpc(
   explvar = NULL,
   iterations = NULL,
   timer = NULL,
-  initialStart = NULL,
+  initial_start = NULL,
   C = NULL,
   B = NULL,
   runs = NULL,
@@ -34,7 +34,7 @@ adpc(
 
 \item{timer}{timer Time of algorithm run.}
 
-\item{initialStart}{initialstart List of \code{type} of start and \code{start_allocation} matrix}
+\item{initial_start}{initial_start List of \code{type} of start and \code{start_allocation} matrix}
 
 \item{C}{Low dimensional profiles matrix C.}
 

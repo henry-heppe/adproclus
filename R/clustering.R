@@ -104,7 +104,7 @@ NULL
         model <- Membs %*% Profs
         result <- list(model = model, A = Membs, P = Profs,
                 sse = sum((model - x)^2), totvar = totvar,
-                explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initialStart = NULL)
+                explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initial_start = NULL)
         class(result) <- "adpc"
 
         return(result)
@@ -170,7 +170,7 @@ NULL
         model <- Membs %*% Profs
         result <- list(model = model, A = Membs, P = Profs,
                 sse = sum((model - x)^2), totvar = totvar,
-                explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initialStart = NULL)
+                explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initial_start = NULL)
         class(result) <- "adpc"
 
         return(result)
@@ -252,12 +252,9 @@ NULL
 
         model <- Membs %*% Profs
         model_lowdim <- Membs %*% ldProfs
-        # result <- list(type = NULL, Model = model, Membs = Membs, Profs = Profs, low_dim_profs = ldProfs, low_dim_base = ldBase,
-        #                sse = sum((model - x)^2), totvar = totvar,
-        #                explvar = explvar, alg_iter = runs, timer = as.numeric(timeruns), svd = svd(Profs)) #issue: take out svd here
         result <- list(model = model, model_lowdim = model_lowdim, A = Membs, P = Profs, C = ldProfs, B = ldBase,
                        sse = sum((model - x)^2), totvar = totvar,
-                       explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initialStart = NULL)
+                       explvar = explvar, iterations = runs, timer = as.numeric(timeruns), initial_start = NULL)
         class(result) <- "adpc"
 
         return(result)
@@ -390,8 +387,8 @@ NULL
 #' The alternating least squares algorithms ("\code{ALS1}" and "\code{ALS2}")
 #' that can be used for minimization of the loss function were proposed by
 #' Depril et al. (2008). In "\code{ALS2}", starting from an initial random or
-#' rational estimate of \eqn{\boldsymbol{A}} (see \code{\link{getRandom}} and
-#' \code{\link{getSemiRandom}}), \eqn{\boldsymbol{A}} and \eqn{\boldsymbol{P}} are alternately
+#' rational estimate of \eqn{\boldsymbol{A}} (see \code{\link{get_random}} and
+#' \code{\link{get_semirandom}}), \eqn{\boldsymbol{A}} and \eqn{\boldsymbol{P}} are alternately
 #' re-estimated conditionally upon each other until convergence. The
 #' "\code{ALS1}" algorithm differs from the one previous one in that each row in
 #' \eqn{\boldsymbol{A}} is updated independently and that the conditionally optimal
@@ -408,13 +405,13 @@ NULL
 #'   \code{data.frame}.
 #' @param nclusters Number of clusters to be used. Must be a positive integer.
 #' @param start_allocation Optional matrix of binary values as starting allocation for first run. Default is \code{NULL}.
-#' @param nrandomstart Number of random starts (see \code{\link{getRandom}}). Can be zero. Increase for better results, though longer computation time.
+#' @param nrandomstart Number of random starts (see \code{\link{get_random}}). Can be zero. Increase for better results, though longer computation time.
 #' Some research finds 500 starts to be a useful reference.
-#' @param nsemirandomstart Number of semi-random starts (see \code{\link{getSemiRandom}})). Can be zero. Increase for better results, though longer computation time.
+#' @param nsemirandomstart Number of semi-random starts (see \code{\link{get_semirandom}})). Can be zero. Increase for better results, though longer computation time.
 #' Some research finds 500 starts to be a useful reference.
 #' @param algorithm character string "\code{ALS1}" (default) or "\code{ALS2}",
 #'   denoting the type of alternating least squares algorithm.
-#' @param saveAllStarts logical. If \code{TRUE}, the results of all algorithm
+#' @param save_all_starts logical. If \code{TRUE}, the results of all algorithm
 #'   starts are returned. By default, only the best solution is retained.
 #' @param seed Integer. Seed for the random number generator. Default: NULL, meaning no reproducibility
 #'
@@ -434,10 +431,10 @@ NULL
 #'   \item{\code{iterations}}{numeric. The number of iterations of the algorithm.}
 #'   \item{\code{timer}}{numeric. The amount of time (in seconds) the algorithm
 #'   ran for.}
-#'   \item{\code{initialStart}}{list. Containing the initial
+#'   \item{\code{initial_start}}{list. Containing the initial
 #'   membership matrix, as well as the type of start that was used
-#'   to obtain the clustering solution. (as returned by \code{\link{getRandom}}
-#'   or \code{\link{getSemiRandom}})}
+#'   to obtain the clustering solution. (as returned by \code{\link{get_random}}
+#'   or \code{\link{get_semirandom}})}
 #'   \item{\code{runs}}{list. Each element represents one model obtained from one of the multiple starts.
 #'   Each element contains all of the above information.}
 #'   \item{\code{parameters}}{list. Containing the parameters used for the model.}}
@@ -474,16 +471,16 @@ NULL
 #'
 #' # Saving the results of all starts
 #' clust <- adproclus(data = x, nclusters = 3,
-#'                    nrandomstart = 2, nsemirandomstart = 2, saveAllStarts = TRUE)
+#'                    nrandomstart = 2, nsemirandomstart = 2, save_all_starts = TRUE)
 #'
 #' # Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
-#' start <- getRational(x,x[1:4,])$A
+#' start <- get_rational(x,x[1:4,])$A
 #' clust <- adproclus(data = x, nclusters = 4, start_allocation = start)
 #'
-#' @seealso \code{\link{adproclusLD}} for low dimensional ADPROCLUS, \code{\link{getRandom}},\code{\link{getSemiRandom}} and \code{\link{getRational}} for generating
+#' @seealso \code{\link{adproclusLD}} for low dimensional ADPROCLUS, \code{\link{get_random}},\code{\link{get_semirandom}} and \code{\link{get_rational}} for generating
 #'   (semi-)random and rational starts for ADPROCLUS.
 adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3, nsemirandomstart = 3,
-        algorithm = "ALS1", saveAllStarts = FALSE, seed = NULL) {
+        algorithm = "ALS1", save_all_starts = FALSE, seed = NULL) {
 
     t <- proc.time()
     results <- list()
@@ -496,7 +493,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
     checkmate::assertCount(nrandomstart, coerce = TRUE)
     checkmate::assertCount(nsemirandomstart, coerce = TRUE)
     checkmate::assertInt(seed, null.ok = TRUE, coerce = TRUE)
-    checkmate::assertFlag(saveAllStarts)
+    checkmate::assertFlag(save_all_starts)
     checkmate::assertMatrix(data, mode = "numeric", any.missing = FALSE)
     checkmate::assertChoice(algorithm, c("ALS1", "ALS2"))
 
@@ -540,7 +537,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
                     res <- .adproclus_lf2(data, start_allocation)
             }
 
-            res$initialStart <- list(type = "Rational Start", initialA = start_allocation)
+            res$initial_start <- list(type = "Rational Start", initialA = start_allocation)
             results <- append(results, list(res))
             BestSol <- res
     }
@@ -551,12 +548,12 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
                             if(!is.null(seed)) {
                                     seed_local <- seed_local + 1
                             }
-                            initialStart <- getRandom(data,
+                            initial_start <- get_random(data,
                                                       nclusters,
                                                       seed = seed_local)
-                            initialStart$type <- paste("random_start_no_", i)
-                            res <- .adproclus_lf1(data, initialStart$A)
-                            res$initialStart <- initialStart
+                            initial_start$type <- paste("random_start_no_", i)
+                            res <- .adproclus_lf1(data, initial_start$A)
+                            res$initial_start <- initial_start
                             if (res$sse < BestSol$sse) {
                                     BestSol <- res
                             }
@@ -571,12 +568,12 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
                             if(!is.null(seed)) {
                                     seed_local <- seed_local + 1
                             }
-                            initialStart <- getSemiRandom(data,
+                            initial_start <- get_semirandom(data,
                                                           nclusters,
                                                           seed = seed_local)
-                            initialStart$type <- paste("semi_random_start_no_", i)
-                            res <- .adproclus_lf1(data, initialStart$A)
-                            res$initialStart <- initialStart
+                            initial_start$type <- paste("semi_random_start_no_", i)
+                            res <- .adproclus_lf1(data, initial_start$A)
+                            res$initial_start <- initial_start
                             if (res$sse < BestSol$sse) {
                                     BestSol <- res
                             }
@@ -593,12 +590,12 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
                             if(!is.null(seed)) {
                                     seed_local <- seed_local + 1
                             }
-                            initialStart <- getRandom(data,
+                            initial_start <- get_random(data,
                                                       nclusters,
                                                       seed = seed_local)
-                            initialStart$type <- paste("random_start_no_", i)
-                            res <- .adproclus_lf2(data, initialStart$A)
-                            res$initialStart <- initialStart
+                            initial_start$type <- paste("random_start_no_", i)
+                            res <- .adproclus_lf2(data, initial_start$A)
+                            res$initial_start <- initial_start
                             if (res$sse < BestSol$sse) {
                                     BestSol <- res
                             }
@@ -613,12 +610,12 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
                             if(!is.null(seed)) {
                                     seed_local <- seed_local + 1
                             }
-                            initialStart <- getSemiRandom(data,
+                            initial_start <- get_semirandom(data,
                                                           nclusters,
                                                           seed = seed_local)
-                            initialStart$type <- paste("semi_random_start_no_", i)
-                            res <- .adproclus_lf2(data, initialStart$A)
-                            res$initialStart <- initialStart
+                            initial_start$type <- paste("semi_random_start_no_", i)
+                            res <- .adproclus_lf2(data, initial_start$A)
+                            res$initial_start <- initial_start
                             if (res$sse < BestSol$sse) {
                                     BestSol <- res
                             }
@@ -628,7 +625,7 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
             }
     }
 
-    if (saveAllStarts == TRUE) {
+    if (save_all_starts == TRUE) {
             BestSol$runs <- results
             results <- BestSol
             names(results$runs) <- as.character(c(1:length(results$runs)))
@@ -687,11 +684,11 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #' @param nclusters Number of clusters to be used. Must be a positive integer.
 #' @param ncomponents Number of components (dimensions) to which the profiles should be restricted. Must be a positive integer.
 #' @param start_allocation Optional matrix of binary values as starting allocation for first run. Default is \code{NULL}.
-#' @param nrandomstart Number of random starts (see \code{\link{getRandom}}). Can be zero. Increase for better results, though longer computation time.
+#' @param nrandomstart Number of random starts (see \code{\link{get_random}}). Can be zero. Increase for better results, though longer computation time.
 #' Some research finds 500 starts to be a useful reference.
-#' @param nsemirandomstart Number of semi-random starts (see \code{\link{getSemiRandom}})). Can be zero. Increase for better results, though longer computation time.
+#' @param nsemirandomstart Number of semi-random starts (see \code{\link{get_semirandom}})). Can be zero. Increase for better results, though longer computation time.
 #' Some research finds 500 starts to be a useful reference.
-#' @param saveAllStarts logical. If \code{TRUE}, the results of all algorithm
+#' @param save_all_starts logical. If \code{TRUE}, the results of all algorithm
 #'   starts are returned. By default, only the best solution is retained.
 #' @param seed Integer. Seed for the random number generator. Default: NULL, meaning no reproducibility
 #'
@@ -715,10 +712,10 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #'   \item{\code{iterations}}{numeric. The number of iterations of the algorithm.}
 #'   \item{\code{timer}}{numeric. The amount of time (in seconds) the algorithm
 #'   ran for.}
-#'   \item{\code{initialStart}}{list. A list containing the initial
+#'   \item{\code{initial_start}}{list. A list containing the initial
 #'   membership matrix, as well as the type of start that was used
-#'   to obtain the clustering solution. (as returned by \code{\link{getRandom}}
-#'   or \code{\link{getSemiRandom}})}
+#'   to obtain the clustering solution. (as returned by \code{\link{get_random}}
+#'   or \code{\link{get_semirandom}})}
 #'   \item{\code{runs}}{list. Each element represents one model obtained from one of the multiple starts.
 #'   Each element contains all of the above information.}
 #'   \item{\code{parameters}}{list. Containing the parameters used for the model.}}
@@ -737,10 +734,10 @@ adproclus <- function(data, nclusters, start_allocation = NULL, nrandomstart = 3
 #' # where the resulting profiles can be characterized in S = 1 dimensions (components)
 #' clust <- adproclusLD(x, nclusters = 3, ncomponents = 1)
 #'
-#' @seealso \code{\link{adproclus}} for full dimensional ADPROCLUS, \code{\link{getRandom}},\code{\link{getSemiRandom}} and \code{\link{getRational}} for generating
+#' @seealso \code{\link{adproclus}} for full dimensional ADPROCLUS, \code{\link{get_random}},\code{\link{get_semirandom}} and \code{\link{get_rational}} for generating
 #'   (semi-)random and rational starts for (low dimensional) ADPROCLUS.
 adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, nrandomstart = 3,
-                      nsemirandomstart = 3, saveAllStarts = FALSE, seed = NULL) {
+                      nsemirandomstart = 3, save_all_starts = FALSE, seed = NULL) {
 
         t <- proc.time()
         results <- list()
@@ -754,7 +751,7 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
         checkmate::assertCount(nrandomstart, coerce = TRUE)
         checkmate::assertCount(nsemirandomstart, coerce = TRUE)
         checkmate::assertInt(seed, null.ok = TRUE, coerce = TRUE)
-        checkmate::assertFlag(saveAllStarts)
+        checkmate::assertFlag(save_all_starts)
         checkmate::assertMatrix(data, mode = "numeric", any.missing = FALSE)
 
         if (ncomponents > min(n,nclusters)) {
@@ -783,7 +780,7 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                 }
 
                 model_new <- .ldadproclus(data, start_allocation, ncomponents)
-                model_new$initialStart <- list(type = "rational_start_model", A = start_allocation)
+                model_new$initial_start <- list(type = "rational_start_model", A = start_allocation)
                 results <- append(results, list(model_new))
                 best_sol <- results[[1]]
         }
@@ -793,10 +790,10 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                         if (!is.null(seed_local)) {
                                 seed_local <- seed_local + 1
                         }
-                        random_start <- getRandom(data, nclusters, seed = seed_local)$A
+                        random_start <- get_random(data, nclusters, seed = seed_local)$A
                         model_new <- .ldadproclus(data, random_start, ncomponents)
 
-                        model_new$initialStart <- list(type = paste("random_start_no_", i),
+                        model_new$initial_start <- list(type = paste("random_start_no_", i),
                                                        A = random_start)
 
                         results <- append(results, list(model_new))
@@ -812,10 +809,10 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                         if (!is.null(seed_local)) {
                                 seed_local <- seed_local + 1
                         }
-                        semi_random_start <- getSemiRandom(data, nclusters, seed = seed_local)$A
+                        semi_random_start <- get_semirandom(data, nclusters, seed = seed_local)$A
                         model_new <- .ldadproclus(data, semi_random_start, ncomponents)
 
-                        model_new$initialStart <- list(type = paste("semi_random_start_no_", j),
+                        model_new$initial_start <- list(type = paste("semi_random_start_no_", j),
                                                        A = semi_random_start)
 
                         results <- append(results, list(model_new))
@@ -825,7 +822,7 @@ adproclusLD <- function(data, nclusters, ncomponents, start_allocation = NULL, n
                 }
         }
 
-        if (saveAllStarts == TRUE) {
+        if (save_all_starts == TRUE) {
                 best_sol$runs <- results
                 results <- best_sol
                 names(results$runs) <- as.character(c(1:length(results$runs)))

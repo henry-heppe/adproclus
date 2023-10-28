@@ -19,7 +19,7 @@
 #' @param explvar explvar Explained variance.
 #' @param iterations iterations Number of iterations.
 #' @param timer timer Time of algorithm run.
-#' @param initialStart initialstart List of \code{type} of start and \code{start_allocation} matrix
+#' @param initial_start initial_start List of \code{type} of start and \code{start_allocation} matrix
 #' @param C Low dimensional profiles matrix C.
 #' @param B Matrix of base vectors connecting low dimensional components with original variables B.
 #' @param runs List of suboptimal models.
@@ -38,7 +38,7 @@
 #' #Use constructor to obtain object of class adpc
 #' result_object <- adpc(A, P)
 #'
-adpc <- function(A, P, sse = NULL, totvar = NULL, explvar = NULL, iterations = NULL, timer = NULL, initialStart = NULL, C = NULL, B = NULL, runs = NULL, parameters = NULL) {
+adpc <- function(A, P, sse = NULL, totvar = NULL, explvar = NULL, iterations = NULL, timer = NULL, initial_start = NULL, C = NULL, B = NULL, runs = NULL, parameters = NULL) {
 
         checkmate::assert_matrix(A, any.missing = FALSE)
         checkmate::assert_matrix(P, any.missing = FALSE)
@@ -47,7 +47,7 @@ adpc <- function(A, P, sse = NULL, totvar = NULL, explvar = NULL, iterations = N
         checkmate::assert_number(explvar, null.ok = TRUE)
         checkmate::assert_count(iterations, null.ok = TRUE)
         checkmate::assert_number(timer, null.ok = TRUE)
-        checkmate::assert_list(initialStart, types = c("character", "matrix"), null.ok = TRUE)
+        checkmate::assert_list(initial_start, types = c("character", "matrix"), null.ok = TRUE)
         checkmate::assert_list(runs, null.ok = TRUE)
         checkmate::assert_list(parameters, null.ok = TRUE)
 
@@ -252,26 +252,26 @@ print.summary.adpc <- function(x, ...) {
 #' # Produce three plots of the model
 #' plot(clust, type = "Network")
 #' plot(clust, type = "Profiles")
-#' plot(clust, type = "VarsByComp")
+#' plot(clust, type = "vars_by_comp")
 plot.adpc <- function(x,
                       type = "Network",
                       title = NULL,
                       relative_overlap = TRUE,
                       ...) {
         checkmate::assertClass(x, "adpc")
-        checkmate::assertChoice(type, c("Network", "Profiles", "VarsByComp"))
+        checkmate::assertChoice(type, c("Network", "Profiles", "vars_by_comp"))
         checkmate::assertString(title, null.ok = TRUE)
         checkmate::assertFlag(relative_overlap)
 
-        #check for illegal choice of VarsByComp for full dim model is done in plotVarsByComp()
-        if (type == "VarsByComp") {
-                plotVarsByComp(model = x, title = title)
+        #check for illegal choice of VarsByComp for full dim x is done in plotVarsByComp()
+        if (type == "vars_by_comp") {
+                plot_vars_by_comp(model = x, title = title)
 
         } else if (type == "Profiles") {
-                plotProfiles(model = x, title = title)
+                plot_profiles(model = x, title = title)
 
         } else {
-                plotClusterNetwork(model = x, title = title, relative_overlap = relative_overlap)
+                plot_cluster_network(model = x, title = title, relative_overlap = relative_overlap)
 
         }
 

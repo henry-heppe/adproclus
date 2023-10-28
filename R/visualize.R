@@ -39,8 +39,8 @@
 #' clust <- adproclusLD(x, 3, 1)
 #'
 #' # Plot the overlapping the clusters
-#' plotClusterNetwork(clust)
-plotClusterNetwork <- function(model,
+#' plot_cluster_network(clust)
+plot_cluster_network <- function(model,
                                title = "Cluster network of ADPROCLUS solution" ,
                                relative_overlap = TRUE,
                                filetype = NULL) {
@@ -163,8 +163,8 @@ plotClusterNetwork <- function(model,
 #' clust <- adproclus(x, 3)
 #'
 #' # Plot the profile scores of each cluster
-#' plotProfiles(clust)
-plotProfiles <- function(model, title = "Profiles of ADPROCLUS solution") {
+#' plot_profiles(clust)
+plot_profiles <- function(model, title = "Profiles of ADPROCLUS solution") {
         checkmate::assertClass(model, "adpc")
         checkmate::assertString(title, null.ok = TRUE)
         #issue: cluster- and profile names displayed correctly?
@@ -205,8 +205,8 @@ plotProfiles <- function(model, title = "Profiles of ADPROCLUS solution") {
 #' clust <- adproclusLD(x, 3, 1)
 #'
 #' # Plot the matrix B', connecting components with variables
-#' plotVarsByComp(clust)
-plotVarsByComp <- function(model, title = "B' of Low Dimensional ADPROCLUS Solution") {
+#' plot_vars_by_comp(clust)
+plot_vars_by_comp <- function(model, title = "B' of Low Dimensional ADPROCLUS Solution") {
         checkmate::assertClass(model, "adpc")
         checkmate::assertString(title, null.ok = TRUE)
 

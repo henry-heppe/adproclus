@@ -11,7 +11,7 @@ adproclusLD(
   start_allocation = NULL,
   nrandomstart = 3,
   nsemirandomstart = 3,
-  saveAllStarts = FALSE,
+  save_all_starts = FALSE,
   seed = NULL
 )
 }
@@ -25,13 +25,13 @@ adproclusLD(
 
 \item{start_allocation}{Optional matrix of binary values as starting allocation for first run. Default is \code{NULL}.}
 
-\item{nrandomstart}{Number of random starts (see \code{\link{getRandom}}). Can be zero. Increase for better results, though longer computation time.
+\item{nrandomstart}{Number of random starts (see \code{\link{get_random}}). Can be zero. Increase for better results, though longer computation time.
 Some research finds 500 starts to be a useful reference.}
 
-\item{nsemirandomstart}{Number of semi-random starts (see \code{\link{getSemiRandom}})). Can be zero. Increase for better results, though longer computation time.
+\item{nsemirandomstart}{Number of semi-random starts (see \code{\link{get_semirandom}})). Can be zero. Increase for better results, though longer computation time.
 Some research finds 500 starts to be a useful reference.}
 
-\item{saveAllStarts}{logical. If \code{TRUE}, the results of all algorithm
+\item{save_all_starts}{logical. If \code{TRUE}, the results of all algorithm
 starts are returned. By default, only the best solution is retained.}
 
 \item{seed}{Integer. Seed for the random number generator. Default: NULL, meaning no reproducibility}
@@ -57,10 +57,10 @@ starts are returned. By default, only the best solution is retained.}
   \item{\code{iterations}}{numeric. The number of iterations of the algorithm.}
   \item{\code{timer}}{numeric. The amount of time (in seconds) the algorithm
   ran for.}
-  \item{\code{initialStart}}{list. A list containing the initial
+  \item{\code{initial_start}}{list. A list containing the initial
   membership matrix, as well as the type of start that was used
-  to obtain the clustering solution. (as returned by \code{\link{getRandom}}
-  or \code{\link{getSemiRandom}})}
+  to obtain the clustering solution. (as returned by \code{\link{get_random}}
+  or \code{\link{get_semirandom}})}
   \item{\code{runs}}{list. Each element represents one model obtained from one of the multiple starts.
   Each element contains all of the above information.}
   \item{\code{parameters}}{list. Containing the parameters used for the model.}}
@@ -110,6 +110,6 @@ Depril, D., Van Mechelen, I., & Wilderjans, T. F.
   \emph{Journal of classification, 29,} 297-320.
 }
 \seealso{
-\code{\link{adproclus}} for full dimensional ADPROCLUS, \code{\link{getRandom}},\code{\link{getSemiRandom}} and \code{\link{getRational}} for generating
+\code{\link{adproclus}} for full dimensional ADPROCLUS, \code{\link{get_random}},\code{\link{get_semirandom}} and \code{\link{get_rational}} for generating
   (semi-)random and rational starts for (low dimensional) ADPROCLUS.
 }

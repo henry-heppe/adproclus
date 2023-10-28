@@ -11,7 +11,7 @@ adproclus(
   nrandomstart = 3,
   nsemirandomstart = 3,
   algorithm = "ALS1",
-  saveAllStarts = FALSE,
+  save_all_starts = FALSE,
   seed = NULL
 )
 }
@@ -23,16 +23,16 @@ adproclus(
 
 \item{start_allocation}{Optional matrix of binary values as starting allocation for first run. Default is \code{NULL}.}
 
-\item{nrandomstart}{Number of random starts (see \code{\link{getRandom}}). Can be zero. Increase for better results, though longer computation time.
+\item{nrandomstart}{Number of random starts (see \code{\link{get_random}}). Can be zero. Increase for better results, though longer computation time.
 Some research finds 500 starts to be a useful reference.}
 
-\item{nsemirandomstart}{Number of semi-random starts (see \code{\link{getSemiRandom}})). Can be zero. Increase for better results, though longer computation time.
+\item{nsemirandomstart}{Number of semi-random starts (see \code{\link{get_semirandom}})). Can be zero. Increase for better results, though longer computation time.
 Some research finds 500 starts to be a useful reference.}
 
 \item{algorithm}{character string "\code{ALS1}" (default) or "\code{ALS2}",
 denoting the type of alternating least squares algorithm.}
 
-\item{saveAllStarts}{logical. If \code{TRUE}, the results of all algorithm
+\item{save_all_starts}{logical. If \code{TRUE}, the results of all algorithm
 starts are returned. By default, only the best solution is retained.}
 
 \item{seed}{Integer. Seed for the random number generator. Default: NULL, meaning no reproducibility}
@@ -54,10 +54,10 @@ starts are returned. By default, only the best solution is retained.}
   \item{\code{iterations}}{numeric. The number of iterations of the algorithm.}
   \item{\code{timer}}{numeric. The amount of time (in seconds) the algorithm
   ran for.}
-  \item{\code{initialStart}}{list. Containing the initial
+  \item{\code{initial_start}}{list. Containing the initial
   membership matrix, as well as the type of start that was used
-  to obtain the clustering solution. (as returned by \code{\link{getRandom}}
-  or \code{\link{getSemiRandom}})}
+  to obtain the clustering solution. (as returned by \code{\link{get_random}}
+  or \code{\link{get_semirandom}})}
   \item{\code{runs}}{list. Each element represents one model obtained from one of the multiple starts.
   Each element contains all of the above information.}
   \item{\code{parameters}}{list. Containing the parameters used for the model.}}
@@ -85,8 +85,8 @@ loss function, see Wilderjans et al., 2011.
 The alternating least squares algorithms ("\code{ALS1}" and "\code{ALS2}")
 that can be used for minimization of the loss function were proposed by
 Depril et al. (2008). In "\code{ALS2}", starting from an initial random or
-rational estimate of \eqn{\boldsymbol{A}} (see \code{\link{getRandom}} and
-\code{\link{getSemiRandom}}), \eqn{\boldsymbol{A}} and \eqn{\boldsymbol{P}} are alternately
+rational estimate of \eqn{\boldsymbol{A}} (see \code{\link{get_random}} and
+\code{\link{get_semirandom}}), \eqn{\boldsymbol{A}} and \eqn{\boldsymbol{P}} are alternately
 re-estimated conditionally upon each other until convergence. The
 "\code{ALS1}" algorithm differs from the one previous one in that each row in
 \eqn{\boldsymbol{A}} is updated independently and that the conditionally optimal
@@ -114,10 +114,10 @@ clust <- adproclus(data = x, nclusters = 3,
 
 # Saving the results of all starts
 clust <- adproclus(data = x, nclusters = 3,
-                   nrandomstart = 2, nsemirandomstart = 2, saveAllStarts = TRUE)
+                   nrandomstart = 2, nsemirandomstart = 2, save_all_starts = TRUE)
 
 # Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
-start <- getRational(x,x[1:4,])$A
+start <- get_rational(x,x[1:4,])$A
 clust <- adproclus(data = x, nclusters = 4, start_allocation = start)
 
 }
@@ -138,6 +138,6 @@ Wilderjans, T. F., Ceulemans, E., Van Mechelen, I., & Depril, D.
   analysis models. \emph{Journal of Classification}, 7(2):167-195.
 }
 \seealso{
-\code{\link{adproclusLD}} for low dimensional ADPROCLUS, \code{\link{getRandom}},\code{\link{getSemiRandom}} and \code{\link{getRational}} for generating
+\code{\link{adproclusLD}} for low dimensional ADPROCLUS, \code{\link{get_random}},\code{\link{get_semirandom}} and \code{\link{get_rational}} for generating
   (semi-)random and rational starts for ADPROCLUS.
 }

@@ -36,7 +36,7 @@ Collate:
     'adproclus_classes.R'
     'clustering.R'
     'data.R'
-    'getStarts.R'
+    'get_starts.R'
     'utils.R'
     'visualize.R'
 Suggests: 

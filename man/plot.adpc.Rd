@@ -49,5 +49,5 @@ clust <- adproclusLD(x, 3, 1)
 # Produce three plots of the model
 plot(clust, type = "Network")
 plot(clust, type = "Profiles")
-plot(clust, type = "VarsByComp")
+plot(clust, type = "vars_by_comp")
 }
