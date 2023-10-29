@@ -17,10 +17,9 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 ```{r, include = FALSE}
- usethis::use_coverage()
+# usethis::use_coverage()
 # usethis::use_cran_badge()
 ```
-[![Codecov test coverage](https://codecov.io/gh/henry-heppe/adproclus/branch/master/graph/badge.svg)](https://app.codecov.io/gh/henry-heppe/adproclus?branch=master)
 <!-- badges: end -->
 
 [package under development, will be submitted to CRAN end of 2023] This package is an implementation of the additive profile clustering (ADPROCLUS) method in R. It can be used to obtain overlapping clustering models for object-by-variable data matrices. It also contains the low dimensional ADPROCLUS method, which achieves a simultaneous dimension reduction when searching for overlapping clusters. This can be used when the object-by-variable data contains a very large number of variables.

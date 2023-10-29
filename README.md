@@ -4,9 +4,6 @@
 # adproclus
 
 <!-- badges: start -->
-
-[![Codecov test
-coverage](https://codecov.io/gh/henry-heppe/adproclus/branch/master/graph/badge.svg)](https://app.codecov.io/gh/henry-heppe/adproclus?branch=master)
 <!-- badges: end -->
 
 \[package under development, will be submitted to CRAN end of 2023\]
