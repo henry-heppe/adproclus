@@ -14,11 +14,13 @@
 )
 }
 \arguments{
-\item{object}{ADPROCLUS solution (class: \code{adpc}). Low dimensional model possible.}
+\item{object}{ADPROCLUS solution (class: \code{adpc}). Low dimensional model
+possible.}
 
 \item{title}{String. Default: "ADPROCLUS solution"}
 
-\item{digits}{Integer. The number of digits that all decimal numbers will be rounded to.}
+\item{digits}{Integer. The number of digits that all decimal numbers will be
+rounded to.}
 
 \item{matrix_rows}{Integer. The number of matrix rows to display. OPTIONAL}
 
@@ -30,12 +32,14 @@
 invisibly returns object of class \code{summary.adpc}
 }
 \description{
-For an object of class \code{adpc} as input, this method yields a summary object of class \code{summary.adpc} including
-group characteristics of the clusters in the solution. Works for both full and low dimensional solutions.
-Adjust the parameters \code{digits, matrix_rows, matrix_cols} to change the level of detail for the printing of the summary.
+For an object of class \code{adpc} as input, this method yields a summary
+object of class \code{summary.adpc} including group characteristics of the
+clusters in the solution. Works for both full and low dimensional solutions.
+Adjust the parameters \code{digits, matrix_rows, matrix_cols} to change the
+level of detail for the printing of the summary.
 }
 \examples{
-#Obtain data, compute model, summarize model
+# Obtain data, compute model, summarize model
 x <- stackloss
 model <- adproclus(x, 3)
 model_summary <- summary(model)

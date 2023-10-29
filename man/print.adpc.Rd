@@ -18,7 +18,8 @@
 
 \item{title}{String. Default: "ADPROCLUS solution"}
 
-\item{digits}{Integer. The number of digits that all decimal numbers will be rounded to.}
+\item{digits}{Integer. The number of digits that all decimal numbers will
+be rounded to.}
 
 \item{matrix_rows}{Integer. The number of matrix rows to display. OPTIONAL}
 
@@ -27,9 +28,11 @@
 \item{...}{ignored}
 }
 \description{
-For an object of class \code{adpc} as input, this method prints basic information
-about the ADPROCLUS solution represented by the object. Works for both full and low dimensional solutions.
-Adjust the parameters \code{digits, matrix_rows, matrix_cols} to change the level of detail printed.
+For an object of class \code{adpc} as input, this method prints basic
+information about the ADPROCLUS solution represented by the object.
+Works for both full and low dimensional solutions. Adjust the parameters
+\code{digits, matrix_rows, matrix_cols}
+to change the level of detail printed.
 }
 \examples{
 # Obtain data, compute model, print model

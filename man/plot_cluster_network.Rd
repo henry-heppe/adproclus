@@ -6,19 +6,22 @@
 \usage{
 plot_cluster_network(
   model,
-  title = "Cluster network of ADPROCLUS solution",
+  title = "Cluster network of ADPROCLUS\\n                                 solution",
   relative_overlap = TRUE,
   filetype = NULL
 )
 }
 \arguments{
-\item{model}{ADPROCLUS solution (class: \code{adpc}). Low dimensional model possible.}
+\item{model}{ADPROCLUS solution (class: \code{adpc}). Low dimensional model
+possible.}
 
 \item{title}{String. Default: " Cluster network of ADPROCLUS solution"}
 
-\item{relative_overlap}{Logical. If \code{TRUE} (default), the number of observations belonging to two clusters
+\item{relative_overlap}{Logical. If \code{TRUE} (default), the number of
+observations belonging to two clusters
 is divided by the total number of observations. If \code{FALSE}
-the number of observations in a cluster overlap will be displayed on the edges.}
+the number of observations in a cluster overlap will be displayed on the
+edges.}
 
 \item{filetype}{Optional. Choose type of file to save the plot.
 Possible choices: \code{"R", "pdf", "svg", "tex", "jpg", "tiff", "png", ""}
@@ -28,13 +31,18 @@ Default: \code{NULL} does not create a file.}
 Invisibly returns the input model.
 }
 \description{
-Produce a representation of a (low dimensional) ADPROCLUS solution, where each cluster is a vertex and
-the edge between two vertices represents the overlap between the corresponding clusters.
-The size of a vertex corresponds to the cluster size. The overlap is represented
-through color, width and numerical label of the edge.
-The numerical edge labels can be relative (number of overlap observations / total observations)
+Produce a representation of a (low dimensional) ADPROCLUS solution,
+where each cluster is a vertex and the edge between two vertices represents
+the overlap between the corresponding clusters.
+The size of a vertex corresponds to the cluster size.
+The overlap is represented through color, width and numerical label
+of the edge.
+The numerical edge labels can be relative
+(number of overlap observations / total observations)
 or absolute (number of observations in both clusters).
-\strong{NOTE:} This function can be called through the \code{plot(model, type = "Network")} function with model an object of class \code{adpc}.
+\strong{NOTE:} This function can be called through the
+\code{plot(model, type = "Network")} function with model an
+object of class \code{adpc}.
 }
 \examples{
 # Loading a test dataset into the global environment

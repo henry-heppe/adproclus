@@ -7,7 +7,8 @@
 get_random(data, nclusters, seed = NULL)
 }
 \arguments{
-\item{data}{Object-by-variable data matrix of class \code{matrix} or \code{data.frame}.}
+\item{data}{Object-by-variable data matrix of class \code{matrix} or
+\code{data.frame}.}
 
 \item{nclusters}{Number of clusters to be used. Must be a positive integer.}
 
@@ -20,22 +21,25 @@ get_random(data, nclusters, seed = NULL)
   matrix}}
 }
 \description{
-Generate an initial random start for the (low dimensional) Additive Profile Clustering
-algorithm (see \code{\link{adproclus}} and \code{\link{adproclus_low_dim}}).
+Generate an initial random start for the (low dimensional) Additive Profile
+Clustering algorithm (see \code{\link{adproclus}} and
+\code{\link{adproclus_low_dim}}).
 }
 \details{
 \code{get_random} generates a random initial binary membership matrix
 \strong{A} by drawing entries from a Bernoulli Distribution with \eqn{\pi =
 0.5}.
 
-For generating an initial start from random draws from the data, see \code{\link{get_semirandom}}
-For generating an initial start based on a specific set of initial cluster centers, see \code{\link{get_rational}}.
+For generating an initial start from random draws from the data, see
+\code{\link{get_semirandom}}
+For generating an initial start based on a specific set of initial cluster
+centers, see \code{\link{get_rational}}.
 
-\strong{Warning:} This function does \emph{not} obtain an ADPRCOLUS model. To
-perform aditive profile clustering, see \code{\link{adproclus}}.
+\strong{Warning:} This function does \emph{not} obtain an ADPRCOLUS model.
+To perform aditive profile clustering, see \code{\link{adproclus}}.
 }
 \examples{
-# Obtain data from standard data set "Stackloss" and generate start allocation
+# Obtain data from data set "Stackloss" and generate start allocation
 start_allocation <- get_random(stackloss, 3)$A
 
 }
@@ -55,7 +59,8 @@ Depril, D., Van Mechelen, I., & Wilderjans, T. F.
 }
 \seealso{
 \describe{
-  \item{\code{\link{adproclus}}, \code{\link{adproclus_low_dim}}}{for details about membership and profile matrices}
+  \item{\code{\link{adproclus}}, \code{\link{adproclus_low_dim}}}{for details
+   about membership and profile matrices}
   \item{\code{\link{get_semirandom}}}{for generating semi-random starts}
   \item{\code{\link{get_rational}}}{for generating rational starts}
 }

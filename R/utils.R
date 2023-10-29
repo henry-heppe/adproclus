@@ -8,7 +8,7 @@
 #'
 #' @noRd
 .repmat <- function(a, n, m) {
-        kronecker(matrix(1, n, m), a)
+  kronecker(matrix(1, n, m), a)
 }
 
 #' Squared Loss Function
@@ -19,7 +19,5 @@
 #'
 #' @noRd
 .lossL2 <- function(w) {
-        sum(w^2)
+  sum(w^2)
 }
-
-

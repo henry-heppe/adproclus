@@ -21,12 +21,16 @@ adproclus(
 
 \item{nclusters}{Number of clusters to be used. Must be a positive integer.}
 
-\item{start_allocation}{Optional matrix of binary values as starting allocation for first run. Default is \code{NULL}.}
+\item{start_allocation}{Optional matrix of binary values as starting
+allocation for first run. Default is \code{NULL}.}
 
-\item{nrandomstart}{Number of random starts (see \code{\link{get_random}}). Can be zero. Increase for better results, though longer computation time.
+\item{nrandomstart}{Number of random starts (see \code{\link{get_random}}).
+Can be zero. Increase for better results, though longer computation time.
 Some research finds 500 starts to be a useful reference.}
 
-\item{nsemirandomstart}{Number of semi-random starts (see \code{\link{get_semirandom}})). Can be zero. Increase for better results, though longer computation time.
+\item{nsemirandomstart}{Number of semi-random starts
+(see \code{\link{get_semirandom}})). Can be zero. Increase for better
+results, though longer computation time.
 Some research finds 500 starts to be a useful reference.}
 
 \item{algorithm}{character string "\code{ALS1}" (default) or "\code{ALS2}",
@@ -35,14 +39,17 @@ denoting the type of alternating least squares algorithm.}
 \item{save_all_starts}{logical. If \code{TRUE}, the results of all algorithm
 starts are returned. By default, only the best solution is retained.}
 
-\item{seed}{Integer. Seed for the random number generator. Default: NULL, meaning no reproducibility}
+\item{seed}{Integer. Seed for the random number generator.
+Default: NULL, meaning no reproducibility}
 }
 \value{
 \code{adproclus} returns a list with the following
   components, which describe the best model (from the multiple starts):
   \describe{
-  \item{\code{model}}{matrix. The obtained overlapping clustering model \strong{M} of the same size as \code{data}.}
-  \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering model. Clusters are sorted by size.}
+  \item{\code{model}}{matrix. The obtained overlapping clustering model
+  \strong{M} of the same size as \code{data}.}
+  \item{\code{A}}{matrix. The membership matrix \strong{A} of the clustering
+  model. Clusters are sorted by size.}
   \item{\code{P}}{matrix. The profile matrix
   \strong{P} of the clustering model.}
   \item{\code{sse}}{numeric. The
@@ -52,16 +59,19 @@ starts are returned. By default, only the best solution is retained.}
   of \code{data}.}
   \item{\code{explvar}}{numeric. The proportion of variance
   in \code{data} that is accounted for by the clustering model.}
-  \item{\code{iterations}}{numeric. The number of iterations of the algorithm.}
+  \item{\code{iterations}}{numeric. The number of iterations of the
+  algorithm.}
   \item{\code{timer}}{numeric. The amount of time (in seconds) the algorithm
   ran for.}
   \item{\code{initial_start}}{list. Containing the initial
   membership matrix, as well as the type of start that was used
   to obtain the clustering solution. (as returned by \code{\link{get_random}}
   or \code{\link{get_semirandom}})}
-  \item{\code{runs}}{list. Each element represents one model obtained from one of the multiple starts.
+  \item{\code{runs}}{list. Each element represents one model obtained from
+  one of the multiple starts.
   Each element contains all of the above information.}
-  \item{\code{parameters}}{list. Containing the parameters used for the model.}}
+  \item{\code{parameters}}{list. Containing the parameters used for the
+  model.}}
 }
 \description{
 Perform additive profile clustering (ADPROCLUS) on object by variable data.
@@ -75,25 +85,26 @@ The ADPROCLUS model approximates an \eqn{I \times J} object by
 variable data matrix \eqn{\boldsymbol{X}} by an \eqn{I \times J} model matrix
 \eqn{\boldsymbol{M}} that can be decomposed into an \eqn{I \times K} binary
 cluster membership matrix \eqn{\boldsymbol{A}} and a \eqn{K \times J}
-real-valued cluster profile matrix \eqn{\boldsymbol{P}}, with \eqn{K} indicating the
-number of overlapping clusters. In particular, the aim of an ADPROCLUS
-analysis is therefore, given a number of clusters \eqn{K}, to estimate a
+real-valued cluster profile matrix \eqn{\boldsymbol{P}}, with \eqn{K}
+indicating the number of overlapping clusters.
+In particular, the aim of an ADPROCLUS analysis is therefore,
+given a number of clusters \eqn{K}, to estimate a
 model matrix \deqn{M = AP} which reconstructs the data matrix
-\eqn{\boldsymbol{X}} as close as possible in a least squares sense (i.e. sum of squared
-residuals). For a detailed illustration of the ADPROCLUS model and associated
-loss function, see Wilderjans et al., 2011.
+\eqn{\boldsymbol{X}} as close as possible in a least squares sense
+(i.e. sum of squared residuals). For a detailed illustration of the
+ADPROCLUS model and associated loss function, see Wilderjans et al., 2011.
 
 The alternating least squares algorithms ("\code{ALS1}" and "\code{ALS2}")
 that can be used for minimization of the loss function were proposed by
 Depril et al. (2008). In "\code{ALS2}", starting from an initial random or
 rational estimate of \eqn{\boldsymbol{A}} (see \code{\link{get_random}} and
-\code{\link{get_semirandom}}), \eqn{\boldsymbol{A}} and \eqn{\boldsymbol{P}} are alternately
-re-estimated conditionally upon each other until convergence. The
-"\code{ALS1}" algorithm differs from the one previous one in that each row in
-\eqn{\boldsymbol{A}} is updated independently and that the conditionally optimal
-\eqn{\boldsymbol{P}} is recalculated after each row update, instead of the end of the
-matrix. For a discussion and comparison of the different algorithms, see
-Depril et al., 2008.
+\code{\link{get_semirandom}}), \eqn{\boldsymbol{A}} and \eqn{\boldsymbol{P}}
+are alternately re-estimated conditionally upon each other until convergence.
+The "\code{ALS1}" algorithm differs from the one previous one in that each
+row in \eqn{\boldsymbol{A}} is updated independently and that the
+conditionally optimal \eqn{\boldsymbol{P}} is recalculated after each row
+update, instead of the end of the matrix. For a discussion and comparison of
+the different algorithms, see Depril et al., 2008.
 
 \strong{Warning:} Computation time increases exponentially with increasing
 number of clusters, \eqn{K}. We recommend to determine the computation time
@@ -111,13 +122,16 @@ clust <- adproclus(data = x, nclusters = 2)
 # using the ALS2 algorithm,
 # with 2 random and 2 semi-random starts
 clust <- adproclus(x, 3,
-                   nrandomstart = 2, nsemirandomstart = 2, algorithm = "ALS2")
+  nrandomstart = 2, nsemirandomstart = 2, algorithm = "ALS2"
+)
 
 # Saving the results of all starts
 clust <- adproclus(x, 3,
-                   nrandomstart = 2, nsemirandomstart = 2, save_all_starts = TRUE)
+  nrandomstart = 2, nsemirandomstart = 2, save_all_starts = TRUE
+)
 
-# Clustering using a user-defined rational start profile matrix (here the first 4 rows of the data)
+# Clustering using a user-defined rational start profile matrix
+# (here the first 4 rows of the data)
 start <- get_rational(x, x[1:4, ])$A
 clust <- adproclus(x, 4, start_allocation = start)
 

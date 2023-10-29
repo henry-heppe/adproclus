@@ -10,7 +10,8 @@ get_rational(data, starting_profiles)
 \item{data}{Object-by-variable data matrix of class \code{matrix} or
 \code{data.frame}.}
 
-\item{starting_profiles}{A matrix where each row represents the profile values for a cluster}
+\item{starting_profiles}{A matrix where each row represents the profile
+values for a cluster}
 }
 \value{
 \code{get_rational} returns a list with the following components:
@@ -20,13 +21,15 @@ get_rational(data, starting_profiles)
   \item{\code{A}}{An initial Membership matrix}}
 }
 \description{
-If cluster profiles are given a priori, this function can be used to compute the conditionally optimal
-cluster membership matrix A which can then be used as a rational starting allocation for the (low dimensional) ADPROCLUS
+If cluster profiles are given a priori, this function can be used to compute
+the conditionally optimal cluster membership matrix A which can then be
+used as a rational starting allocation for the (low dimensional) ADPROCLUS
 procedure (see \code{\link{adproclus}} and \code{\link{adproclus_low_dim}}).
 }
 \details{
-The function uses the same quadratic loss function and minimization method as the (low dimensional) ADPROCLUS procedure
-does to find the next conditionally optimal membership matrix A. (for details, see Depril et al., 2012).
+The function uses the same quadratic loss function and minimization method as
+the (low dimensional) ADPROCLUS procedure does to find the next conditionally
+ optimal membership matrix A. (for details, see Depril et al., 2012).
 
 \strong{Warning:} This function does \emph{not} obtain an ADPRCOLUS model. To
 perform additive profile clustering, see \code{\link{adproclus}}.
@@ -35,7 +38,8 @@ perform additive profile clustering, see \code{\link{adproclus}}.
 # Obtain data from standard data set "Stackloss"
 x <- stackloss
 
-# Obtaining a user-defined rational start profile matrix (here the first 4 rows of the data)
+# Obtaining a user-defined rational start profile matrix
+# (here the first 4 rows of the data)
 start_allocation <- get_rational(x, x[1:4, ])$A
 
 }
@@ -46,7 +50,8 @@ Depril, D., Van Mechelen, I., & Wilderjans, T. F.
 }
 \seealso{
 \describe{
-  \item{\code{\link{adproclus}}, \code{\link{adproclus_low_dim}}}{for details about membership and profile matrices}
+  \item{\code{\link{adproclus}}, \code{\link{adproclus_low_dim}}}{for details
+   about membership and profile matrices}
   \item{\code{\link{get_random}}}{for generating random starts}
   \item{\code{\link{get_semirandom}}}{for generating semi-random starts}
 }

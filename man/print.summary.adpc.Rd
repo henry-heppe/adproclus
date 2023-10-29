@@ -15,12 +15,14 @@
 invisibly returns object of class \code{summary.adpc}
 }
 \description{
-Prints an object of class \code{summary.adpc} to represent and summarize a (low dimensional) ADPROCLUS solution.
-A number of parameters for how the results should be printed can be passed as an argument to \code{summary.adpc()}
-which then passes it on to this method. This method does not take a model of class \code{adpc} directly as input.
+Prints an object of class \code{summary.adpc} to represent and summarize a
+(low dimensional) ADPROCLUS solution. A number of parameters for how the
+results should be printed can be passed as an argument to
+\code{summary.adpc()} which then passes it on to this method. This method
+does not take a model of class \code{adpc} directly as input.
 }
 \examples{
-#Obtain data, compute model, print summary of model
+# Obtain data, compute model, print summary of model
 x <- stackloss
 model <- adproclus(x, 3)
 print(summary(model))

@@ -21,32 +21,45 @@ adproclus_low_dim(
 
 \item{nclusters}{Number of clusters to be used. Must be a positive integer.}
 
-\item{ncomponents}{Number of components (dimensions) to which the profiles should be restricted. Must be a positive integer.}
+\item{ncomponents}{Number of components (dimensions) to which the profiles
+should be restricted. Must be a positive integer.}
 
-\item{start_allocation}{Optional matrix of binary values as starting allocation for first run. Default is \code{NULL}.}
+\item{start_allocation}{Optional matrix of binary values as starting
+allocation for first run. Default is \code{NULL}.}
 
-\item{nrandomstart}{Number of random starts (see \code{\link{get_random}}). Can be zero. Increase for better results, though longer computation time.
+\item{nrandomstart}{Number of random starts (see \code{\link{get_random}}).
+Can be zero. Increase for better results, though longer computation time.
 Some research finds 500 starts to be a useful reference.}
 
-\item{nsemirandomstart}{Number of semi-random starts (see \code{\link{get_semirandom}})). Can be zero. Increase for better results, though longer computation time.
+\item{nsemirandomstart}{Number of semi-random starts
+(see \code{\link{get_semirandom}})). Can be zero.
+Increase for better results, though longer computation time.
 Some research finds 500 starts to be a useful reference.}
 
 \item{save_all_starts}{logical. If \code{TRUE}, the results of all algorithm
 starts are returned. By default, only the best solution is retained.}
 
-\item{seed}{Integer. Seed for the random number generator. Default: NULL, meaning no reproducibility}
+\item{seed}{Integer. Seed for the random number generator.
+Default: NULL, meaning no reproducibility}
 }
 \value{
 \code{adproclus_low_dim} returns a list with the following
-  components, which describe the best model (from the multiple starts): \describe{
-  \item{\code{model}}{matrix. The obtained overlapping clustering model \eqn{\boldsymbol{M}} of the same size as \code{data}.}
-  \item{\code{model_lowdim}}{matrix. The obtained low dimensional clustering model \eqn{\boldsymbol{AC}}
-  of size \eqn{I \times S}}
-  \item{\code{A}}{matrix. The membership matrix \eqn{\boldsymbol{A}} of the clustering model. Clusters are sorted by size.}
-  \item{\code{P}}{matrix. The profile matrix \eqn{\boldsymbol{P}} of the clustering model.}
-  \item{\code{c}}{matrix. The profile values in terms of the low dimensional components.}
-  \item{\code{B}}{matrix. Base vectors connecting low dimensional components with original variables.
-  Variables-by-components matrix. Warning: for computing \eqn{\boldsymbol{P}} use \eqn{\boldsymbol{B'}}}
+  components, which describe the best model (from the multiple starts):
+  \describe{
+  \item{\code{model}}{matrix. The obtained overlapping clustering model
+  \eqn{\boldsymbol{M}} of the same size as \code{data}.}
+  \item{\code{model_lowdim}}{matrix. The obtained low dimensional clustering
+  model \eqn{\boldsymbol{AC}} of size \eqn{I \times S}}
+  \item{\code{A}}{matrix. The membership matrix \eqn{\boldsymbol{A}} of the
+  clustering model. Clusters are sorted by size.}
+  \item{\code{P}}{matrix. The profile matrix \eqn{\boldsymbol{P}} of the
+  clustering model.}
+  \item{\code{c}}{matrix. The profile values in terms of the low dimensional
+  components.}
+  \item{\code{B}}{matrix. Base vectors connecting low dimensional components
+  with original variables.
+  Variables-by-components matrix. Warning: for computing
+  \eqn{\boldsymbol{P}} use \eqn{\boldsymbol{B'}}}
   \item{\code{sse}}{numeric. The
   residual sum of squares of the clustering model, which is minimized by the
   ALS algorithm.}
@@ -54,41 +67,52 @@ starts are returned. By default, only the best solution is retained.}
   of \code{data}.}
   \item{\code{explvar}}{numeric. The proportion of variance
   in \code{data} that is accounted for by the clustering model.}
-  \item{\code{iterations}}{numeric. The number of iterations of the algorithm.}
+  \item{\code{iterations}}{numeric. The number of iterations of the
+  algorithm.}
   \item{\code{timer}}{numeric. The amount of time (in seconds) the algorithm
   ran for.}
   \item{\code{initial_start}}{list. A list containing the initial
   membership matrix, as well as the type of start that was used
   to obtain the clustering solution. (as returned by \code{\link{get_random}}
   or \code{\link{get_semirandom}})}
-  \item{\code{runs}}{list. Each element represents one model obtained from one of the multiple starts.
+  \item{\code{runs}}{list. Each element represents one model obtained
+  from one of the multiple starts.
   Each element contains all of the above information.}
-  \item{\code{parameters}}{list. Containing the parameters used for the model.}}
+  \item{\code{parameters}}{list. Containing the parameters used for the
+  model.}}
 }
 \description{
-Perform \strong{low dimensional} additive profile clustering (ADPROCLUS) on object by variable data.
-Use case: data to cluster consists of a large set of variables, where it can be useful to interpret
-the cluster profiles in terms of a smaller set of components that represent the original variables well.
+Perform \strong{low dimensional} additive profile clustering (ADPROCLUS) on
+object by variable data. Use case: data to cluster consists of a large set of
+variables, where it can be useful to interpret the cluster profiles in terms
+of a smaller set of components that represent the original variables well.
 }
 \details{
-In this function, an extension by Depril et al. (2012) of Mirkins (1987, 1990) additive profile clustering
-method is used to obtain a low dimensional overlapping clustering model of the object by variable data provided by \code{data}.
-More precisely, the low dimensional ADPROCLUS model approximates an \eqn{I \times J} object by
-variable data matrix \eqn{\boldsymbol{X}} by an \eqn{I \times J} model matrix
-\eqn{\boldsymbol{M}}. For \eqn{K} overlapping clusters, \eqn{\boldsymbol{M}} can be decomposed into an \eqn{I \times K} binary
-cluster membership matrix \eqn{\boldsymbol{A}} and a \eqn{K \times J} real-valued cluster profile matrix \eqn{\boldsymbol{P}} s.t.
-\deqn{M = AP.}
-With the simultaneous dimension reduction, \eqn{\boldsymbol{P}} is restricted to be
-of reduced rank \eqn{S < \min(K,J)}, such that it can be decomposed into \deqn{P = CB',}
-with \eqn{\boldsymbol{C}} a \eqn{K \times S} matrix and \eqn{\boldsymbol{B}} a \eqn{J \times S} matrix. Now,
-a row in \eqn{\boldsymbol{C}} represents the profile values associated with the respective cluster in terms of the \eqn{S} components, while
-the entries of \eqn{\boldsymbol{B}} can be used to interpret the components in terms of the complete set of variables.
-In particular, the aim of an ADPROCLUS
-analysis is therefore, given a number of clusters \eqn{K} and a number of dimensions \eqn{S}, to estimate a
-model matrix \eqn{\boldsymbol{M}} that reconstructs data matrix
-\eqn{\boldsymbol{X}} as close as possible in a least squares sense and simultaneously reduce the dimensions of the data.
-For a detailed illustration of the low dimensional ADPROCLUS model and associated
-loss function, see Depril et al. (2012).
+In this function, an extension by Depril et al. (2012) of
+Mirkins (1987, 1990) additive profile clustering method is used to obtain a
+low dimensional overlapping clustering model of the object by variable data
+provided by \code{data}.
+More precisely, the low dimensional ADPROCLUS model approximates an
+\eqn{I \times J} object by variable data matrix \eqn{\boldsymbol{X}} by an
+\eqn{I \times J} model matrix \eqn{\boldsymbol{M}}. For \eqn{K} overlapping
+clusters, \eqn{\boldsymbol{M}} can be decomposed into an \eqn{I \times K}
+binary cluster membership matrix \eqn{\boldsymbol{A}} and a \eqn{K \times J}
+real-valued cluster profile matrix \eqn{\boldsymbol{P}} s.t. \deqn{M = AP.}
+With the simultaneous dimension reduction, \eqn{\boldsymbol{P}} is restricted
+to be of reduced rank \eqn{S < \min(K,J)}, such that it can be decomposed
+into \deqn{P = CB',} with \eqn{\boldsymbol{C}} a \eqn{K \times S} matrix and
+\eqn{\boldsymbol{B}} a \eqn{J \times S} matrix. Now, a row in
+\eqn{\boldsymbol{C}} represents the profile values associated with the
+respective cluster in terms of the \eqn{S} components, while
+the entries of \eqn{\boldsymbol{B}} can be used to interpret the components
+in terms of the complete set of variables. In particular, the aim of an
+ADPROCLUS analysis is therefore, given a number of clusters \eqn{K} and a
+number of dimensions \eqn{S}, to estimate a model matrix \eqn{\boldsymbol{M}}
+that reconstructs data matrix
+\eqn{\boldsymbol{X}} as close as possible in a least squares sense and
+simultaneously reduce the dimensions of the data.
+For a detailed illustration of the low dimensional ADPROCLUS model and
+associated loss function, see Depril et al. (2012).
 
 \strong{Warning:} Computation time increases exponentially with increasing
 number of clusters, \eqn{K}. We recommend to determine the computation time
@@ -100,7 +124,7 @@ multistart procedure.
 x <- stackloss
 
 # Low dimensional clustering with K = 3 clusters
-# where the resulting profiles can be characterized in S = 1 dimensions (components)
+# where the resulting profiles can be characterized in S = 1 dimensions
 clust <- adproclus_low_dim(x, 3, ncomponents = 1)
 
 }

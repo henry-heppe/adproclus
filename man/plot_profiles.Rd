@@ -7,7 +7,8 @@
 plot_profiles(model, title = "Profiles of ADPROCLUS solution")
 }
 \arguments{
-\item{model}{Object of class \code{adpc}. (Low dimensional) ADPROCLUS solution}
+\item{model}{Object of class \code{adpc}. (Low dimensional) ADPROCLUS
+solution}
 
 \item{title}{String. Default: "Profiles of ADPROCLUS solution"}
 }
@@ -15,10 +16,12 @@ plot_profiles(model, title = "Profiles of ADPROCLUS solution")
 Invisibly returns the input model.
 }
 \description{
-Produce a representation of profile matrix \eqn{\boldsymbol{P}} of a (low dimensional) ADPROCLUS solution
-of class \code{adpc}. The plot displays the profiles in the style of a correlation plot.
-\strong{NOTE:} This function can also be called through the \code{plot(model, type = "Profiles")} function
-with model an object of class \code{adpc}.
+Produce a representation of profile matrix \eqn{\boldsymbol{P}} of a
+(low dimensional) ADPROCLUS solution of class \code{adpc}.
+The plot displays the profiles in the style of a correlation plot.
+\strong{NOTE:} This function can also be called through the
+\code{plot(model, type = "Profiles")} function with model an object of
+class \code{adpc}.
 }
 \examples{
 # Loading a test dataset into the global environment

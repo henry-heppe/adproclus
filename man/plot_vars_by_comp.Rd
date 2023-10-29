@@ -4,10 +4,14 @@
 \alias{plot_vars_by_comp}
 \title{Plot variable to component matrix of ADPROCLUS solution}
 \usage{
-plot_vars_by_comp(model, title = "B' of Low Dimensional ADPROCLUS Solution")
+plot_vars_by_comp(
+  model,
+  title = "B' of Low Dimensional\\n                              ADPROCLUS Solution"
+)
 }
 \arguments{
-\item{model}{Object of class \code{adpc}. Must be \strong{Low dimensional} ADPROCLUS solution}
+\item{model}{Object of class \code{adpc}. Must be \strong{Low dimensional}
+ADPROCLUS solution}
 
 \item{title}{String. Default: "B' of Low Dimensional ADPROCLUS Solution"}
 }
@@ -15,9 +19,12 @@ plot_vars_by_comp(model, title = "B' of Low Dimensional ADPROCLUS Solution")
 Invisibly returns the input model.
 }
 \description{
-Produce a representation of variable to component matrix \eqn{\boldsymbol{B'}} of a \strong{low dimensional} ADPROCLUS solution
-of class \code{adpc}. The plot displays the scores in the style of a correlation plot.
-\strong{NOTE:} This function can be called through the \code{plot(model, type = "VarsByComp")} function
+Produce a representation of variable to component matrix
+\eqn{\boldsymbol{B'}} of a \strong{low dimensional} ADPROCLUS solution
+of class \code{adpc}. The plot displays the scores in the style of a
+correlation plot.
+\strong{NOTE:} This function can be called through the
+\code{plot(model, type = "VarsByComp")} function
 with model an object of class \code{adpc}.
 }
 \examples{
