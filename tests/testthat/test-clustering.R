@@ -36,7 +36,7 @@ test_that("ADPROCLUS illegal inputs", {
   ))
   # A0 more rows than data
   start <- get_rational(x, x[1:4, ])$A
-  expect_error(adproclus(x[seq_len(nrow(data) - 1), ],
+  expect_error(adproclus(x[seq_len(nrow(x) - 1), ],
     nclusters = 4,
     start_allocation = start
   ))
@@ -81,7 +81,7 @@ test_that("adproclus_low_dim illegal inputs", {
   ))
   # A0 more rows than data
   start <- get_rational(x, x[1:4, ])$A
-  expect_error(adproclus_low_dim(x[seq_len(nrow(data) - 1), ], nclusters = 4, ncomponents = 1, start_allocation = start))
+  expect_error(adproclus_low_dim(x[seq_len(nrow(x) - 1), ], nclusters = 4, ncomponents = 1, start_allocation = start))
 
   # ncol(start_allocation) unequal nclusters
   start <- get_rational(x, x[1:4, ])$A
@@ -140,8 +140,4 @@ test_that("order of clusters", {
     unname(rank((-1) * colSums(modelLD$A), ties.method = "first")),
     seq_len(ncol(modelLD$A))
   )
-})
-
-test_that("ADPROCLUS edge cases", {
-
 })

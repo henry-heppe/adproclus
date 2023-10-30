@@ -146,8 +146,9 @@ plot_cluster_network <- function(model,
 
 #' Plot profile matrix of ADPROCLUS solution
 #'
-#' Produce a representation of profile matrix \eqn{\boldsymbol{P}} of a
-#' (low dimensional) ADPROCLUS solution of class \code{adpc}.
+#' Produce a representation of profile matrix \eqn{\boldsymbol{P}}
+#' (or \eqn{\boldsymbol{C}} for low dimensional solution) of an ADPROCLUS
+#' solution of class \code{adpc}.
 #' The plot displays the profiles in the style of a correlation plot.
 #' \strong{NOTE:} This function can also be called through the
 #' \code{plot(model, type = "Profiles")} function with model an object of
@@ -183,7 +184,7 @@ plot_profiles <- function(model, title = "Profiles of ADPROCLUS solution") {
     )
   } else {
     if (title == "Profiles of ADPROCLUS solution") {
-      title <- "Profiles of Low dimensional ADPROCLUS solution"
+      title <- "Low dim Profiles C of ADPROCLUS solution"
     }
     corrplot::corrplot(model$C,
       is.corr = FALSE, title = title,

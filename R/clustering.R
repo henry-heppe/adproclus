@@ -889,6 +889,7 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
   results <- object
   # row and column names
   colnames(results$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
+  colnames(results$P) <- colnames(data, do.NULL = FALSE, prefix = "V")
   colnames(results$A) <- colnames(results$A, do.NULL = FALSE, prefix = "Cl")
   rownames(results$P) <- rownames(results$P, do.NULL = FALSE, prefix = "Cl")
 
@@ -897,6 +898,10 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
       colnames(results$runs[[i]]$model) <- colnames(data,
         do.NULL = FALSE,
         prefix = "V"
+      )
+      colnames(results$runs[[i]]$P) <- colnames(data,
+                                                    do.NULL = FALSE,
+                                                    prefix = "V"
       )
       colnames(results$runs[[i]]$A) <- colnames(results$A,
         do.NULL = FALSE,
@@ -924,6 +929,7 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
 
   # row and column names
   colnames(results$model) <- colnames(data, do.NULL = FALSE, prefix = "V")
+  colnames(results$P) <- colnames(data, do.NULL = FALSE, prefix = "V")
   colnames(results$model_lowdim) <- colnames(results$model_lowdim,
     do.NULL = FALSE, prefix = "Comp"
   )
@@ -932,13 +938,17 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
   colnames(results$C) <- colnames(results$C, do.NULL = FALSE, prefix = "Comp")
   rownames(results$C) <- rownames(results$C, do.NULL = FALSE, prefix = "Cl")
   colnames(results$B) <- colnames(results$B, do.NULL = FALSE, prefix = "Comp")
-  rownames(results$B) <- rownames(results$B, do.NULL = FALSE, prefix = "V")
+  rownames(results$B) <- colnames(data, do.NULL = FALSE, prefix = "V")
 
   if (!is.null(results$runs)) {
     for (i in seq_along(results$runs)) {
       colnames(results$runs[[i]]$model) <- colnames(data,
         do.NULL = FALSE,
         prefix = "V"
+      )
+      colnames(results$runs[[i]]$P) <- colnames(data,
+                                                    do.NULL = FALSE,
+                                                    prefix = "V"
       )
       colnames(results$runs[[i]]$model_lowdim) <- colnames(results$model_lowdim,
         do.NULL = FALSE,
@@ -964,9 +974,9 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
         do.NULL = FALSE,
         prefix = "Comp"
       )
-      rownames(results$runs[[i]]$B) <- rownames(results$B,
-        do.NULL = FALSE,
-        prefix = "V"
+      rownames(results$runs[[i]]$B) <- colnames(data,
+                                                do.NULL = FALSE,
+                                                prefix = "V"
       )
     }
   }
