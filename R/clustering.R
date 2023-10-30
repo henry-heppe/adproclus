@@ -76,8 +76,10 @@ NULL
 #'   in \code{data} that is accounted for by the clustering model.}
 #'   \item{\code{iterations}}{numeric. The number of iterations of the
 #'   algorithm.}
-#'   \item{\code{timer}}{numeric. The amount of time (in seconds) the algorithm
-#'   ran for.}
+#'   \item{\code{timer}}{numeric. The amount of time (in seconds) the complete
+#'   algorithm ran for.}
+#'   \item{\code{timer_one_run}}{numeric. The amount of time (in seconds) the
+#'   relevant single start ran for.}
 #'   \item{\code{initial_start}}{list. Containing the initial
 #'   membership matrix, as well as the type of start that was used
 #'   to obtain the clustering solution. (as returned by \code{\link{get_random}}
@@ -306,6 +308,7 @@ adproclus <- function(data, nclusters,
   results$parameters <- parameters
 
   time <- (proc.time() - t)[1]
+  results$timer <- time
   results <- .adjust_row_col_names(results, data)
   results
 }
@@ -395,8 +398,10 @@ adproclus <- function(data, nclusters,
 #'   in \code{data} that is accounted for by the clustering model.}
 #'   \item{\code{iterations}}{numeric. The number of iterations of the
 #'   algorithm.}
-#'   \item{\code{timer}}{numeric. The amount of time (in seconds) the algorithm
-#'   ran for.}
+#'   \item{\code{timer}}{numeric. The amount of time (in seconds) the complete
+#'   algorithm ran for.}
+#'   \item{\code{timer_one_run}}{numeric. The amount of time (in seconds) the
+#'   relevant single start ran for.}
 #'   \item{\code{initial_start}}{list. A list containing the initial
 #'   membership matrix, as well as the type of start that was used
 #'   to obtain the clustering solution. (as returned by \code{\link{get_random}}
@@ -545,6 +550,7 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
   )
   results$parameters <- parameters
   time <- (proc.time() - t)[1]
+  results$timer <- time
   results <- .adjust_row_col_names_LD(results, data)
   results
 }
@@ -672,7 +678,7 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
   result <- list(
     model = model, A = Membs, P = Profs,
     sse = sum((model - x)^2), totvar = totvar, explvar = explvar,
-    iterations = runs, timer = as.numeric(timeruns),
+    iterations = runs, timer_one_run = as.numeric(timeruns),
     initial_start = NULL
   )
   class(result) <- "adpc"
@@ -745,7 +751,7 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
   result <- list(
     model = model, A = Membs, P = Profs,
     sse = sum((model - x)^2), totvar = totvar, explvar = explvar,
-    iterations = runs, timer = as.numeric(timeruns),
+    iterations = runs, timer_one_run = as.numeric(timeruns),
     initial_start = NULL
   )
   class(result) <- "adpc"
@@ -844,7 +850,7 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
     model = model, model_lowdim = model_lowdim,
     A = Membs, P = Profs, C = ldProfs, B = ldBase,
     sse = sum((model - x)^2), totvar = totvar, explvar = explvar,
-    iterations = runs, timer = as.numeric(timeruns),
+    iterations = runs, timer_one_run = as.numeric(timeruns),
     initial_start = NULL
   )
   class(result) <- "adpc"

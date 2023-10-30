@@ -18,12 +18,13 @@
 #'
 #' @param A Membership matrix A.
 #' @param P Profile matrix P.
-#' @param sse sse Sum of Squared Error.
-#' @param totvar totvar Total variance.
-#' @param explvar explvar Explained variance.
-#' @param iterations iterations Number of iterations.
-#' @param timer timer Time of algorithm run.
-#' @param initial_start initial_start List of \code{type} of start and
+#' @param sse Sum of Squared Error.
+#' @param totvar Total variance.
+#' @param explvar Explained variance.
+#' @param iterations Number of iterations.
+#' @param timer Time run the complete algorithm.
+#' @param timer_one_run Time to complete this single algorithm start.
+#' @param initial_start  List of \code{type} of start and
 #' \code{start_allocation} matrix
 #' @param C Low dimensional profiles matrix C.
 #' @param B Matrix of base vectors connecting low dimensional components with
@@ -46,7 +47,8 @@
 #'
 adpc <- function(A, P,
                  sse = NULL, totvar = NULL, explvar = NULL,
-                 iterations = NULL, timer = NULL, initial_start = NULL,
+                 iterations = NULL, timer = NULL, timer_one_run = NULL,
+                 initial_start = NULL,
                  C = NULL, B = NULL,
                  runs = NULL, parameters = NULL) {
   checkmate::assert_matrix(A, any.missing = FALSE)
@@ -56,6 +58,7 @@ adpc <- function(A, P,
   checkmate::assert_number(explvar, null.ok = TRUE)
   checkmate::assert_count(iterations, null.ok = TRUE)
   checkmate::assert_number(timer, null.ok = TRUE)
+  checkmate::assert_number(timer_one_run, null.ok = TRUE)
   checkmate::assert_list(initial_start,
     types = c("character", "matrix"),
     null.ok = TRUE
@@ -86,7 +89,7 @@ adpc <- function(A, P,
   object <- list(
     model = A %*% P, model_lowdim = model_lowdim, A = A, P = P,
     sse = sse, totvar = totvar, explvar = explvar,
-    iterations = iterations, timer = timer,
+    iterations = iterations, timer = timer, timer_one_run = timer_one_run,
     C = C, B = B,
     runs = runs, parameters = parameters
   )

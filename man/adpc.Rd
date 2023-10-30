@@ -12,6 +12,7 @@ adpc(
   explvar = NULL,
   iterations = NULL,
   timer = NULL,
+  timer_one_run = NULL,
   initial_start = NULL,
   C = NULL,
   B = NULL,
@@ -24,17 +25,19 @@ adpc(
 
 \item{P}{Profile matrix P.}
 
-\item{sse}{sse Sum of Squared Error.}
+\item{sse}{Sum of Squared Error.}
 
-\item{totvar}{totvar Total variance.}
+\item{totvar}{Total variance.}
 
-\item{explvar}{explvar Explained variance.}
+\item{explvar}{Explained variance.}
 
-\item{iterations}{iterations Number of iterations.}
+\item{iterations}{Number of iterations.}
 
-\item{timer}{timer Time of algorithm run.}
+\item{timer}{Time run the complete algorithm.}
 
-\item{initial_start}{initial_start List of \code{type} of start and
+\item{timer_one_run}{Time to complete this single algorithm start.}
+
+\item{initial_start}{List of \code{type} of start and
 \code{start_allocation} matrix}
 
 \item{C}{Low dimensional profiles matrix C.}

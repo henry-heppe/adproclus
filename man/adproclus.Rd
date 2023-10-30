@@ -61,8 +61,10 @@ Default: NULL, meaning no reproducibility}
   in \code{data} that is accounted for by the clustering model.}
   \item{\code{iterations}}{numeric. The number of iterations of the
   algorithm.}
-  \item{\code{timer}}{numeric. The amount of time (in seconds) the algorithm
-  ran for.}
+  \item{\code{timer}}{numeric. The amount of time (in seconds) the complete
+  algorithm ran for.}
+  \item{\code{timer_one_run}}{numeric. The amount of time (in seconds) the
+  relevant single start ran for.}
   \item{\code{initial_start}}{list. Containing the initial
   membership matrix, as well as the type of start that was used
   to obtain the clustering solution. (as returned by \code{\link{get_random}}
