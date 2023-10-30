@@ -307,7 +307,7 @@ adproclus <- function(data, nclusters,
   )
   results$parameters <- parameters
 
-  time <- (proc.time() - t)[1]
+  time <- (proc.time() - t)[[3]]
   results$timer <- time
   results <- .adjust_row_col_names(results, data)
   results
@@ -549,7 +549,7 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
     seed = seed
   )
   results$parameters <- parameters
-  time <- (proc.time() - t)[1]
+  time <- (proc.time() - t)[[3]]
   results$timer <- time
   results <- .adjust_row_col_names_LD(results, data)
   results
@@ -672,7 +672,7 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
   Membs <- Membs[, order, drop = FALSE]
   Profs <- Profs[order, , drop = FALSE]
 
-  timeruns <- (proc.time() - t)[1]
+  timeruns <- (proc.time() - t)[[3]]
 
   model <- Membs %*% Profs
   result <- list(
@@ -739,7 +739,7 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
   sse <- f
   explvar <- 1 - (f / totvar)
 
-  timeruns <- (proc.time() - t)[1]
+  timeruns <- (proc.time() - t)[[3]]
 
   # sort A columns and P rows by decreasing cluster size
   order <- order(colSums(Membs), decreasing = TRUE)
@@ -842,7 +842,7 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
   ldProfs <- as.matrix(U %*% D)
 
 
-  timeruns <- (proc.time() - t)[1]
+  timeruns <- (proc.time() - t)[[3]]
 
   model <- Membs %*% Profs
   model_lowdim <- Membs %*% ldProfs
