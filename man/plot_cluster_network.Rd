@@ -6,9 +6,11 @@
 \usage{
 plot_cluster_network(
   model,
-  title = "Cluster network of ADPROCLUS\\n                                 solution",
+  title = "Cluster network of ADPROCLUS solution",
   relative_overlap = TRUE,
-  filetype = NULL
+  filetype = NULL,
+  filename = NULL,
+  ...
 )
 }
 \arguments{
@@ -26,6 +28,11 @@ edges.}
 \item{filetype}{Optional. Choose type of file to save the plot.
 Possible choices: \code{"R", "pdf", "svg", "tex", "jpg", "tiff", "png", ""}
 Default: \code{NULL} does not create a file.}
+
+\item{filename}{Optional. Name of the file without extension.}
+
+\item{...}{Additional arguments passing to the
+\code{qgraph::qgraph()} function, to customize the graph visualization.}
 }
 \value{
 Invisibly returns the input model.

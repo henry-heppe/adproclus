@@ -4,13 +4,16 @@
 \alias{plot_profiles}
 \title{Plot profile matrix of ADPROCLUS solution}
 \usage{
-plot_profiles(model, title = "Profiles of ADPROCLUS solution")
+plot_profiles(model, title = "Profiles of ADPROCLUS solution", ...)
 }
 \arguments{
 \item{model}{Object of class \code{adpc}. (Low dimensional) ADPROCLUS
 solution}
 
 \item{title}{String. Default: "Profiles of ADPROCLUS solution"}
+
+\item{...}{Additional arguments passing to the
+\code{corrplot::corrplot()} function, to customize the plot.}
 }
 \value{
 Invisibly returns the input model.

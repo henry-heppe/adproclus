@@ -6,7 +6,8 @@
 \usage{
 plot_vars_by_comp(
   model,
-  title = "B' of Low Dimensional\\n                              ADPROCLUS Solution"
+  title = "B' of Low Dimensional ADPROCLUS Solution",
+  ...
 )
 }
 \arguments{
@@ -14,6 +15,9 @@ plot_vars_by_comp(
 ADPROCLUS solution}
 
 \item{title}{String. Default: "B' of Low Dimensional ADPROCLUS Solution"}
+
+\item{...}{Additional arguments passing to the
+\code{corrplot::corrplot()} function, to customize the plot}
 }
 \value{
 Invisibly returns the input model.

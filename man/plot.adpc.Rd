@@ -18,7 +18,8 @@
 \code{type = "Network"}. If \code{TRUE} (default), the number of observations
 belonging to two clusters is divided by the total number of observations.}
 
-\item{...}{ignored}
+\item{...}{additional arguments will be passed on to the functions
+\code{plot_cluster_network(), plot_profiles(), plot_vars_by_comp()}}
 }
 \value{
 Invisibly returns the input model.

@@ -219,8 +219,7 @@ print.summary.adpc <- function(x, ...) {
   cat("Cluster sizes and overlaps:\n")
   print(x$cluster_sizes_overlaps)
   cat(" (diagonal entries: number of observations in a cluster)\n")
-  cat(" (off-diagonal entry [i,j]:  number of observations both in
-      cluster i and j)\n\n")
+  cat(" (off-diagonal entry [i,j]:  number of observations both in cluster i and j)\n\n")
   if (is.null(x$model_complete$C)) {
     cat("Summary statistics of model variables per cluster:\n")
     if (n_var_true > n_var_inc) {
@@ -279,7 +278,8 @@ print.summary.adpc <- function(x, ...) {
 #' @param relative_overlap Logical, only applies to plot of
 #' \code{type = "Network"}. If \code{TRUE} (default), the number of observations
 #' belonging to two clusters is divided by the total number of observations.
-#' @param ... ignored
+#' @param ... additional arguments will be passed on to the functions
+#' \code{plot_cluster_network(), plot_profiles(), plot_vars_by_comp()}
 #'
 #' @return Invisibly returns the input model.
 #' @export
@@ -305,15 +305,16 @@ plot.adpc <- function(x,
   checkmate::assertString(title, null.ok = TRUE)
   checkmate::assertFlag(relative_overlap)
 
-  # Check for illegal choice of VarsByComp for full dim x is in plotVarsByComp()
+  # Check for illegal choice of vars_by_comp for full dim x is in plotVarsByComp()
   if (type == "vars_by_comp") {
-    plot_vars_by_comp(model = x, title = title)
+    plot_vars_by_comp(model = x, title = title, ...)
   } else if (type == "Profiles") {
-    plot_profiles(model = x, title = title)
+    plot_profiles(model = x, title = title, ...)
   } else {
     plot_cluster_network(
       model = x, title = title,
-      relative_overlap = relative_overlap
+      relative_overlap = relative_overlap,
+      ...
     )
   }
 
@@ -372,10 +373,9 @@ print.adpc <- function(x,
     cat("   number of clusters:", ncol(x$A), "\n")
     cat("   number of components: ", ncol(x$C), "\n")
     cat("   data format: ", nrow(x$model), "x", ncol(x$model), "\n")
-    cat(
-      "   number of total starts:",
-      n_randomstart + n_semirandomstart +
-        1 * !is.null(start_allocation), "\n"
+    cat("   number of total starts:",
+      n_randomstart + n_semirandomstart + 1 * !is.null(start_allocation),
+      "\n"
     )
     if (!is.null(start_allocation)) {
       cat("   A rational start was also included.\n")
@@ -410,8 +410,7 @@ print.adpc <- function(x,
     cat("Setup:", "\n")
     cat("   number of clusters:", ncol(x$A), "\n")
     cat("   data format: ", nrow(x$model), "x", ncol(x$model), "\n")
-    cat(
-      "   number of total starts:",
+    cat("   number of total starts:",
       n_randomstart + n_semirandomstart + 1 * !is.null(start_allocation),
       "\n"
     )

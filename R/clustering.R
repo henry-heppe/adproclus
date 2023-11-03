@@ -165,12 +165,10 @@ adproclus <- function(data, nclusters,
   }
 
   if (n < nclusters) {
-    stop("Number of clusters must be less or equal the number of
-         objects in 'data'.")
+    stop("Number of clusters must be less or equal the number of objects in 'data'.")
   }
   if (is.null(start_allocation) && nrandomstart == 0 && nsemirandomstart == 0) {
-    stop("Must have either start allocation matrix or a non-zero number of
-         (semi-) random starts")
+    stop("Must have either start allocation matrix or a non-zero number of (semi-) random starts")
   }
   if (nclusters > ncol(data)) {
     stop("Number of clusters must be less or equal the number of variables.")
@@ -189,8 +187,8 @@ adproclus <- function(data, nclusters,
     m <- as.integer(nrow(start_allocation))
     q <- as.integer(ncol(start_allocation))
     if (!all(start_allocation %in% c(0, 1)) || m != n || q != nclusters) {
-      stop("invalid start allocation matrix: either non-binary matrix,
-                         or number of rows or columns do not match data")
+      stop(paste("invalid start allocation matrix: either non-binary matrix,",
+                 "or number of rows or columns do not match data", sep = ""))
     }
 
     if (alg == 1) {
@@ -454,20 +452,16 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
 
 
   if (ncomponents > min(n, nclusters)) {
-    stop("'ncomponents' must be smaller than min(number of observations,
-         number of clusters).")
+    stop("'ncomponents' must be smaller than min(number of observations, number of clusters).")
   }
   if (is.null(start_allocation) && nrandomstart == 0 && nsemirandomstart == 0) {
-    stop("Must have either start allocation matrix or a non-zero number of
-         (semi-) random starts")
+    stop("Must have either start allocation matrix or a non-zero number of (semi-) random starts")
   }
   if (n < nclusters) {
-    stop("Number of clusters must be less or equal the number of objects
-         in 'data'.")
+    stop("Number of clusters must be less or equal the number of objects in 'data'.")
   }
   if (nrandomstart + nsemirandomstart > 50) {
-    warning("Number of starts is larger than 50.
-            Computation might take a while")
+    warning("Number of starts is larger than 50. Computation might take a while")
   }
 
   best_sol <- list(sse = Inf)
@@ -478,8 +472,8 @@ adproclus_low_dim <- function(data, nclusters, ncomponents,
     m <- as.integer(nrow(start_allocation))
     q <- as.integer(ncol(start_allocation))
     if (!all(start_allocation %in% c(0, 1)) || m != n || q != nclusters) {
-      stop("invalid start allocation matrix: either non-binary matrix,
-                             or number of rows or columns do not match data")
+            stop(paste("invalid start allocation matrix: either non-binary matrix,",
+                       "or number of rows or columns do not match data", sep = ""))
     }
 
     model_new <- .ldadproclus(data, start_allocation, ncomponents)
