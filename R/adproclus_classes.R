@@ -32,7 +32,7 @@
 #' @param runs List of suboptimal models.
 #' @param parameters List of algorithm parameters.
 #'
-#' @return Object of class \code{adpc}
+#' @return Object of class \code{adpc}.
 #' @export
 #'
 #' @examples
@@ -114,7 +114,7 @@ adpc <- function(A, P,
 #' @param matrix_cols Integer. The number of matrix columns to display. OPTIONAL
 #' @param ... ignored
 #'
-#' @return invisibly returns object of class \code{summary.adpc}
+#' @return Invisibly returns object of class \code{summary.adpc}.
 #' @export
 #'
 #' @examples
@@ -191,7 +191,7 @@ summary.adpc <- function(object,
 #' @param x Object of class \code{summary.adpc}
 #' @param ... ignored
 #'
-#' @return invisibly returns object of class \code{summary.adpc}
+#' @return Invisibly returns object of class \code{summary.adpc}.
 #' @export
 #'
 #' @examples

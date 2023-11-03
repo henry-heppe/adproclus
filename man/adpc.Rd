@@ -50,7 +50,7 @@ original variables B.}
 \item{parameters}{List of algorithm parameters.}
 }
 \value{
-Object of class \code{adpc}
+Object of class \code{adpc}.
 }
 \description{
 Yields an object of class \code{adpc}, which can be printed, plotted and

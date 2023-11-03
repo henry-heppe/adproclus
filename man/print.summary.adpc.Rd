@@ -12,7 +12,7 @@
 \item{...}{ignored}
 }
 \value{
-invisibly returns object of class \code{summary.adpc}
+Invisibly returns object of class \code{summary.adpc}.
 }
 \description{
 Prints an object of class \code{summary.adpc} to represent and summarize a

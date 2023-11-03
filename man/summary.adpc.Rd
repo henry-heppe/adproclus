@@ -29,7 +29,7 @@ rounded to.}
 \item{...}{ignored}
 }
 \value{
-invisibly returns object of class \code{summary.adpc}
+Invisibly returns object of class \code{summary.adpc}.
 }
 \description{
 For an object of class \code{adpc} as input, this method yields a summary
