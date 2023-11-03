@@ -1,5 +1,5 @@
 test_that("ADPROCLUS base case normal input", {
-  x <- adproclus::CGdata[1:100, ]
+  x <- stackloss
   expect_no_error(adproclus(x, nclusters = 2))
   expect_no_error(adproclus(x,
     nclusters = 3,
@@ -16,7 +16,7 @@ test_that("ADPROCLUS base case normal input", {
 })
 
 test_that("ADPROCLUS with start_allocation ", {
-  x <- adproclus::CGdata[1:100, ]
+  x <- stackloss
   start <- get_rational(x, x[1:4, ])$A
   expect_no_error(adproclus(x, nclusters = 4, start_allocation = start))
   expect_no_error(adproclus(x,
@@ -27,7 +27,7 @@ test_that("ADPROCLUS with start_allocation ", {
 })
 
 test_that("ADPROCLUS illegal inputs", {
-  x <- adproclus::CGdata[1:100, ]
+  x <- stackloss
 
   # no random starts and no start_allocation
   expect_error(adproclus(x,
@@ -47,7 +47,7 @@ test_that("ADPROCLUS illegal inputs", {
 })
 
 test_that("adproclus_low_dim base case normal input", {
-  x <- adproclus::CGdata[1:100, ]
+  x <- stackloss
   expect_no_error(adproclus_low_dim(x, nclusters = 2, ncomponents = 1))
   expect_no_error(adproclus_low_dim(x,
     nclusters = 3, ncomponents = 2,
@@ -61,7 +61,7 @@ test_that("adproclus_low_dim base case normal input", {
 })
 
 test_that("adproclus_low_dim with start_allocation ", {
-  x <- adproclus::CGdata[1:100, ]
+  x <- stackloss
   start <- get_rational(x, x[1:3, ])$A
   expect_no_error(adproclus_low_dim(x, nclusters = 3, ncomponents = 1, start_allocation = start))
   expect_no_error(adproclus_low_dim(x,
@@ -72,7 +72,7 @@ test_that("adproclus_low_dim with start_allocation ", {
 })
 
 test_that("adproclus_low_dim illegal inputs", {
-  x <- adproclus::CGdata[1:100, ]
+  x <- stackloss
 
   # no random starts and no start_allocation
   expect_error(adproclus_low_dim(x,
@@ -89,7 +89,7 @@ test_that("adproclus_low_dim illegal inputs", {
 })
 
 test_that("reproducibility both functions", {
-  x <- adproclus::CGdata[1:100, ]
+  x <- stackloss
   start <- get_rational(x, x[1:4, ])$A
   expect_equal(
     adproclus(x,
@@ -115,7 +115,7 @@ test_that("reproducibility both functions", {
 
 
 test_that("order of clusters", {
-  x <- adproclus::CGdata[1:100, ]
+  x <- stackloss
   model <- adproclus(x,
     nclusters = 4, nrandomstart = 1, nsemirandomstart = 1,
     save_all_starts = TRUE, seed = 10

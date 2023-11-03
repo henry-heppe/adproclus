@@ -1,9 +1,9 @@
 test_that("network plot, basic functionality", {
-        model <- adproclus(adproclus::CGdata[1:100, ],
+        model <- adproclus(stackloss,
                            nclusters = 4,
                            nrandomstart = 1, nsemirandomstart = 1
         )
-        modelLD <- adproclus_low_dim(adproclus::CGdata[1:100, ], 3, 2)
+        modelLD <- adproclus_low_dim(stackloss, 3, 2)
         expect_no_condition(plot_cluster_network(model))
         expect_no_error(plot_cluster_network(model,
                                              title = "Test network",
@@ -21,16 +21,16 @@ test_that("network plot, basic functionality", {
 })
 
 test_that("profile plot, basic functionality", {
-        model <- adproclus(adproclus::CGdata[1:100, ],
+        model <- adproclus(stackloss,
                            nclusters = 4,
                            nrandomstart = 1, nsemirandomstart = 1
         )
-        modelLD <- adproclus_low_dim(adproclus::CGdata[1:100, ], 3, 2)
+        modelLD <- adproclus_low_dim(stackloss, 3, 2)
         expect_no_condition(plot_profiles(model))
         expect_no_condition(plot_profiles(modelLD))
 })
 
 test_that("VarsByComp plot, basic functionality", {
-        modelLD <- adproclus_low_dim(adproclus::CGdata[1:100, ], 3, 2)
+        modelLD <- adproclus_low_dim(stackloss, 3, 2)
         expect_no_condition(plot_vars_by_comp(modelLD))
 })
