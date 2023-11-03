@@ -6,7 +6,6 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-\[package under development, will be submitted to CRAN end of 2023\]
 This package is an implementation of the additive profile clustering
 (ADPROCLUS) method in R. It can be used to obtain overlapping clustering
 models for object-by-variable data matrices. It also contains the low

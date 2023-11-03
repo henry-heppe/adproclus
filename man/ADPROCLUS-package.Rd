@@ -8,13 +8,13 @@
 Obtain overlapping clustering models for object-by-variable data matrices using the additive profile clustering (ADPROCLUS) method. Also contains the low dimensional ADPROCLUS method, for simultaneous dimension reduction and overlapping clustering.
 }
 \author{
-\strong{Maintainer}: Henry Heppe \email{heppe.henry@gmail.com}
+\strong{Maintainer}: Henry Heppe \email{heppe.henry@gmail.com} [copyright holder]
 
 Authors:
 \itemize{
-  \item Julian Rossbroich \email{rossbroich@outlook.com}
+  \item Julian Rossbroich
   \item Jeffrey Durieux
-  \item Tom Wilderjans \email{t.f.wilderjans@fsw.leidenuniv.nl}
+  \item Tom Wilderjans
 }
 
 }
