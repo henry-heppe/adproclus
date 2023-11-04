@@ -4,6 +4,8 @@
 # adproclus
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/henry-heppe/adproclus/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/henry-heppe/adproclus/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 This package is an implementation of the additive profile clustering
