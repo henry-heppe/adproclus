@@ -56,10 +56,10 @@ Default: NULL, meaning no reproducibility}
   clustering model.}
   \item{\code{c}}{matrix. The profile values in terms of the low dimensional
   components.}
-  \item{\code{B}}{matrix. Base vectors connecting low dimensional components
-  with original variables.
-  Variables-by-components matrix. Warning: for computing
-  \eqn{\boldsymbol{P}} use \eqn{\boldsymbol{B'}}}
+  \item{\code{B}}{Variables-by-components matrix.
+  Base vectors connecting low dimensional components with original variables.
+  matrix. Warning: for computing
+  \eqn{\boldsymbol{P}} use \eqn{\boldsymbol{B'}}.}
   \item{\code{sse}}{numeric. The
   residual sum of squares of the clustering model, which is minimized by the
   ALS algorithm.}
