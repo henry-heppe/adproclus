@@ -3,7 +3,9 @@ NULL
 
 #' Additive profile clustering
 #'
-#' Perform additive profile clustering (ADPROCLUS) on object by variable data.
+#' Perform additive profile clustering (ADPROCLUS) on object-by-variable data.
+#' Creates a model that assigns the objects to overlapping clusters which are
+#' characterized in terms of the variables by the so-called profiles.
 #'
 #' In this function, Mirkin's (1987, 1990) Additive Profile Clustering
 #' (ADPROCLUS) method is used to obtain an unrestricted overlapping clustering
@@ -20,7 +22,7 @@ NULL
 #' model matrix \deqn{M = AP} which reconstructs the data matrix
 #' \eqn{\boldsymbol{X}} as close as possible in a least squares sense
 #' (i.e. sum of squared residuals). For a detailed illustration of the
-#' ADPROCLUS model and associated loss function, see Wilderjans et al., 2011.
+#' ADPROCLUS model and associated loss function, see Wilderjans et al. (2011).
 #'
 #' The alternating least squares algorithms ("\code{ALS1}" and "\code{ALS2}")
 #' that can be used for minimization of the loss function were proposed by
@@ -28,7 +30,7 @@ NULL
 #' rational estimate of \eqn{\boldsymbol{A}} (see \code{\link{get_random}} and
 #' \code{\link{get_semirandom}}), \eqn{\boldsymbol{A}} and \eqn{\boldsymbol{P}}
 #' are alternately re-estimated conditionally upon each other until convergence.
-#' The "\code{ALS1}" algorithm differs from the one previous one in that each
+#' The "\code{ALS1}" algorithm differs from the previous one in that each
 #' row in \eqn{\boldsymbol{A}} is updated independently and that the
 #' conditionally optimal \eqn{\boldsymbol{P}} is recalculated after each row
 #' update, instead of the end of the matrix. For a discussion and comparison of
@@ -36,8 +38,8 @@ NULL
 #'
 #' \strong{Warning:} Computation time increases exponentially with increasing
 #' number of clusters, \eqn{K}. We recommend to determine the computation time
-#' of a single start for each specific dataset and \eqn{K} before employing a
-#' multistart procedure.
+#' of a single start for each specific dataset and \eqn{K} before increasing the
+#' number of starts.
 #'
 #' @param data Object-by-variable data matrix of class \code{matrix} or
 #'   \code{data.frame}.
@@ -51,14 +53,15 @@ NULL
 #' (see \code{\link{get_semirandom}})). Can be zero. Increase for better
 #' results, though longer computation time.
 #' Some research finds 500 starts to be a useful reference.
-#' @param algorithm character string "\code{ALS1}" (default) or "\code{ALS2}",
-#'   denoting the type of alternating least squares algorithm.
-#' @param save_all_starts logical. If \code{TRUE}, the results of all algorithm
+#' @param algorithm Character string "\code{ALS1}" (default) or "\code{ALS2}",
+#'   denoting the type of alternating least squares algorithm. Can be
+#'   abbreviated with "1" or "2".
+#' @param save_all_starts Logical. If \code{TRUE}, the results of all algorithm
 #'   starts are returned. By default, only the best solution is retained.
 #' @param seed Integer. Seed for the random number generator.
-#' Default: NULL, meaning no reproducibility
+#' Default: NULL, meaning no reproducibility.
 #'
-#' @return \code{adproclus} returns a list with the following
+#' @return \code{adproclus()} returns a list with the following
 #'   components, which describe the best model (from the multiple starts):
 #'   \describe{
 #'   \item{\code{model}}{matrix. The obtained overlapping clustering model
@@ -86,14 +89,15 @@ NULL
 #'   or \code{\link{get_semirandom}})}
 #'   \item{\code{runs}}{list. Each element represents one model obtained from
 #'   one of the multiple starts.
-#'   Each element contains all of the above information.}
-#'   \item{\code{parameters}}{list. Containing the parameters used for the
+#'   Each element contains all of the above information for the
+#'   respective start.}
+#'   \item{\code{parameters}}{list. Contains the parameters used for the
 #'   model.}}
 #'
 #' @export
 #'
 #' @references Wilderjans, T. F., Ceulemans, E., Van Mechelen, I., & Depril, D.
-#'   (2010). ADPROCLUS: a graphical user interface for fitting additive profile
+#'   (2011S). ADPROCLUS: a graphical user interface for fitting additive profile
 #'   clustering models to object by variable data matrices. \emph{Behavior
 #'   Research Methods, 43}(1), 56-65.
 #'
@@ -156,7 +160,7 @@ adproclus <- function(data, nclusters,
   checkmate::assertInt(seed, null.ok = TRUE, coerce = TRUE)
   checkmate::assertFlag(save_all_starts)
   checkmate::assertMatrix(data, mode = "numeric", any.missing = FALSE)
-  checkmate::assertChoice(algorithm, c("ALS1", "ALS2"))
+  checkmate::assertChoice(algorithm, c("ALS1", "ALS2", "1", "2"))
 
 
   if (nrandomstart + nsemirandomstart > 50) {

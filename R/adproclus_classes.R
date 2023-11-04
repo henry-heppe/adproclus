@@ -12,8 +12,8 @@
 #' and \eqn{\boldsymbol{B}} have to be provided and \eqn{\boldsymbol{P}} can
 #' be inferred from those. All other inputs are optional but may be included
 #' so that the output from the \code{summary(), print(), plot()} is complete.
-#' For further details on the (low dimensional) ADPROCLUS model a
-#' nd what every element of the objects means
+#' For further details on the (low dimensional) ADPROCLUS model and
+#' what every element of the objects means
 #' see \code{\link{adproclus}} and \code{\link{adproclus_low_dim}}.
 #'
 #' @param A Membership matrix A.
@@ -22,10 +22,10 @@
 #' @param totvar Total variance.
 #' @param explvar Explained variance.
 #' @param iterations Number of iterations.
-#' @param timer Time run the complete algorithm.
+#' @param timer Time needed to run the complete algorithm.
 #' @param timer_one_run Time to complete this single algorithm start.
-#' @param initial_start  List of \code{type} of start and
-#' \code{start_allocation} matrix
+#' @param initial_start  List containing type of start and
+#' \code{start_allocation} matrix.
 #' @param C Low dimensional profiles matrix C.
 #' @param B Matrix of base vectors connecting low dimensional components with
 #' original variables B.

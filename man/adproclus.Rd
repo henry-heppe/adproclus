@@ -33,17 +33,18 @@ Some research finds 500 starts to be a useful reference.}
 results, though longer computation time.
 Some research finds 500 starts to be a useful reference.}
 
-\item{algorithm}{character string "\code{ALS1}" (default) or "\code{ALS2}",
-denoting the type of alternating least squares algorithm.}
+\item{algorithm}{Character string "\code{ALS1}" (default) or "\code{ALS2}",
+denoting the type of alternating least squares algorithm. Can be
+abbreviated with "1" or "2".}
 
-\item{save_all_starts}{logical. If \code{TRUE}, the results of all algorithm
+\item{save_all_starts}{Logical. If \code{TRUE}, the results of all algorithm
 starts are returned. By default, only the best solution is retained.}
 
 \item{seed}{Integer. Seed for the random number generator.
-Default: NULL, meaning no reproducibility}
+Default: NULL, meaning no reproducibility.}
 }
 \value{
-\code{adproclus} returns a list with the following
+\code{adproclus()} returns a list with the following
   components, which describe the best model (from the multiple starts):
   \describe{
   \item{\code{model}}{matrix. The obtained overlapping clustering model
@@ -71,12 +72,15 @@ Default: NULL, meaning no reproducibility}
   or \code{\link{get_semirandom}})}
   \item{\code{runs}}{list. Each element represents one model obtained from
   one of the multiple starts.
-  Each element contains all of the above information.}
-  \item{\code{parameters}}{list. Containing the parameters used for the
+  Each element contains all of the above information for the
+  respective start.}
+  \item{\code{parameters}}{list. Contains the parameters used for the
   model.}}
 }
 \description{
-Perform additive profile clustering (ADPROCLUS) on object by variable data.
+Perform additive profile clustering (ADPROCLUS) on object-by-variable data.
+Creates a model that assigns the objects to overlapping clusters which are
+characterized in terms of the variables by the so-called profiles.
 }
 \details{
 In this function, Mirkin's (1987, 1990) Additive Profile Clustering
@@ -94,7 +98,7 @@ given a number of clusters \eqn{K}, to estimate a
 model matrix \deqn{M = AP} which reconstructs the data matrix
 \eqn{\boldsymbol{X}} as close as possible in a least squares sense
 (i.e. sum of squared residuals). For a detailed illustration of the
-ADPROCLUS model and associated loss function, see Wilderjans et al., 2011.
+ADPROCLUS model and associated loss function, see Wilderjans et al. (2011).
 
 The alternating least squares algorithms ("\code{ALS1}" and "\code{ALS2}")
 that can be used for minimization of the loss function were proposed by
@@ -102,7 +106,7 @@ Depril et al. (2008). In "\code{ALS2}", starting from an initial random or
 rational estimate of \eqn{\boldsymbol{A}} (see \code{\link{get_random}} and
 \code{\link{get_semirandom}}), \eqn{\boldsymbol{A}} and \eqn{\boldsymbol{P}}
 are alternately re-estimated conditionally upon each other until convergence.
-The "\code{ALS1}" algorithm differs from the one previous one in that each
+The "\code{ALS1}" algorithm differs from the previous one in that each
 row in \eqn{\boldsymbol{A}} is updated independently and that the
 conditionally optimal \eqn{\boldsymbol{P}} is recalculated after each row
 update, instead of the end of the matrix. For a discussion and comparison of
@@ -110,8 +114,8 @@ the different algorithms, see Depril et al., 2008.
 
 \strong{Warning:} Computation time increases exponentially with increasing
 number of clusters, \eqn{K}. We recommend to determine the computation time
-of a single start for each specific dataset and \eqn{K} before employing a
-multistart procedure.
+of a single start for each specific dataset and \eqn{K} before increasing the
+number of starts.
 }
 \examples{
 # Loading a test dataset into the global environment
@@ -140,7 +144,7 @@ clust <- adproclus(x, 4, start_allocation = start)
 }
 \references{
 Wilderjans, T. F., Ceulemans, E., Van Mechelen, I., & Depril, D.
-  (2010). ADPROCLUS: a graphical user interface for fitting additive profile
+  (2011S). ADPROCLUS: a graphical user interface for fitting additive profile
   clustering models to object by variable data matrices. \emph{Behavior
   Research Methods, 43}(1), 56-65.
 

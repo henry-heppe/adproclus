@@ -33,12 +33,12 @@ adpc(
 
 \item{iterations}{Number of iterations.}
 
-\item{timer}{Time run the complete algorithm.}
+\item{timer}{Time needed to run the complete algorithm.}
 
 \item{timer_one_run}{Time to complete this single algorithm start.}
 
-\item{initial_start}{List of \code{type} of start and
-\code{start_allocation} matrix}
+\item{initial_start}{List containing type of start and
+\code{start_allocation} matrix.}
 
 \item{C}{Low dimensional profiles matrix C.}
 
@@ -63,8 +63,8 @@ For a low dimensional ADPROCLUS model, the matrices \eqn{\boldsymbol{C}}
 and \eqn{\boldsymbol{B}} have to be provided and \eqn{\boldsymbol{P}} can
 be inferred from those. All other inputs are optional but may be included
 so that the output from the \code{summary(), print(), plot()} is complete.
-For further details on the (low dimensional) ADPROCLUS model a
-nd what every element of the objects means
+For further details on the (low dimensional) ADPROCLUS model and
+what every element of the objects means
 see \code{\link{adproclus}} and \code{\link{adproclus_low_dim}}.
 }
 \examples{
