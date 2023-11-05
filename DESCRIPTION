@@ -32,6 +32,7 @@ Imports:
     withr
 RoxygenNote: 7.2.3
 Collate: 
+    'adproclus-package.R'
     'adproclus_classes.R'
     'clustering.R'
     'data.R'
