@@ -1,5 +1,4 @@
 #' @keywords internal
-#' @aliases adproclus-package
 "_PACKAGE"
 
 ## usethis namespace: start
