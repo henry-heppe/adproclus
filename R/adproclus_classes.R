@@ -265,15 +265,15 @@ print.summary.adpc <- function(x, ...) {
 #' for full dimensional model, \eqn{\boldsymbol{C}} for low dimensional model)
 #' in the style of a correlation plot to visualize the relation of each cluster
 #' with each variable.}
-#' \item{Low Dimensional Components}{Plot the low dimensional
+#' \item{Variables by components}{Plot the low dimensional
 #' component-by-variable matrix \eqn{\boldsymbol{B'}} in the style of a
 #' correlation plot to visualize the relation of each component with each
 #' original variable. \strong{NOTE:} Only works for low dimensional ADPROCLUS.}
 #' }
 #'
 #' @param x Object of class \code{adpc}. (Low dimensional) ADPROCLUS solution
-#' @param type Choice for type of plot: one of "Network", "Profiles",
-#' "VarsByComp". Default: "Network".
+#' @param type Choice for type of plot: one of \code{"Network", "Profiles",
+#' "vars_by_comp"}. Default: \code{"Network"}.
 #' @param title String. OPTIONAL.
 #' @param relative_overlap Logical, only applies to plot of
 #' \code{type = "Network"}. If \code{TRUE} (default), the number of observations

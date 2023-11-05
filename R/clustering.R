@@ -352,8 +352,8 @@ adproclus <- function(data, nclusters,
 #'
 #' \strong{Warning:} Computation time increases exponentially with increasing
 #' number of clusters, \eqn{K}. We recommend to determine the computation time
-#' of a single start for each specific dataset and \eqn{K} before employing a
-#' multistart procedure.
+#' of a single start for each specific dataset and \eqn{K} before increasing the
+#' number of starts.
 #'
 #' @param data Object-by-variable data matrix of class \code{matrix} or
 #'   \code{data.frame}.
@@ -374,7 +374,7 @@ adproclus <- function(data, nclusters,
 #' @param seed Integer. Seed for the random number generator.
 #' Default: NULL, meaning no reproducibility
 #'
-#' @return \code{adproclus_low_dim} returns a list with the following
+#' @return \code{adproclus_low_dim()} returns a list with the following
 #'   components, which describe the best model (from the multiple starts):
 #'   \describe{
 #'   \item{\code{model}}{matrix. The obtained overlapping clustering model

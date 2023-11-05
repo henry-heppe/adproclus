@@ -11,10 +11,10 @@ get_rational(data, starting_profiles)
 \code{data.frame}.}
 
 \item{starting_profiles}{A matrix where each row represents the profile
-values for a cluster}
+values for a cluster. Needs to be of same dimensions as \eqn{P}.}
 }
 \value{
-\code{get_rational} returns a list with the following components:
+\code{get_rational()} returns a list with the following components:
   \describe{
   \item{\code{type}}{A character string denoting the type of start
   ('Rational Start')}

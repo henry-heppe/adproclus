@@ -15,7 +15,7 @@ get_random(data, nclusters, seed = NULL)
 \item{seed}{Integer. Seed for the random number generator. Default: NULL}
 }
 \value{
-\code{get_random} returns a list with the following components:
+\code{get_random()} returns a list with the following components:
   \describe{ \item{\code{type}}{A character string denoting the type of start
   ('Random Start')} \item{\code{A}}{A randomly generated initial Membership
   matrix}}
@@ -27,11 +27,11 @@ Clustering algorithm (see \code{\link{adproclus}} and
 }
 \details{
 \code{get_random} generates a random initial binary membership matrix
-\strong{A} by drawing entries from a Bernoulli Distribution with \eqn{\pi =
-0.5}.
+\strong{A} such that each entry is an independen draw from a
+Bernoulli Distribution with \eqn{\pi = 0.5}.
 
 For generating an initial start from random draws from the data, see
-\code{\link{get_semirandom}}
+\code{\link{get_semirandom}}.
 For generating an initial start based on a specific set of initial cluster
 centers, see \code{\link{get_rational}}.
 

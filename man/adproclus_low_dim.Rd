@@ -43,7 +43,7 @@ starts are returned. By default, only the best solution is retained.}
 Default: NULL, meaning no reproducibility}
 }
 \value{
-\code{adproclus_low_dim} returns a list with the following
+\code{adproclus_low_dim()} returns a list with the following
   components, which describe the best model (from the multiple starts):
   \describe{
   \item{\code{model}}{matrix. The obtained overlapping clustering model
@@ -118,8 +118,8 @@ associated loss function, see Depril et al. (2012).
 
 \strong{Warning:} Computation time increases exponentially with increasing
 number of clusters, \eqn{K}. We recommend to determine the computation time
-of a single start for each specific dataset and \eqn{K} before employing a
-multistart procedure.
+of a single start for each specific dataset and \eqn{K} before increasing the
+number of starts.
 }
 \examples{
 # Loading a test dataset into the global environment

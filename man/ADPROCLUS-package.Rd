@@ -3,6 +3,7 @@
 \docType{package}
 \name{adproclus-package}
 \alias{adproclus-package}
+\alias{_PACKAGE}
 \title{adproclus: Additive Profile Clustering Algorithms}
 \description{
 Obtain overlapping clustering models for object-by-variable data matrices using the Additive Profile Clustering (ADPROCLUS) method. Also contains the low dimensional ADPROCLUS method for simultaneous dimension reduction and overlapping clustering. For reference see Depril, Van Mechelen, Mirkin (2008) \doi{10.1016/j.csda.2008.04.014} and Depril, Van Mechelen, Wilderjans (2012) \doi{10.1007/s00357-012-9112-5}.
