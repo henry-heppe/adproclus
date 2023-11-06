@@ -95,7 +95,7 @@ real-valued cluster profile matrix \eqn{P}, with \eqn{K}
 indicating the number of overlapping clusters.
 In particular, the aim of an ADPROCLUS analysis is therefore,
 given a number of clusters \eqn{K}, to estimate a
-model matrix \deqn{M = AP} which reconstructs the data matrix
+model matrix \eqn{M = AP} which reconstructs the data matrix
 \eqn{X} as close as possible in a least squares sense
 (i.e. sum of squared residuals). For a detailed illustration of the
 ADPROCLUS model and associated loss function, see Wilderjans et al. (2011).

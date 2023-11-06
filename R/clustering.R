@@ -19,7 +19,7 @@ NULL
 #' indicating the number of overlapping clusters.
 #' In particular, the aim of an ADPROCLUS analysis is therefore,
 #' given a number of clusters \eqn{K}, to estimate a
-#' model matrix \deqn{M = AP} which reconstructs the data matrix
+#' model matrix \eqn{M = AP} which reconstructs the data matrix
 #' \eqn{X} as close as possible in a least squares sense
 #' (i.e. sum of squared residuals). For a detailed illustration of the
 #' ADPROCLUS model and associated loss function, see Wilderjans et al. (2011).
@@ -333,10 +333,10 @@ adproclus <- function(data, nclusters,
 #' \eqn{I \times J} model matrix \eqn{M}. For \eqn{K} overlapping
 #' clusters, \eqn{M} can be decomposed into an \eqn{I \times K}
 #' binary cluster membership matrix \eqn{A} and a \eqn{K \times J}
-#' real-valued cluster profile matrix \eqn{P} s.t. \deqn{M = AP.}
+#' real-valued cluster profile matrix \eqn{P} s.t. \eqn{M = AP.}
 #' With the simultaneous dimension reduction, \eqn{P} is restricted
 #' to be of reduced rank \eqn{S < min(K,J)}, such that it can be decomposed
-#' into \deqn{P = CB',} with \eqn{C} a \eqn{K \times S} matrix and
+#' into \eqn{P = CB',} with \eqn{C} a \eqn{K \times S} matrix and
 #' \eqn{B} a \eqn{J \times S} matrix. Now, a row in
 #' \eqn{C} represents the profile values associated with the
 #' respective cluster in terms of the \eqn{S} components, while

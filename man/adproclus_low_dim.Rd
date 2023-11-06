@@ -99,10 +99,10 @@ More precisely, the low dimensional ADPROCLUS model approximates an
 \eqn{I \times J} model matrix \eqn{M}. For \eqn{K} overlapping
 clusters, \eqn{M} can be decomposed into an \eqn{I \times K}
 binary cluster membership matrix \eqn{A} and a \eqn{K \times J}
-real-valued cluster profile matrix \eqn{P} s.t. \deqn{M = AP.}
+real-valued cluster profile matrix \eqn{P} s.t. \eqn{M = AP.}
 With the simultaneous dimension reduction, \eqn{P} is restricted
 to be of reduced rank \eqn{S < min(K,J)}, such that it can be decomposed
-into \deqn{P = CB',} with \eqn{C} a \eqn{K \times S} matrix and
+into \eqn{P = CB',} with \eqn{C} a \eqn{K \times S} matrix and
 \eqn{B} a \eqn{J \times S} matrix. Now, a row in
 \eqn{C} represents the profile values associated with the
 respective cluster in terms of the \eqn{S} components, while
