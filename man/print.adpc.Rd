@@ -27,6 +27,9 @@ be rounded to.}
 
 \item{...}{ignored}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 For an object of class \code{adpc} as input, this method prints basic
 information about the ADPROCLUS solution represented by the object.

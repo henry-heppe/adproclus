@@ -339,6 +339,7 @@ plot.adpc <- function(x,
 #' @param matrix_cols Integer. The number of matrix columns to display. OPTIONAL
 #' @param ... ignored
 #'
+#' @return No return value, called for side effects.
 #' @export
 #'
 #' @examples
