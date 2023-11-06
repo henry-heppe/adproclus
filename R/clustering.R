@@ -12,27 +12,27 @@ NULL
 #' model of the object by variable data provided by \code{data}.
 #'
 #' The ADPROCLUS model approximates an \eqn{I \times J} object by
-#' variable data matrix \eqn{\boldsymbol{X}} by an \eqn{I \times J} model matrix
-#' \eqn{\boldsymbol{M}} that can be decomposed into an \eqn{I \times K} binary
-#' cluster membership matrix \eqn{\boldsymbol{A}} and a \eqn{K \times J}
-#' real-valued cluster profile matrix \eqn{\boldsymbol{P}}, with \eqn{K}
+#' variable data matrix \eqn{X} by an \eqn{I \times J} model matrix
+#' \eqn{M} that can be decomposed into an \eqn{I \times K} binary
+#' cluster membership matrix \eqn{A} and a \eqn{K \times J}
+#' real-valued cluster profile matrix \eqn{P}, with \eqn{K}
 #' indicating the number of overlapping clusters.
 #' In particular, the aim of an ADPROCLUS analysis is therefore,
 #' given a number of clusters \eqn{K}, to estimate a
 #' model matrix \deqn{M = AP} which reconstructs the data matrix
-#' \eqn{\boldsymbol{X}} as close as possible in a least squares sense
+#' \eqn{X} as close as possible in a least squares sense
 #' (i.e. sum of squared residuals). For a detailed illustration of the
 #' ADPROCLUS model and associated loss function, see Wilderjans et al. (2011).
 #'
 #' The alternating least squares algorithms ("\code{ALS1}" and "\code{ALS2}")
 #' that can be used for minimization of the loss function were proposed by
 #' Depril et al. (2008). In "\code{ALS2}", starting from an initial random or
-#' rational estimate of \eqn{\boldsymbol{A}} (see \code{\link{get_random}} and
-#' \code{\link{get_semirandom}}), \eqn{\boldsymbol{A}} and \eqn{\boldsymbol{P}}
+#' rational estimate of \eqn{A} (see \code{\link{get_random}} and
+#' \code{\link{get_semirandom}}), \eqn{A} and \eqn{P}
 #' are alternately re-estimated conditionally upon each other until convergence.
 #' The "\code{ALS1}" algorithm differs from the previous one in that each
-#' row in \eqn{\boldsymbol{A}} is updated independently and that the
-#' conditionally optimal \eqn{\boldsymbol{P}} is recalculated after each row
+#' row in \eqn{A} is updated independently and that the
+#' conditionally optimal \eqn{P} is recalculated after each row
 #' update, instead of the end of the matrix. For a discussion and comparison of
 #' the different algorithms, see Depril et al., 2008.
 #'
@@ -329,23 +329,23 @@ adproclus <- function(data, nclusters,
 #' low dimensional overlapping clustering model of the object by variable data
 #' provided by \code{data}.
 #' More precisely, the low dimensional ADPROCLUS model approximates an
-#' \eqn{I \times J} object by variable data matrix \eqn{\boldsymbol{X}} by an
-#' \eqn{I \times J} model matrix \eqn{\boldsymbol{M}}. For \eqn{K} overlapping
-#' clusters, \eqn{\boldsymbol{M}} can be decomposed into an \eqn{I \times K}
-#' binary cluster membership matrix \eqn{\boldsymbol{A}} and a \eqn{K \times J}
-#' real-valued cluster profile matrix \eqn{\boldsymbol{P}} s.t. \deqn{M = AP.}
-#' With the simultaneous dimension reduction, \eqn{\boldsymbol{P}} is restricted
-#' to be of reduced rank \eqn{S < \min(K,J)}, such that it can be decomposed
-#' into \deqn{P = CB',} with \eqn{\boldsymbol{C}} a \eqn{K \times S} matrix and
-#' \eqn{\boldsymbol{B}} a \eqn{J \times S} matrix. Now, a row in
-#' \eqn{\boldsymbol{C}} represents the profile values associated with the
+#' \eqn{I \times J} object by variable data matrix \eqn{X} by an
+#' \eqn{I \times J} model matrix \eqn{M}. For \eqn{K} overlapping
+#' clusters, \eqn{M} can be decomposed into an \eqn{I \times K}
+#' binary cluster membership matrix \eqn{A} and a \eqn{K \times J}
+#' real-valued cluster profile matrix \eqn{P} s.t. \deqn{M = AP.}
+#' With the simultaneous dimension reduction, \eqn{P} is restricted
+#' to be of reduced rank \eqn{S < min(K,J)}, such that it can be decomposed
+#' into \deqn{P = CB',} with \eqn{C} a \eqn{K \times S} matrix and
+#' \eqn{B} a \eqn{J \times S} matrix. Now, a row in
+#' \eqn{C} represents the profile values associated with the
 #' respective cluster in terms of the \eqn{S} components, while
-#' the entries of \eqn{\boldsymbol{B}} can be used to interpret the components
+#' the entries of \eqn{B} can be used to interpret the components
 #' in terms of the complete set of variables. In particular, the aim of an
 #' ADPROCLUS analysis is therefore, given a number of clusters \eqn{K} and a
-#' number of dimensions \eqn{S}, to estimate a model matrix \eqn{\boldsymbol{M}}
+#' number of dimensions \eqn{S}, to estimate a model matrix \eqn{M}
 #' that reconstructs data matrix
-#' \eqn{\boldsymbol{X}} as close as possible in a least squares sense and
+#' \eqn{X} as close as possible in a least squares sense and
 #' simultaneously reduce the dimensions of the data.
 #' For a detailed illustration of the low dimensional ADPROCLUS model and
 #' associated loss function, see Depril et al. (2012).
@@ -378,19 +378,19 @@ adproclus <- function(data, nclusters,
 #'   components, which describe the best model (from the multiple starts):
 #'   \describe{
 #'   \item{\code{model}}{matrix. The obtained overlapping clustering model
-#'   \eqn{\boldsymbol{M}} of the same size as \code{data}.}
+#'   \eqn{M} of the same size as \code{data}.}
 #'   \item{\code{model_lowdim}}{matrix. The obtained low dimensional clustering
-#'   model \eqn{\boldsymbol{AC}} of size \eqn{I \times S}}
-#'   \item{\code{A}}{matrix. The membership matrix \eqn{\boldsymbol{A}} of the
+#'   model \eqn{AC} of size \eqn{I \times S}}
+#'   \item{\code{A}}{matrix. The membership matrix \eqn{A} of the
 #'   clustering model. Clusters are sorted by size.}
-#'   \item{\code{P}}{matrix. The profile matrix \eqn{\boldsymbol{P}} of the
+#'   \item{\code{P}}{matrix. The profile matrix \eqn{P} of the
 #'   clustering model.}
 #'   \item{\code{c}}{matrix. The profile values in terms of the low dimensional
 #'   components.}
 #'   \item{\code{B}}{Variables-by-components matrix.
 #'   Base vectors connecting low dimensional components with original variables.
 #'   matrix. Warning: for computing
-#'   \eqn{\boldsymbol{P}} use \eqn{\boldsymbol{B'}}.}
+#'   \eqn{P} use \eqn{B'}.}
 #'   \item{\code{sse}}{numeric. The
 #'   residual sum of squares of the clustering model, which is minimized by the
 #'   ALS algorithm.}

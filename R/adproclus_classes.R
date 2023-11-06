@@ -4,12 +4,12 @@
 #'
 #' Yields an object of class \code{adpc}, which can be printed, plotted and
 #' summarized by the corresponding methods. Mandatory input are the membership
-#' matrix \eqn{\boldsymbol{A}} and the profile matrix \eqn{\boldsymbol{P}}
-#' (where the number of columns from \eqn{\boldsymbol{A}} corresponds to
-#' the number of rows in \eqn{\boldsymbol{P}}),
+#' matrix \eqn{A} and the profile matrix \eqn{P}
+#' (where the number of columns from \eqn{A} corresponds to
+#' the number of rows in \eqn{P}),
 #' if the object is to represent a full dimensional ADPROCLUS model.
-#' For a low dimensional ADPROCLUS model, the matrices \eqn{\boldsymbol{C}}
-#' and \eqn{\boldsymbol{B}} have to be provided and \eqn{\boldsymbol{P}} can
+#' For a low dimensional ADPROCLUS model, the matrices \eqn{C}
+#' and \eqn{B} have to be provided and \eqn{P} can
 #' be inferred from those. All other inputs are optional but may be included
 #' so that the output from the \code{summary(), print(), plot()} is complete.
 #' For further details on the (low dimensional) ADPROCLUS model and
@@ -261,12 +261,12 @@ print.summary.adpc <- function(x, ...) {
 #' edge. The numerical edge-labels can be relative
 #' (number of overlap observations / total observations)
 #' or absolute (number of observations in both clusters).}
-#' \item{Profiles}{Plot the profile matrix (\eqn{\boldsymbol{P}}
-#' for full dimensional model, \eqn{\boldsymbol{C}} for low dimensional model)
+#' \item{Profiles}{Plot the profile matrix (\eqn{P}
+#' for full dimensional model, \eqn{C} for low dimensional model)
 #' in the style of a correlation plot to visualize the relation of each cluster
 #' with each variable.}
 #' \item{Variables by components}{Plot the low dimensional
-#' component-by-variable matrix \eqn{\boldsymbol{B'}} in the style of a
+#' component-by-variable matrix \eqn{B'} in the style of a
 #' correlation plot to visualize the relation of each component with each
 #' original variable. \strong{NOTE:} Only works for low dimensional ADPROCLUS.}
 #' }

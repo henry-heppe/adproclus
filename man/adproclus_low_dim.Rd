@@ -47,19 +47,19 @@ Default: NULL, meaning no reproducibility}
   components, which describe the best model (from the multiple starts):
   \describe{
   \item{\code{model}}{matrix. The obtained overlapping clustering model
-  \eqn{\boldsymbol{M}} of the same size as \code{data}.}
+  \eqn{M} of the same size as \code{data}.}
   \item{\code{model_lowdim}}{matrix. The obtained low dimensional clustering
-  model \eqn{\boldsymbol{AC}} of size \eqn{I \times S}}
-  \item{\code{A}}{matrix. The membership matrix \eqn{\boldsymbol{A}} of the
+  model \eqn{AC} of size \eqn{I \times S}}
+  \item{\code{A}}{matrix. The membership matrix \eqn{A} of the
   clustering model. Clusters are sorted by size.}
-  \item{\code{P}}{matrix. The profile matrix \eqn{\boldsymbol{P}} of the
+  \item{\code{P}}{matrix. The profile matrix \eqn{P} of the
   clustering model.}
   \item{\code{c}}{matrix. The profile values in terms of the low dimensional
   components.}
   \item{\code{B}}{Variables-by-components matrix.
   Base vectors connecting low dimensional components with original variables.
   matrix. Warning: for computing
-  \eqn{\boldsymbol{P}} use \eqn{\boldsymbol{B'}}.}
+  \eqn{P} use \eqn{B'}.}
   \item{\code{sse}}{numeric. The
   residual sum of squares of the clustering model, which is minimized by the
   ALS algorithm.}
@@ -95,23 +95,23 @@ Mirkins (1987, 1990) additive profile clustering method is used to obtain a
 low dimensional overlapping clustering model of the object by variable data
 provided by \code{data}.
 More precisely, the low dimensional ADPROCLUS model approximates an
-\eqn{I \times J} object by variable data matrix \eqn{\boldsymbol{X}} by an
-\eqn{I \times J} model matrix \eqn{\boldsymbol{M}}. For \eqn{K} overlapping
-clusters, \eqn{\boldsymbol{M}} can be decomposed into an \eqn{I \times K}
-binary cluster membership matrix \eqn{\boldsymbol{A}} and a \eqn{K \times J}
-real-valued cluster profile matrix \eqn{\boldsymbol{P}} s.t. \deqn{M = AP.}
-With the simultaneous dimension reduction, \eqn{\boldsymbol{P}} is restricted
-to be of reduced rank \eqn{S < \min(K,J)}, such that it can be decomposed
-into \deqn{P = CB',} with \eqn{\boldsymbol{C}} a \eqn{K \times S} matrix and
-\eqn{\boldsymbol{B}} a \eqn{J \times S} matrix. Now, a row in
-\eqn{\boldsymbol{C}} represents the profile values associated with the
+\eqn{I \times J} object by variable data matrix \eqn{X} by an
+\eqn{I \times J} model matrix \eqn{M}. For \eqn{K} overlapping
+clusters, \eqn{M} can be decomposed into an \eqn{I \times K}
+binary cluster membership matrix \eqn{A} and a \eqn{K \times J}
+real-valued cluster profile matrix \eqn{P} s.t. \deqn{M = AP.}
+With the simultaneous dimension reduction, \eqn{P} is restricted
+to be of reduced rank \eqn{S < min(K,J)}, such that it can be decomposed
+into \deqn{P = CB',} with \eqn{C} a \eqn{K \times S} matrix and
+\eqn{B} a \eqn{J \times S} matrix. Now, a row in
+\eqn{C} represents the profile values associated with the
 respective cluster in terms of the \eqn{S} components, while
-the entries of \eqn{\boldsymbol{B}} can be used to interpret the components
+the entries of \eqn{B} can be used to interpret the components
 in terms of the complete set of variables. In particular, the aim of an
 ADPROCLUS analysis is therefore, given a number of clusters \eqn{K} and a
-number of dimensions \eqn{S}, to estimate a model matrix \eqn{\boldsymbol{M}}
+number of dimensions \eqn{S}, to estimate a model matrix \eqn{M}
 that reconstructs data matrix
-\eqn{\boldsymbol{X}} as close as possible in a least squares sense and
+\eqn{X} as close as possible in a least squares sense and
 simultaneously reduce the dimensions of the data.
 For a detailed illustration of the low dimensional ADPROCLUS model and
 associated loss function, see Depril et al. (2012).

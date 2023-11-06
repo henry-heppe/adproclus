@@ -55,12 +55,12 @@ Object of class \code{adpc}.
 \description{
 Yields an object of class \code{adpc}, which can be printed, plotted and
 summarized by the corresponding methods. Mandatory input are the membership
-matrix \eqn{\boldsymbol{A}} and the profile matrix \eqn{\boldsymbol{P}}
-(where the number of columns from \eqn{\boldsymbol{A}} corresponds to
-the number of rows in \eqn{\boldsymbol{P}}),
+matrix \eqn{A} and the profile matrix \eqn{P}
+(where the number of columns from \eqn{A} corresponds to
+the number of rows in \eqn{P}),
 if the object is to represent a full dimensional ADPROCLUS model.
-For a low dimensional ADPROCLUS model, the matrices \eqn{\boldsymbol{C}}
-and \eqn{\boldsymbol{B}} have to be provided and \eqn{\boldsymbol{P}} can
+For a low dimensional ADPROCLUS model, the matrices \eqn{C}
+and \eqn{B} have to be provided and \eqn{P} can
 be inferred from those. All other inputs are optional but may be included
 so that the output from the \code{summary(), print(), plot()} is complete.
 For further details on the (low dimensional) ADPROCLUS model and

@@ -155,8 +155,8 @@ plot_cluster_network <- function(model,
 
 #' Plot profile matrix of ADPROCLUS solution
 #'
-#' Produce a representation of profile matrix \eqn{\boldsymbol{P}}
-#' (or \eqn{\boldsymbol{C}} for low dimensional solution) of an ADPROCLUS
+#' Produce a representation of profile matrix \eqn{P}
+#' (or \eqn{C} for low dimensional solution) of an ADPROCLUS
 #' solution of class \code{adpc}.
 #' The plot displays the profiles in the style of a correlation plot.
 #' \strong{NOTE:} This function can also be called through the
@@ -212,7 +212,7 @@ plot_profiles <- function(model,
 #' Plot variable to component matrix of ADPROCLUS solution
 #'
 #' Produce a representation of variable to component matrix
-#' \eqn{\boldsymbol{B'}} of a \strong{low dimensional} ADPROCLUS solution
+#' \eqn{B'} of a \strong{low dimensional} ADPROCLUS solution
 #' of class \code{adpc}. The plot displays the scores in the style of a
 #' correlation plot.
 #' \strong{NOTE:} This function can be called through the

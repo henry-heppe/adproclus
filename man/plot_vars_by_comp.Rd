@@ -24,7 +24,7 @@ Invisibly returns the input model.
 }
 \description{
 Produce a representation of variable to component matrix
-\eqn{\boldsymbol{B'}} of a \strong{low dimensional} ADPROCLUS solution
+\eqn{B'} of a \strong{low dimensional} ADPROCLUS solution
 of class \code{adpc}. The plot displays the scores in the style of a
 correlation plot.
 \strong{NOTE:} This function can be called through the

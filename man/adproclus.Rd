@@ -88,27 +88,27 @@ In this function, Mirkin's (1987, 1990) Additive Profile Clustering
 model of the object by variable data provided by \code{data}.
 
 The ADPROCLUS model approximates an \eqn{I \times J} object by
-variable data matrix \eqn{\boldsymbol{X}} by an \eqn{I \times J} model matrix
-\eqn{\boldsymbol{M}} that can be decomposed into an \eqn{I \times K} binary
-cluster membership matrix \eqn{\boldsymbol{A}} and a \eqn{K \times J}
-real-valued cluster profile matrix \eqn{\boldsymbol{P}}, with \eqn{K}
+variable data matrix \eqn{X} by an \eqn{I \times J} model matrix
+\eqn{M} that can be decomposed into an \eqn{I \times K} binary
+cluster membership matrix \eqn{A} and a \eqn{K \times J}
+real-valued cluster profile matrix \eqn{P}, with \eqn{K}
 indicating the number of overlapping clusters.
 In particular, the aim of an ADPROCLUS analysis is therefore,
 given a number of clusters \eqn{K}, to estimate a
 model matrix \deqn{M = AP} which reconstructs the data matrix
-\eqn{\boldsymbol{X}} as close as possible in a least squares sense
+\eqn{X} as close as possible in a least squares sense
 (i.e. sum of squared residuals). For a detailed illustration of the
 ADPROCLUS model and associated loss function, see Wilderjans et al. (2011).
 
 The alternating least squares algorithms ("\code{ALS1}" and "\code{ALS2}")
 that can be used for minimization of the loss function were proposed by
 Depril et al. (2008). In "\code{ALS2}", starting from an initial random or
-rational estimate of \eqn{\boldsymbol{A}} (see \code{\link{get_random}} and
-\code{\link{get_semirandom}}), \eqn{\boldsymbol{A}} and \eqn{\boldsymbol{P}}
+rational estimate of \eqn{A} (see \code{\link{get_random}} and
+\code{\link{get_semirandom}}), \eqn{A} and \eqn{P}
 are alternately re-estimated conditionally upon each other until convergence.
 The "\code{ALS1}" algorithm differs from the previous one in that each
-row in \eqn{\boldsymbol{A}} is updated independently and that the
-conditionally optimal \eqn{\boldsymbol{P}} is recalculated after each row
+row in \eqn{A} is updated independently and that the
+conditionally optimal \eqn{P} is recalculated after each row
 update, instead of the end of the matrix. For a discussion and comparison of
 the different algorithms, see Depril et al., 2008.
 

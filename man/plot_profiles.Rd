@@ -19,8 +19,8 @@ solution}
 Invisibly returns the input model.
 }
 \description{
-Produce a representation of profile matrix \eqn{\boldsymbol{P}}
-(or \eqn{\boldsymbol{C}} for low dimensional solution) of an ADPROCLUS
+Produce a representation of profile matrix \eqn{P}
+(or \eqn{C} for low dimensional solution) of an ADPROCLUS
 solution of class \code{adpc}.
 The plot displays the profiles in the style of a correlation plot.
 \strong{NOTE:} This function can also be called through the
