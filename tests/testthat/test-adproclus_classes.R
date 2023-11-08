@@ -1,6 +1,6 @@
 test_that("adpc constructor test", {
-  model_complete <- adproclus(stackloss, 2)
-  model_completeLD <- adproclus_low_dim(stackloss, 3, 2)
+  model_complete <- adproclus(stackloss, 2, seed = 1)
+  model_completeLD <- adproclus_low_dim(stackloss, 3, 2, seed = 1)
   expect_no_condition(adpc(model_complete$A, model_complete$P))
   expect_no_condition(adpc(
     A = model_completeLD$A, P = model_completeLD$P,
@@ -15,8 +15,8 @@ test_that("adpc constructor test", {
 
 test_that("print test", {
   x <- stackloss
-  model <- adproclus(x, nclusters = 2)
-  modelLD <- adproclus_low_dim(x, nclusters = 3, ncomponents = 2)
+  model <- adproclus(x, nclusters = 2, seed = 1)
+  modelLD <- adproclus_low_dim(x, nclusters = 3, ncomponents = 2, seed = 1)
   expect_no_error(print.adpc(model))
   expect_no_error(print.adpc(modelLD))
   expect_equal(
@@ -31,8 +31,8 @@ test_that("print test", {
 
 test_that("summary.adpc test", {
   x <- stackloss
-  model <- adproclus(x, nclusters = 2)
-  modelLD <- adproclus_low_dim(x, nclusters = 3, ncomponents = 2)
+  model <- adproclus(x, nclusters = 2, seed = 1)
+  modelLD <- adproclus_low_dim(x, nclusters = 3, ncomponents = 2, seed = 1)
 
   expect_no_error(summary.adpc(model))
   expect_no_error(summary.adpc(modelLD))
@@ -42,8 +42,8 @@ test_that("summary.adpc test", {
 
 test_that("print.summary.adpc test", {
   x <- stackloss
-  model <- adproclus(x, nclusters = 2)
-  modelLD <- adproclus_low_dim(x, nclusters = 3, ncomponents = 2)
+  model <- adproclus(x, nclusters = 2, seed = 1)
+  modelLD <- adproclus_low_dim(x, nclusters = 3, ncomponents = 2, seed = 1)
   sum_res <- summary(model, digits = 2, matrix_rows = 1, matrix_cols = 4)
   sum_resLD <- summary(modelLD, digits = 2, matrix_rows = 1, matrix_cols = 4)
   expect_error(print.summary.adpc(model))
@@ -55,8 +55,8 @@ test_that("print.summary.adpc test", {
 
 test_that("plot test", {
   x <- stackloss
-  model <- adproclus(x, nclusters = 2)
-  modelLD <- adproclus_low_dim(x, nclusters = 3, ncomponents = 2)
+  model <- adproclus(x, nclusters = 2, seed = 1)
+  modelLD <- adproclus_low_dim(x, nclusters = 3, ncomponents = 2, seed = 1)
 
   expect_no_condition(plot(model))
   expect_no_condition(plot(modelLD))
