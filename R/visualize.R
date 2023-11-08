@@ -270,6 +270,6 @@ plot_vars_by_comp <- function(model,
         cluster1 <- edge[1]
         cluster2 <- edge[2]
         # no. of rows in which both clusters (cols) are 1
-        overlap <- nrow(A[A[, cluster1] == 1 & A[, cluster2] == 1, ])
+        overlap <- nrow(A[A[, cluster1] == 1 & A[, cluster2] == 1, , drop = FALSE])
         overlap
 }
