@@ -7,6 +7,14 @@
 \description{
 Obtain overlapping clustering models for object-by-variable data matrices using the Additive Profile Clustering (ADPROCLUS) method. Also contains the low dimensional ADPROCLUS method for simultaneous dimension reduction and overlapping clustering. For reference see Depril, Van Mechelen, Mirkin (2008) \doi{10.1016/j.csda.2008.04.014} and Depril, Van Mechelen, Wilderjans (2012) \doi{10.1007/s00357-012-9112-5}.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/henry-heppe/adproclus}
+  \item Report bugs at \url{https://github.com/henry-heppe/adproclus/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Henry Heppe \email{heppe.henry@gmail.com} [copyright holder]
 

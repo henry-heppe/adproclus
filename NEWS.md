@@ -1,3 +1,7 @@
-# adproclus 0.1.0
+# adproclus 1.0.2
+* Using `plot_cluster_network()` now also works when clusters have an 
+overlap of 1 observation.
+
+# adproclus 1.0.0
 
 * Initial CRAN submission.
