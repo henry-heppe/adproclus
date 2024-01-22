@@ -37,6 +37,7 @@ Collate:
     'clustering.R'
     'data.R'
     'get_starts.R'
+    'model_selection.R'
     'utils.R'
     'visualize.R'
 Suggests: 

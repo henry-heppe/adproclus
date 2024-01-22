@@ -440,3 +440,15 @@ print.adpc <- function(x,
     }
   }
 }
+
+plot.adpclist <- function(model_list,
+                          title = "Scree plot of ADPROCLUS models",
+                          unexplvar = TRUE,
+                          digits = 2) {
+        plot_scree_adpc(model_list = model_list,
+                        title = title,
+                        unexplvar = unexplvar,
+                        digits = digits)
+}
+
+
