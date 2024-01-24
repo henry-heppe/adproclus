@@ -1,5 +1,7 @@
 # Visualization functions for an ADPROCLUS model
 
+if(getRversion() >= "2.15.1")  utils::globalVariables(c("clusters", "unexplained_variance", "SSE"))
+
 #' Title
 #'
 #' @param model_list
@@ -18,6 +20,7 @@ plot_scree_adpc <- function(model_list,
         checkmate::assert_class(model_list, "adpclist")
         checkmate::assert_string(title)
         checkmate::assert_flag(unexplvar)
+
 
         results <- c()
         if (unexplvar) {

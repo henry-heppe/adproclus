@@ -24,6 +24,8 @@ LazyData: true
 Imports: 
     checkmate,
     corrplot,
+    ggplot2,
+    ggrepel,
     gtools,
     igraph,
     NMFN,

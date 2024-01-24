@@ -43,3 +43,5 @@ mselect_adproclus <- function(data, min_nclusters, max_nclusters,
         class(all_models) <- "adpclist"
         all_models
 }
+
+
