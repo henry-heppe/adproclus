@@ -13,37 +13,62 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("clusters", "unexplained
 #' @export
 #'
 #' @examples
-plot_scree_adpc <- function(model_list,
+plot_scree_adpc <- function(model_fit,
                           title = "Scree plot of ADPROCLUS models",
-                          unexplvar = TRUE,
                           digits = 2) {
-        checkmate::assert_class(model_list, "adpclist")
+        checkmate::assert_matrix(model_list, "adpclist")
         checkmate::assert_string(title)
-        checkmate::assert_flag(unexplvar)
+        checkmate::assert_count(digits, positive = TRUE, coerce = TRUE)
 
-
-        results <- c()
-        if (unexplvar) {
-                for (i in 1:length(model_list)) {
-                        results <- append(results, round(1 - model_list[[i]]$explvar, digits))
-                }
-                data <- data.frame(clusters = ncol(model_list[[1]]$A):ncol(model_list[[length(model_list)]]$A), unexplained_variance = results)
-                scree_plot <- ggplot2::ggplot(data, ggplot2::aes(x = clusters, y = unexplained_variance)) +
-                        ggplot2::geom_line(color = "blue", linewidth = 1) +
-                        ggplot2::geom_point(color = "blue", size = 3) +
-                        ggrepel::geom_text_repel(ggplot2::aes(label = unexplained_variance, segment.linetype = 0), box.padding = 0.5, point.padding = 0.1, color = "red") +
-                        ggplot2::labs(x = "Number of Clusters", y = "Unexplained Variance", title = title)
-        } else {
-                for (i in 1:length(model_list)) {
-                        results <- append(results, round(model_list[[i]]$sse, digits = digits))
-                }
-                data <- data.frame(clusters = ncol(model_list[[1]]$A):ncol(model_list[[length(model_list)]]$A), SSE = results)
-                scree_plot <- ggplot2::ggplot(data, ggplot2::aes(x = clusters, y = SSE)) +
-                        ggplot2::geom_line(color = "blue", linewidth = 1) +
-                        ggplot2::geom_point(color = "blue", size = 3) +
-                        ggrepel::geom_text_repel(ggplot2::aes(label = SSE, segment.linetype = 0), box.padding = 0.5, point.padding = 0.1, color = "red") +
-                        ggplot2::labs(x = "Number of Clusters", y = "SSE", title = title)
+        model_fit <- round(model_fit, digits)
+        if (ncol(model_fit) == 1) {
+                var <- colnames(model_fit)
+                data <- data.frame(clusters = strtoi(rownames(model_fit)), model_fit[, 1])
+                colnames(data)[2] <- colnames(model_fit)
+                fit_var <- colnames(model_fit)
+                scree_plot <- ggplot2::ggplot(data, ggplot2::aes(x = clusters, y = !!(rlang::ensym(fit_var)))) +
+                        ggplot2::geom_line(color = "blue", linewidth = 0.75) +
+                        ggplot2::geom_point(color = "blue", size = 2) +
+                        ggplot2::labs(x = "Number of Clusters", y = gsub("_", " ", fit_var), title = title) +
+                        ggplot2::scale_x_continuous(breaks = scales::breaks_extended(nrow(model_fit))) +
+                        ggplot2::scale_y_continuous(labels = scales::label_number(accuracy = 0.001)) +
+                        ggplot2::theme_classic()
         }
+        # } else {
+        #         max_nclusters <- length(model_list)
+        #         max_ncomponents <- length(model_list[[length(model_list)]])
+        #         results <- matrix(1:(max_nclusters * max_ncomponents), max_nclusters, max_ncomponents)
+        #         if (unexplvar) {
+        #                 for (i in 1:max_nclusters) {
+        #                         results_i <- c()
+        #                         for (j in 1:max_ncomponents) {
+        #                                 if (j > length(model_list[[i]])) {
+        #                                         results_i <- append(results_i, NA)
+        #                                 } else {
+        #                                         results_i <- append(results_i, round(1 - model_list[[i]][[j]]$explvar, digits))
+        #                                 }
+        #
+        #                         }
+        #                         results[i,] <- results_i
+        #                 }
+        #         } else {
+        #                 for (i in 1:max_nclusters) {
+        #                         results_i <- c()
+        #                         for (j in 1:max_ncomponents) {
+        #                                 if (j > length(model_list[[i]])) {
+        #                                         results_i <- append(results_i, NA)
+        #                                 } else {
+        #                                         results_i <- append(results_i, round(model_list[[i]][[j]]$sse, digits))
+        #                                 }
+        #
+        #                         }
+        #                         results[i,] <- results_i
+        #                 }
+        #         }
+        # }
+
+
+
         scree_plot
 }
 
