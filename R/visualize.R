@@ -1,6 +1,6 @@
 # Visualization functions for an ADPROCLUS model
 
-if(getRversion() >= "2.15.1")  utils::globalVariables(c("clusters", "unexplained_variance", "SSE"))
+if(getRversion() >= "2.15.1")  utils::globalVariables(c("clusters"))
 
 #' Title
 #'
@@ -15,61 +15,62 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("clusters", "unexplained
 #' @examples
 plot_scree_adpc <- function(model_fit,
                           title = "Scree plot of ADPROCLUS models",
-                          digits = 2) {
-        checkmate::assert_matrix(model_list, "adpclist")
+                          grid = FALSE,
+                          digits = 3) {
+        checkmate::assert_matrix(model_fit)
         checkmate::assert_string(title)
         checkmate::assert_count(digits, positive = TRUE, coerce = TRUE)
 
         model_fit <- round(model_fit, digits)
+
+        #option for full dimensional model
         if (ncol(model_fit) == 1) {
-                var <- colnames(model_fit)
                 data <- data.frame(clusters = strtoi(rownames(model_fit)), model_fit[, 1])
                 colnames(data)[2] <- colnames(model_fit)
                 fit_var <- colnames(model_fit)
                 scree_plot <- ggplot2::ggplot(data, ggplot2::aes(x = clusters, y = !!(rlang::ensym(fit_var)))) +
-                        ggplot2::geom_line(color = "blue", linewidth = 0.75) +
-                        ggplot2::geom_point(color = "blue", size = 2) +
+                        ggplot2::geom_line() +
+                        ggplot2::geom_point() +
                         ggplot2::labs(x = "Number of Clusters", y = gsub("_", " ", fit_var), title = title) +
                         ggplot2::scale_x_continuous(breaks = scales::breaks_extended(nrow(model_fit))) +
-                        ggplot2::scale_y_continuous(labels = scales::label_number(accuracy = 0.001)) +
+                        ggplot2::scale_y_continuous(labels = scales::label_number(accuracy = 10^(-digits))) +
                         ggplot2::theme_classic()
+        } else {
+                #option for low dimensional model
+                if (substring(colnames(model_fit)[[1]], 1, 1) == "S") {
+                        fit_var <- "SSE"
+                } else {
+                        fit_var <- "Unexplained_Variance"
+                }
+
+                data_wide <- data.frame(clusters = strtoi(rownames(model_fit)), model_fit)
+                data <- data_wide %>% tidyr::pivot_longer(cols = !clusters,
+                                                          names_to = "components",
+                                                          names_transform = readr::parse_number,
+                                                          values_to = fit_var)
+                data$clusters <- as.factor(data$clusters)
+
+                if (grid) {
+                        scree_plot <- ggplot2::ggplot(data, ggplot2::aes(x = components, y = !!(rlang::ensym(fit_var)), group = clusters)) +
+                                ggplot2::geom_line() +
+                                ggplot2::geom_point() +
+                                ggplot2::labs(x = "Number of Components", y = fit_var, title = title) +
+                                ggplot2::scale_x_continuous(breaks = scales::breaks_extended(nrow(model_fit))) +
+                                ggplot2::scale_y_continuous(labels = scales::label_number(accuracy = 10^(-digits))) +
+                                ggplot2::facet_wrap(vars(clusters), labeller = "label_both") +
+                                ggplot2::theme_classic()
+                } else {
+                        scree_plot <- ggplot2::ggplot(data, ggplot2::aes(x = components, y = !!(rlang::ensym(fit_var)), color = clusters)) +
+                                ggplot2::geom_line() +
+                                ggplot2::geom_point() +
+                                ggplot2::scale_color_manual(values = c("blue", "red", "green", "black")) +
+                                ggplot2::labs(x = "Number of Components", y = fit_var, title = title) +
+                                ggplot2::scale_x_continuous(breaks = scales::breaks_extended(nrow(model_fit))) +
+                                ggplot2::scale_y_continuous(labels = scales::label_number(accuracy = 10^(-digits))) +
+                                ggplot2::theme_classic()
+                }
         }
-        # } else {
-        #         max_nclusters <- length(model_list)
-        #         max_ncomponents <- length(model_list[[length(model_list)]])
-        #         results <- matrix(1:(max_nclusters * max_ncomponents), max_nclusters, max_ncomponents)
-        #         if (unexplvar) {
-        #                 for (i in 1:max_nclusters) {
-        #                         results_i <- c()
-        #                         for (j in 1:max_ncomponents) {
-        #                                 if (j > length(model_list[[i]])) {
-        #                                         results_i <- append(results_i, NA)
-        #                                 } else {
-        #                                         results_i <- append(results_i, round(1 - model_list[[i]][[j]]$explvar, digits))
-        #                                 }
-        #
-        #                         }
-        #                         results[i,] <- results_i
-        #                 }
-        #         } else {
-        #                 for (i in 1:max_nclusters) {
-        #                         results_i <- c()
-        #                         for (j in 1:max_ncomponents) {
-        #                                 if (j > length(model_list[[i]])) {
-        #                                         results_i <- append(results_i, NA)
-        #                                 } else {
-        #                                         results_i <- append(results_i, round(model_list[[i]][[j]]$sse, digits))
-        #                                 }
-        #
-        #                         }
-        #                         results[i,] <- results_i
-        #                 }
-        #         }
-        # }
-
-
-
-        scree_plot
+        suppressWarnings(print(scree_plot), classes = c("warning", "message"))
 }
 
 #' Network plot of a (low dimensional) ADPROCLUS solution

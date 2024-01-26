@@ -83,6 +83,7 @@ mselect_adproclus_low_dim <- function(data,
                                       min_nclusters, max_nclusters,
                                       min_ncomponents, max_ncomponents,
                                       return_models = FALSE,
+                                      unexplvar = TRUE,
                               start_allocation = NULL,
                               nrandomstart = 1, nsemirandomstart = 1,
                               save_all_starts = FALSE,
@@ -111,9 +112,45 @@ mselect_adproclus_low_dim <- function(data,
                 names(all_models)[length(all_models)] <- paste("models_", i, sep = "")
         }
         class(all_models) <- "adpclist"
+
         if (return_models) {
                 all_models
         } else {
+                results <- matrix(1:(max_nclusters * max_ncomponents), max_nclusters, max_ncomponents)
+                if (unexplvar) {
+                        for (i in 1:max_nclusters) {
+                                results_i <- c()
+                                for (j in 1:max_ncomponents) {
+                                        if (j > length(all_models[[i]])) {
+                                                results_i <- append(results_i, NA)
+                                        } else {
+                                                results_i <- append(results_i, 1 - all_models[[i]][[j]]$explvar)
+                                        }
+
+                                }
+                                results[i,] <- results_i
+                        }
+                        colnames(results) <- sapply(list(min_ncomponents:max_ncomponents),
+                                                    function(x) {paste("Unexplained_Variance_", x, "comp", sep = "")})
+                } else {
+                        for (i in 1:max_nclusters) {
+                                results_i <- c()
+                                for (j in 1:max_ncomponents) {
+                                        if (j > length(all_models[[i]])) {
+                                                results_i <- append(results_i, NA)
+                                        } else {
+                                                results_i <- append(results_i, all_models[[i]][[j]]$sse)
+                                        }
+
+                                }
+                                results[i,] <- results_i
+                        }
+                        colnames(results) <- sapply(list(min_ncomponents:max_ncomponents),
+                                                    function(x) {paste("SSE_", x, "comp", sep = "")})
+                }
+                rownames(results) <- min_nclusters:max_nclusters
+
+                results
 
         }
 

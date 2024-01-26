@@ -5,9 +5,8 @@
 \title{Title}
 \usage{
 plot_scree_adpc(
-  model_list,
+  model_fit,
   title = "Scree plot of ADPROCLUS models",
-  unexplvar = TRUE,
   digits = 2
 )
 }
