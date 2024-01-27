@@ -171,3 +171,48 @@ mselect_adproclus_low_dim <- function(data,
 
 }
 
+
+#' Title
+#' only works when the unexplained variance/SSE is decreasing in the number of components
+#' if for a certain number of clusters exactly 2 models where estimated, this procedure will always choose the one with the better model fit
+#'
+#' @param model_fit
+#' @param PercentageFit
+#'
+#' @return
+#' @export
+#'
+#' @examples
+select_by_CHull <- function(model_fit, percentage_fit = 0.0001) {
+        if (substring(colnames(model_fit)[[1]], 1, 1) == "S") {
+                fit_var <- "SSE"
+        } else {
+                fit_var <- "Unexplained_Variance"
+        }
+        if (ncol(model_fit) == 1) {
+                multichull::CHull(cbind(strtoi(rownames(model_fit)), model_fit[, 1]), bound = "lower", PercentageFit = percentage_fit)
+        } else {
+                clusters <- strtoi(rownames(model_fit))
+                components <- c()
+                model_fit_result <- c()
+                for (i in 1:nrow(model_fit)) {
+                        model_data <- cbind(readr::parse_number(colnames(model_fit)), model_fit[i,])
+                        model_data <- model_data[rowSums(is.na(model_data)) != 1, , drop = FALSE]
+                        if (nrow(model_data) == 1) {
+                                components <- append(components, model_data[1, 1])
+                                model_fit_result <- append(model_fit_result, model_data[1, 2])
+                        } else if (nrow(model_data) == 2) {
+                                components <- append(components, model_data[which.min(model_data[, 2]), 1])
+                                model_fit_result <- append(model_fit_result, min(model_data[, 2]))
+                        } else {
+                                model <- multichull::CHull(data = model_data, bound = "lower", PercentageFit = percentage_fit)
+                                components <- append(components, model$Solution$complexity)
+                                model_fit_result <- append(model_fit_result, model$Solution$fit)
+                        }
+                }
+                results <- cbind(clusters, components, model_fit_result)
+                rownames(results) <- paste("Cl:", clusters, "; Comp:", components, sep = "")
+                colnames(results)[3] <- fit_var
+                results
+        }
+}

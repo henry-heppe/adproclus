@@ -22,3 +22,18 @@ test_that("model selection, low dimensional", {
                                                       return_models = FALSE,
                                                       seed = 1))
 })
+
+test_that("model selection, CHull", {
+        model_fit <- mselect_adproclus(stackloss,
+                                       min_nclusters = 1, max_nclusters = 4,
+                                       return_models = FALSE,
+                                       seed = 1)
+        expect_no_condition(select_by_CHull(model_fit = model_fit))
+
+        model_fit <- mselect_adproclus_low_dim(stackloss,
+                                               min_nclusters = 1, max_nclusters = 4,
+                                               min_ncomponents = 1, max_ncomponents = 4,
+                                               return_models = FALSE,
+                                               seed = 1)
+        expect_no_condition(select_by_CHull(model_fit = model_fit))
+})

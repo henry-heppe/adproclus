@@ -27,6 +27,7 @@ plot_scree_adpc <- function(model_fit,
         if (ncol(model_fit) == 1) {
                 data <- data.frame(clusters = strtoi(rownames(model_fit)), model_fit[, 1])
                 colnames(data)[2] <- colnames(model_fit)
+                print(data)
                 fit_var <- colnames(model_fit)
                 scree_plot <- ggplot2::ggplot(data, ggplot2::aes(x = clusters, y = !!(rlang::ensym(fit_var)))) +
                         ggplot2::geom_line() +
@@ -72,6 +73,37 @@ plot_scree_adpc <- function(model_fit,
                 }
         }
         suppressWarnings(print(scree_plot))
+}
+
+#' Title
+#'
+#' @param model_fit
+#' @param title
+#' @param digits
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plot_scree_adpc_preselected <- function(model_fit,
+                             title = "Scree plot of low dim ADPROCLUS pre-selected models",
+                             digits = 3) {
+        checkmate::assert_matrix(model_fit)
+        checkmate::assert_string(title)
+        checkmate::assert_count(digits, positive = TRUE, coerce = TRUE)
+
+        model_fit <- round(model_fit, digits)
+
+        fit_var <- colnames(model_fit)[3]
+        scree_plot <- ggplot2::ggplot(data.frame(model_fit), ggplot2::aes(x = clusters, y = !!(rlang::ensym(fit_var)), label = rownames(model_fit))) +
+                ggplot2::geom_line() +
+                ggplot2::geom_point() +
+                ggrepel::geom_label_repel(box.padding = 0.5, segment.linetype = 0) +
+                ggplot2::labs(x = "Number of Clusters", y = gsub("_", " ", fit_var), title = title) +
+                ggplot2::scale_x_continuous(breaks = scales::breaks_extended(nrow(model_fit))) +
+                ggplot2::scale_y_continuous(labels = scales::label_number(accuracy = 10^(-digits))) +
+                ggplot2::theme_classic()
+        scree_plot
 }
 
 #' Network plot of a (low dimensional) ADPROCLUS solution
