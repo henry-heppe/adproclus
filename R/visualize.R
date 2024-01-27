@@ -4,10 +4,10 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("clusters"))
 
 #' Title
 #'
-#' @param model_list
 #' @param title
-#' @param unexplvar
 #' @param digits
+#' @param model_fit
+#' @param grid
 #'
 #' @return
 #' @export
@@ -51,10 +51,10 @@ plot_scree_adpc <- function(model_fit,
                 data$clusters <- as.factor(data$clusters)
 
                 if (grid) {
-                        scree_plot <- ggplot2::ggplot(data, ggplot2::aes(x = components, y = !!(rlang::ensym(fit_var)), group = clusters)) +
+                        scree_plot <- ggplot2::ggplot(data, ggplot2::aes(x = components, y = !!(rlang::ensym(fit_var)), group = 1)) +
                                 ggplot2::geom_line() +
                                 ggplot2::geom_point() +
-                                ggplot2::labs(x = "Number of Components", y = fit_var, title = title) +
+                                ggplot2::labs(x = "Number of Components", y = gsub("_", " ", fit_var), title = title) +
                                 ggplot2::scale_x_continuous(breaks = scales::breaks_extended(nrow(model_fit))) +
                                 ggplot2::scale_y_continuous(labels = scales::label_number(accuracy = 10^(-digits))) +
                                 ggplot2::facet_wrap(vars(clusters), labeller = "label_both") +
@@ -64,7 +64,7 @@ plot_scree_adpc <- function(model_fit,
                                 ggplot2::geom_line() +
                                 ggplot2::geom_point() +
                                 ggplot2::scale_color_manual(values = c("blue", "red", "green", "black")) +
-                                ggplot2::labs(x = "Number of Components", y = fit_var, title = title) +
+                                ggplot2::labs(x = "Number of Components", y = gsub("_", " ", fit_var), title = title) +
                                 ggplot2::scale_x_continuous(breaks = scales::breaks_extended(nrow(model_fit))) +
                                 ggplot2::scale_y_continuous(labels = scales::label_number(accuracy = 10^(-digits))) +
                                 ggplot2::theme_classic()
