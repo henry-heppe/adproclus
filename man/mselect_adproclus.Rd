@@ -19,7 +19,7 @@ mselect_adproclus(
 )
 }
 \arguments{
-\item{seed}{}
+\item{unexplvar}{}
 }
 \description{
 Title

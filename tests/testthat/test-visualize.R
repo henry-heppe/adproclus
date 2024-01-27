@@ -36,3 +36,18 @@ test_that("VarsByComp plot, basic functionality", {
         modelLD <- adproclus_low_dim(stackloss, 3, 2, seed = 1)
         expect_no_condition(plot_vars_by_comp(modelLD))
 })
+
+test_that("Scree plot full dimensional", {
+        model_selection <- mselect_adproclus(stackloss, min_nclusters = 1, max_nclusters = 4, seed = 1)
+        expect_no_condition(plot_scree_adpc(model_selection))
+})
+
+test_that("Scree plots low dimensional", {
+
+        model_selection <- mselect_adproclus_low_dim(stackloss,
+                                                     min_nclusters = 1, max_nclusters = 4,
+                                                     min_ncomponents = 1, max_ncomponents = 4,
+                                                     seed = 1)
+        expect_no_condition(plot_scree_adpc(model_selection))
+        expect_no_condition(plot_scree_adpc(model_selection, grid = TRUE))
+})

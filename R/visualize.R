@@ -1,6 +1,6 @@
 # Visualization functions for an ADPROCLUS model
 
-if(getRversion() >= "2.15.1")  utils::globalVariables(c("clusters"))
+if(getRversion() >= "2.15.1")  utils::globalVariables(c("clusters", "components"))
 
 #' Title
 #'
@@ -44,10 +44,11 @@ plot_scree_adpc <- function(model_fit,
                 }
 
                 data_wide <- data.frame(clusters = strtoi(rownames(model_fit)), model_fit)
-                data <- data_wide %>% tidyr::pivot_longer(cols = !clusters,
-                                                          names_to = "components",
-                                                          names_transform = readr::parse_number,
-                                                          values_to = fit_var)
+                data <- tidyr::pivot_longer(data = data_wide,
+                                                 cols = !clusters,
+                                                 names_to = "components",
+                                                 names_transform = readr::parse_number,
+                                                 values_to = fit_var)
                 data$clusters <- as.factor(data$clusters)
 
                 if (grid) {
@@ -57,7 +58,7 @@ plot_scree_adpc <- function(model_fit,
                                 ggplot2::labs(x = "Number of Components", y = gsub("_", " ", fit_var), title = title) +
                                 ggplot2::scale_x_continuous(breaks = scales::breaks_extended(nrow(model_fit))) +
                                 ggplot2::scale_y_continuous(labels = scales::label_number(accuracy = 10^(-digits))) +
-                                ggplot2::facet_wrap(vars(clusters), labeller = "label_both") +
+                                ggplot2::facet_wrap(ggplot2::vars(clusters), labeller = "label_both") +
                                 ggplot2::theme_classic()
                 } else {
                         scree_plot <- ggplot2::ggplot(data, ggplot2::aes(x = components, y = !!(rlang::ensym(fit_var)), color = clusters)) +
@@ -70,7 +71,7 @@ plot_scree_adpc <- function(model_fit,
                                 ggplot2::theme_classic()
                 }
         }
-        suppressWarnings(print(scree_plot), classes = c("warning", "message"))
+        suppressWarnings(print(scree_plot))
 }
 
 #' Network plot of a (low dimensional) ADPROCLUS solution

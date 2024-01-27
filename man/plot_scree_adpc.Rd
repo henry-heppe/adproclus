@@ -7,11 +7,12 @@
 plot_scree_adpc(
   model_fit,
   title = "Scree plot of ADPROCLUS models",
-  digits = 2
+  grid = FALSE,
+  digits = 3
 )
 }
 \arguments{
-\item{digits}{}
+\item{grid}{}
 }
 \description{
 Title

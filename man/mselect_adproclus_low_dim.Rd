@@ -20,7 +20,7 @@ mselect_adproclus_low_dim(
 )
 }
 \arguments{
-\item{seed}{}
+\item{unexplvar}{}
 }
 \description{
 Title

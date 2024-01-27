@@ -25,12 +25,15 @@ Imports:
     checkmate,
     corrplot,
     ggplot2,
-    ggrepel,
     gtools,
     igraph,
     NMFN,
     qgraph,
+    readr,
+    rlang,
+    scales,
     stats,
+    tidyr,
     withr
 RoxygenNote: 7.2.3
 Collate: 
