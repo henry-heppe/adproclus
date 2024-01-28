@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_selection.R
 \name{mselect_adproclus_low_dim}
 \alias{mselect_adproclus_low_dim}
-\title{Title}
+\title{Model selection helper for low dimensional ADPROCLUS}
 \usage{
 mselect_adproclus_low_dim(
   data,
@@ -20,8 +20,78 @@ mselect_adproclus_low_dim(
 )
 }
 \arguments{
-\item{unexplvar}{}
+\item{data}{Object-by-variable data matrix of class \code{matrix} or
+\code{data.frame}.}
+
+\item{min_nclusters}{Minimum number of clusters to estimate.}
+
+\item{max_nclusters}{Maximum number of clusters to estimate.}
+
+\item{min_ncomponents}{Minimum number of components to estimate.
+Must be smaller or equal than \code{min_nclusters}.}
+
+\item{max_ncomponents}{Maximum number of components to estimate.
+Must be smaller or equal than \code{max_nclusters}.}
+
+\item{return_models}{Boolean. If \code{FALSE} a matrix of model fit scores is
+returned, which is compatible with the \code{\link{plot_scree_adpc}} function.
+If \code{TRUE} the list of actually estimated models is returned.}
+
+\item{unexplvar}{Boolean. If \code{TRUE} the model fit is specified in terms
+of unexplained variance. Otherwise it will be specified in terms of
+Sum of Squared Errors (SSE). This propagates through to the scree plots.}
+
+\item{start_allocation}{Optional starting cluster membership matrix to be
+passed to the low dimensional ADPROCLUS procedure.
+See \code{\link{get_rational}} for more information.}
+
+\item{nrandomstart}{Number of random starts computed for each model.}
+
+\item{nsemirandomstart}{Number of semi-random starts computed for each model.}
+
+\item{save_all_starts}{Logical. If \code{TRUE} and \code{return_models = TRUE},
+the results of all algorithm starts are returned.
+By default, only the best solution is retained.}
+
+\item{seed}{Integer. Seed for the random number generator.
+Default: NULL, meaning no reproducibility.}
+}
+\value{
+Number of clusters by number of components matrix
+where the values are SSE or unexplained variance scores for all estimated
+models. Row names are the value of the cluster parameter for the relevant
+model. Column names contain the value of the components parameter.
+Depends on the choice of \code{return_models}.
+If \code{TRUE} a list of estimated models is returned.
 }
 \description{
-Title
+Performs low dimensional ADPROCLUS for the number of clusters from
+\code{min_nclusters} to \code{max_nclusters} and the number of components
+from \code{min_ncomponents} to \code{max_ncomponents}.
+This replaces the need to manually estimate multiple models to select the best
+number of clusters and components and returns the results in a format compatible with
+\code{\link{plot_scree_adpc}} to obtain a scree plot / multiple scree plots.
+Output is also compatible with \code{\link{select_by_CHull}} to
+automatically select a suitable number of components for each number of clusters.
+The compatibility with both functions is only given if
+\code{return_models = FALSE}.
+}
+\examples{
+# Loading a test dataset into the global environment
+x <- stackloss
+
+# Estimating models with cluster parameter values ranging from 1 to 4
+# and component parameter values also ranging from 1 to 4
+model_fits <- mselect_adproclus_low_dim(data = x, 1, 4, 1, 4, seed = 1)
+
+# Plot the results as a scree plot to select the appropriate number of clusters
+plot_scree_adpc(model_fits)
+
+}
+\seealso{
+\describe{
+  \item{\code{\link{adproclus_low_dim}}}{for the actual low dimensional ADPROCLUS procedure}
+  \item{\code{\link{plot_scree_adpc}}}{for plotting the model fits}
+  \item{\code{\link{select_by_CHull}}}{for automatic model selection via CHull method}
+}
 }

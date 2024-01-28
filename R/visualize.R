@@ -2,17 +2,50 @@
 
 if(getRversion() >= "2.15.1")  utils::globalVariables(c("clusters", "components"))
 
-#' Title
+#' Scree plot of (low dimensional) ADPROCLUS models
 #'
-#' @param title
-#' @param digits
-#' @param model_fit
-#' @param grid
+#' Used for scree-plot based model selection. Visualizes a set of ADPROClUS models
+#' in terms of their number of clusters and model fit (SSE or unexplained variance).
+#' For low dimensional ADPROCLUS models plots are made with the number of
+#' components on the x-axis for each given number of clusters. One can then
+#' choose to have them displayed all in one plot (\code{grid = FALSE}) or next
+#' to each other in separate plots (\code{grid = TRUE}).
 #'
-#' @return
+#'
+#' @param model_fit Matrix of SSe or unexplained variance scores as given by the
+#' output of \code{\link{mselect_adproclus}} or
+#' \code{\link{mselect_adproclus_low_dim}}.
+#' @param title String. Title to be displayed in plot.
+#' @param grid Boolean. \code{FALSE} means for low dimensional ADPROCLUS all
+#' lines will be in one plot. \code{TRUE} means separate plots.
+#' @param digits Integer. The number of decimal places to display.
+#'
+#' @return Invisibly returns the \code{ggplot2} object.
 #' @export
 #'
 #' @examples
+#' # Loading a test dataset into the global environment
+#' x <- stackloss
+#'
+#' # Estimating models with cluster parameter values ranging from 1 to 4
+#' model_fits <- mselect_adproclus(data = x, min_nclusters = 1, max_nclusters = 4, seed = 1)
+#'
+#' # Plot the results as a scree plot to select the appropriate number of clusters
+#' plot_scree_adpc(model_fits)
+#'
+#' # Estimating models with cluster parameter values ranging from 1 to 4
+#' # and component parameter values also ranging from 1 to 4
+#' model_fits <- mselect_adproclus_low_dim(data = x, 1, 4, 1, 4, seed = 1)
+#'
+#' # Plot the results as a scree plot to select the appropriate number of clusters
+#' plot_scree_adpc(model_fits)
+#'
+#' @seealso
+#' \describe{
+#'   \item{\code{\link{mselect_adproclus}}}{to obtain the \code{model_fit} input from the possible ADPROCLUS models}
+#'   \item{\code{\link{mselect_adproclus_low_dim}}}{to obtain the \code{model_fit} input from the possible low dimensional ADPROCLUS models}
+#'   \item{\code{\link{select_by_CHull}}}{for automatic model selection via CHull method}
+#' }
 plot_scree_adpc <- function(model_fit,
                           title = "Scree plot of ADPROCLUS models",
                           grid = FALSE,
@@ -73,18 +106,38 @@ plot_scree_adpc <- function(model_fit,
                 }
         }
         suppressWarnings(print(scree_plot))
+        invisible(scree_plot)
 }
 
-#' Title
+#' Scree plot of a pre-selection of low dimensional ADPROCLUS models
 #'
-#' @param model_fit
-#' @param title
-#' @param digits
+#' To be used when one has selected a number of components for each number
+#' of clusters. Plots the remaining sets of models to compare SSE or unexplained
+#' variances. The input \code{model_fit} is supposed to be the output from the
+#' \code{\link{select_by_CHull}} function applied to the output from
+#' the \code{\link{mselect_adproclus_low_dim}} function.
 #'
-#' @return
+#' @param model_fit Matrix with SSE or unexplained variance values.
+#' Can be obtained from \code{\link{select_by_CHull}}.
+#' @param title String. Title to be displayed in plot.
+#' @param digits Integer. The number of decimal places to display.
+#'
+#' @return Returns the \code{ggplot2} object.
 #' @export
 #'
 #' @examples
+#' # Loading a test dataset into the global environment
+#' x <- stackloss
+#'
+#' # Estimating models with cluster parameter values ranging from 1 to 4
+#' # and component parameter values also ranging from 1 to 4
+#' model_fits <- mselect_adproclus_low_dim(data = x, 1, 4, 1, 4, seed = 1)
+#'
+#' # Choosing for each number of cluster the best number of components
+#' model_fits_preselected <- select_by_CHull(model_fits)
+#'
+#' # Plot the results as a scree plot to select the appropriate number of clusters
+#' plot_scree_adpc_preselected(model_fits_preselected)
 plot_scree_adpc_preselected <- function(model_fit,
                              title = "Scree plot of low dim ADPROCLUS pre-selected models",
                              digits = 3) {

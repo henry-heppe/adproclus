@@ -2,7 +2,7 @@
 % Please edit documentation in R/visualize.R
 \name{plot_scree_adpc}
 \alias{plot_scree_adpc}
-\title{Title}
+\title{Scree plot of (low dimensional) ADPROCLUS models}
 \usage{
 plot_scree_adpc(
   model_fit,
@@ -12,8 +12,50 @@ plot_scree_adpc(
 )
 }
 \arguments{
-\item{grid}{}
+\item{model_fit}{Matrix of SSe or unexplained variance scores as given by the
+output of \code{\link{mselect_adproclus}} or
+\code{\link{mselect_adproclus_low_dim}}.}
+
+\item{title}{String. Title to be displayed in plot.}
+
+\item{grid}{Boolean. \code{FALSE} means for low dimensional ADPROCLUS all
+lines will be in one plot. \code{TRUE} means separate plots.}
+
+\item{digits}{Integer. The number of decimal places to display.}
+}
+\value{
+Invisibly returns the \code{ggplot2} object.
 }
 \description{
-Title
+Used for scree-plot based model selection. Visualizes a set of ADPROClUS models
+in terms of their number of clusters and model fit (SSE or unexplained variance).
+For low dimensional ADPROCLUS models plots are made with the number of
+components on the x-axis for each given number of clusters. One can then
+choose to have them displayed all in one plot (\code{grid = FALSE}) or next
+to each other in separate plots (\code{grid = TRUE}).
+}
+\examples{
+# Loading a test dataset into the global environment
+x <- stackloss
+
+# Estimating models with cluster parameter values ranging from 1 to 4
+model_fits <- mselect_adproclus(data = x, min_nclusters = 1, max_nclusters = 4, seed = 1)
+
+# Plot the results as a scree plot to select the appropriate number of clusters
+plot_scree_adpc(model_fits)
+
+# Estimating models with cluster parameter values ranging from 1 to 4
+# and component parameter values also ranging from 1 to 4
+model_fits <- mselect_adproclus_low_dim(data = x, 1, 4, 1, 4, seed = 1)
+
+# Plot the results as a scree plot to select the appropriate number of clusters
+plot_scree_adpc(model_fits)
+
+}
+\seealso{
+\describe{
+  \item{\code{\link{mselect_adproclus}}}{to obtain the \code{model_fit} input from the possible ADPROCLUS models}
+  \item{\code{\link{mselect_adproclus_low_dim}}}{to obtain the \code{model_fit} input from the possible low dimensional ADPROCLUS models}
+  \item{\code{\link{select_by_CHull}}}{for automatic model selection via CHull method}
+}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/visualize.R
 \name{plot_scree_adpc_preselected}
 \alias{plot_scree_adpc_preselected}
-\title{Title}
+\title{Scree plot of a pre-selection of low dimensional ADPROCLUS models}
 \usage{
 plot_scree_adpc_preselected(
   model_fit,
@@ -11,8 +11,34 @@ plot_scree_adpc_preselected(
 )
 }
 \arguments{
-\item{digits}{}
+\item{model_fit}{Matrix with SSE or unexplained variance values.
+Can be obtained from \code{\link{select_by_CHull}}.}
+
+\item{title}{String. Title to be displayed in plot.}
+
+\item{digits}{Integer. The number of decimal places to display.}
+}
+\value{
+Returns the \code{ggplot2} object.
 }
 \description{
-Title
+To be used when one has selected a number of components for each number
+of clusters. Plots the remaining sets of models to compare SSE or unexplained
+variances. The input \code{model_fit} is supposed to be the output from the
+\code{\link{select_by_CHull}} function applied to the output from
+the \code{\link{mselect_adproclus_low_dim}} function.
+}
+\examples{
+# Loading a test dataset into the global environment
+x <- stackloss
+
+# Estimating models with cluster parameter values ranging from 1 to 4
+# and component parameter values also ranging from 1 to 4
+model_fits <- mselect_adproclus_low_dim(data = x, 1, 4, 1, 4, seed = 1)
+
+# Choosing for each number of cluster the best number of components
+model_fits_preselected <- select_by_CHull(model_fits)
+
+# Plot the results as a scree plot to select the appropriate number of clusters
+plot_scree_adpc_preselected(model_fits_preselected)
 }

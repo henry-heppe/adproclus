@@ -2,17 +2,80 @@
 % Please edit documentation in R/model_selection.R
 \name{select_by_CHull}
 \alias{select_by_CHull}
-\title{Title
-only works when the unexplained variance/SSE is decreasing in the number of components
-if for a certain number of clusters exactly 2 models where estimated, this procedure will always choose the one with the better model fit}
+\title{Automatic Model Selection for ADPROCLUS with CHull Method}
 \usage{
-select_by_CHull(model_fit, percentage_fit = 1e-04)
+select_by_CHull(model_fit, percentage_fit = 1e-04, ...)
 }
 \arguments{
-\item{PercentageFit}{}
+\item{model_fit}{Matrix containing SSEs or unexplained variance of all models
+as in the output of \code{\link{mselect_adproclus}} or \code{\link{mselect_adproclus_low_dim}}.}
+
+\item{percentage_fit}{Required proportion of increase in fit of a more complex model.}
+
+\item{...}{Additional parameters to be passed on to \code{multichull::CHull()} function.}
+}
+\value{
+For full dimensional ADPROCLUS a \code{CHull} object containing the
+chosen model.
+For low dimensional ADPROCLUS a matrix containing the list of chosen models
+and the relevant model parameter, compatible with
+\code{\link{plot_scree_adpc_preselected}}.
 }
 \description{
-Title
-only works when the unexplained variance/SSE is decreasing in the number of components
-if for a certain number of clusters exactly 2 models where estimated, this procedure will always choose the one with the better model fit
+For a set of full dimensional ADPROCLUS models (each with different number of clusters),
+this function finds the "elbow" in the scree plot by using the
+CHull procedure (Wilderjans, Ceuleman & Meers, 2013) implemented in
+the \code{\link[multichull]{multichull}} package.
+For a matrix of low dimensional ADPROCLUS models
+(each with different number of cluster and components),
+this function finds the "elbow" in the scree plot for each
+number of clusters with the CHull methods.
+That is, it reduces the number of model to choose from to the number of
+different cluster parameter values by choosing the "elbow" number of
+components for a given number of clusters. The resulting list can in turn
+be visualized with \code{\link{plot_scree_adpc_preselected}}.
+For this procedure to work, the SSE or unexplained variance values must be
+decreasing in the number of clusters (components). If that is not the case
+increasing the number of (semi-) random starts can help.
+}
+\details{
+This procedure cannot choose the model with
+the largest or smallest number of clusters (components), i.e. for a set of
+three models it will always choose the middle one. If for a given number of
+clusters exactly two models were estimated, this function chooses the model
+with the lower SSE/unexplained variance.
+}
+\examples{
+# Loading a test dataset into the global environment
+x <- stackloss
+
+# Estimating models with cluster parameter values ranging from 1 to 4
+model_fits <- mselect_adproclus(data = x, min_nclusters = 1, max_nclusters = 4)
+
+# Use and visualize CHull method
+selected_model <- select_by_CHull(model_fits)
+selected_model
+plot(selected_model)
+
+# Estimating low dimensional models with cluster parameter values
+# ranging from 1 to 4 and component parameter values also ranging from 1 to 4
+model_fits <- mselect_adproclus_low_dim(data = x, 1, 4, 1, 4, nsemirandomstart = 10, seed = 1)
+
+# Using the CHull method
+pre_selection <- select_by_CHull(model_fits)
+
+# Visualize pre-selected models
+plot_scree_adpc_preselected(pre_selection)
+
+}
+\references{
+Wilderjans, T. F., Ceulemans, E., & Meers, K. (2012). CHull: A generic convex hull based model
+selection method. \emph{Behavior Research Methods}, 45, 1-15
+}
+\seealso{
+\describe{
+  \item{\code{\link{mselect_adproclus}}}{to obtain the \code{model_fit} input from the possible ADPROCLUS models}
+  \item{\code{\link{mselect_adproclus_low_dim}}}{to obtain the \code{model_fit} input from the possible low dimensional ADPROCLUS models}
+  \item{\code{\link{plot_scree_adpc}}}{for plotting the model fits}
+}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_selection.R
 \name{mselect_adproclus}
 \alias{mselect_adproclus}
-\title{Title}
+\title{Model selection helper for ADPROCLUS}
 \usage{
 mselect_adproclus(
   data,
@@ -19,8 +19,70 @@ mselect_adproclus(
 )
 }
 \arguments{
-\item{unexplvar}{}
+\item{data}{Object-by-variable data matrix of class \code{matrix} or
+\code{data.frame}.}
+
+\item{min_nclusters}{Minimum number of clusters to estimate.}
+
+\item{max_nclusters}{Maximum number of clusters to estimate.}
+
+\item{return_models}{Boolean. If \code{FALSE} a vector of model fit scores is
+returned, which is compatible with the \code{\link{plot_scree_adpc}} function.
+If \code{TRUE} the list of actually estimated models is returned.}
+
+\item{unexplvar}{Boolean. If \code{TRUE} the model fit is specified in terms
+of unexplained variance. Otherwise it will be specified in terms of
+Sum of Squared Errors (SSE). This propagates through to the scree plots.}
+
+\item{start_allocation}{Optional starting cluster membership matrix to be
+passed to the ADPROCLUS procedure. See \code{\link{get_rational}} for more information.}
+
+\item{nrandomstart}{Number of random starts computed for each model.}
+
+\item{nsemirandomstart}{Number of semi-random starts computed for each model.}
+
+\item{algorithm}{Character string "\code{ALS1}" (default) or "\code{ALS2}",
+denoting the type of alternating least squares algorithm. Can be
+abbreviated with "1" or "2".}
+
+\item{save_all_starts}{Logical. If \code{TRUE} and \code{return_models = TRUE},
+the results of all algorithm starts are returned.
+By default, only the best solution is retained.}
+
+\item{seed}{Integer. Seed for the random number generator.
+Default: NULL, meaning no reproducibility.}
+}
+\value{
+Matrix with one column of SSE or unexplained variance scores for all estimated
+models. Row names are the value of the cluster parameter for the relevant model.
+Depends on the choice of \code{return_models}.
+If \code{TRUE} a list of estimated models is returned.
 }
 \description{
-Title
+Performs ADPROCLUS for the number of clusters from \code{min_nclusters} to \code{max_nclusters}.
+This replaces the need to manually estimate multiple models to select the best
+number of clusters and returns the results in a format compatible with
+\code{\link{plot_scree_adpc}} to obtain a scree plot.
+Output is also compatible with \code{\link{select_by_CHull}} to
+automatically select a suitable number of clusters.
+The compatibility with both functions is only given if
+\code{return_models = FALSE}.
+}
+\examples{
+# Loading a test dataset into the global environment
+x <- stackloss
+
+# Estimating models with cluster parameter values ranging from 1 to 4
+model_fits <- mselect_adproclus(data = x, min_nclusters = 1, max_nclusters = 4, seed = 10)
+
+# Plot the results as a scree plot to select the appropriate number of clusters
+plot_scree_adpc(model_fits)
+
+}
+\seealso{
+\describe{
+  \item{\code{\link{adproclus}}}{for the actual ADPROCLUS procedure}
+  \item{\code{\link{plot_scree_adpc}}}{for plotting the model fits}
+  \item{\code{\link{select_by_CHull}}}{for automatic model selection via CHull method}
+}
 }
