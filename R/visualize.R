@@ -60,7 +60,6 @@ plot_scree_adpc <- function(model_fit,
         if (ncol(model_fit) == 1) {
                 data <- data.frame(clusters = strtoi(rownames(model_fit)), model_fit[, 1])
                 colnames(data)[2] <- colnames(model_fit)
-                print(data)
                 fit_var <- colnames(model_fit)
                 scree_plot <- ggplot2::ggplot(data, ggplot2::aes(x = clusters, y = !!(rlang::ensym(fit_var)))) +
                         ggplot2::geom_line() +
