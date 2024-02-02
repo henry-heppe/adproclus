@@ -146,33 +146,23 @@ summary.adpc <- function(object,
 
   cluster_characteristics <- list()
   if (is.null(object$C)) {
-    for (i in 1:(k+1)) {
-            if (i == k+1) {
-                    members <- which(rowSums(A) == 0)
-                    print(members)
-            } else {
-                    members <- which(as.logical(A[, i]))
-            }
+    for (i in 1:k) {
+            members <- which(as.logical(A[, i]))
 
       cluster_characteristics <- append(
         cluster_characteristics,
         list(summary(object$model[members, , drop = FALSE])[c(1, 4, 6), , drop = FALSE])
       )
-      names(cluster_characteristics)[i] <- if (i < k+1) colnames(A)[i] else "Cl0"
+      names(cluster_characteristics)[i] <- colnames(A)[i]
     }
   } else {
-    for (i in 1:(k+1)) {
-            if (i == k+1) {
-                    members <- which(rowSums(A) == 0)
-                    print(members)
-            } else {
-                    members <- which(as.logical(A[, i]))
-            }
+    for (i in 1:k) {
+            members <- which(as.logical(A[, i]))
       cluster_characteristics <- append(
         cluster_characteristics,
         list(summary(object$model_lowdim[members, , drop = FALSE])[c(1, 4, 6), , drop = FALSE])
       )
-      names(cluster_characteristics)[i] <- if (i < k+1) colnames(A)[i] else "Cl0"
+      names(cluster_characteristics)[i] <- colnames(A)[i]
     }
   }
 
@@ -250,7 +240,7 @@ print.summary.adpc <- function(x, ...) {
   }
 
   lapply(
-    seq_len(ncol(x$model_complete$A)+1),
+    seq_len(ncol(x$model_complete$A)),
     function(i) {
       cat(names(x$cluster_characteristics)[i], "\n")
       print(x$cluster_characteristics[[i]][, 1:n_var_inc, drop = FALSE])
