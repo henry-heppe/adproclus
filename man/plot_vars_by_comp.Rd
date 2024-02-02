@@ -28,7 +28,7 @@ Produce a representation of variable to component matrix
 of class \code{adpc}. The plot displays the scores in the style of a
 correlation plot.
 \strong{NOTE:} This function can be called through the
-\code{plot(model, type = "VarsByComp")} function
+\code{plot(model, type = "vars_by_comp")} function
 with model an object of class \code{adpc}.
 }
 \examples{
