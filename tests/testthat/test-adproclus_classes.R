@@ -69,3 +69,12 @@ test_that("plot test", {
   expect_equal(plot(model), plot.adpc(model))
   expect_equal(plot(modelLD), plot.adpc(modelLD))
 })
+
+test_that("cluster means test", {
+        x <- CGdata
+        model <- adproclus(x, nclusters = 2, seed = 1)
+        modelLD <- adproclus_low_dim(x, nclusters = 3, ncomponents = 2, seed = 1)
+
+        expect_no_condition(cluster_means(CGdata, model))
+        expect_no_condition(cluster_means(CGdata, modelLD))
+})

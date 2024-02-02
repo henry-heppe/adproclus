@@ -101,7 +101,8 @@ adpc <- function(A, P,
 #'
 #' For an object of class \code{adpc} as input, this method yields a summary
 #' object of class \code{summary.adpc} including group characteristics of the
-#' clusters in the solution. Works for both full and low dimensional solutions.
+#' clusters in the solution in terms of the model variables.
+#' Works for both full and low dimensional solutions.
 #' Adjust the parameters \code{digits, matrix_rows, matrix_cols} to change the
 #' level of detail for the printing of the summary.
 #'
@@ -225,12 +226,12 @@ print.summary.adpc <- function(x, ...) {
   cat(" (off-diagonal entry [i,j]:  number of observations both in cluster i and j)\n")
   cat(" (last row/column represents additional baseline cluster (observations which belong to no cluster))\n\n")
   if (is.null(x$model_complete$C)) {
-    cat("Summary statistics of model variables per cluster:\n")
+    cat("Summary statistics of approximated model variables per cluster:\n")
     if (n_var_true > n_var_inc) {
       cat("[", n_var_true - n_var_inc, "variables per cluster were omitted ]\n")
     }
   } else {
-    cat("Summary statistics of low dimensional components per cluster:\n")
+    cat("Summary statistics of approximated low dimensional components per cluster:\n")
     if (n_var_true > n_var_inc) {
       cat(
         "[", n_var_true - n_var_inc,
@@ -443,5 +444,60 @@ print.adpc <- function(x,
       cat("[", n_var_true - n_var_inc, " columns were omitted ]\n")
     }
   }
+}
+
+#' Cluster Means based on Original Variables
+#'
+#' Obtain a cluster-by-variable dataframe where the values are the cluster means
+#' for the given variable. Takes as input a (low dimensional) ADPROCLUS model
+#' of class \code{adpc} and the dataset the model was estimated on.
+#' The dataset does not actually have to have the same variables as the one
+#' the model was trained on, since this function can also be used to automatically
+#' compute the cluster means for a different set of variables for the same
+#' set of observations. The last row \code{Cl0} is the baseline cluster consisting
+#' of all the observations that were not assigned to a cluster,
+#' if this cluster is not empyt.
+#'
+#' This can be e.g. useful if one has a patient by symptom dataset, but only
+#' clusters on a subset of the symptoms. In this case this function nonetheless
+#' return the cluster means for all symptoms to describe the patients in a
+#' cluster more closely.
+#'
+#' The output of this function is different from the last output matrix in the
+#' \code{summary()} method. The former is in terms of the original variables
+#' while the latter is in terms of the approximated model variables.
+#'
+#'
+#' @param data Object-by-variable matrix. Can contain other variables than
+#' the ADPROCLUS model.
+#' @param model ADPROCLUS solution (class: \code{adpc}). Low dimensional model
+#' possible.
+#'
+#' @return Cluster-by-variable dataframe where the values are the cluster means
+#' for the given variable.
+#' @export
+#'
+#' @examples
+#' # Obtain data, compute model, report cluster means
+#' x <- CGdata
+#' model <- adproclus(x, 3)
+#' cluster_means(data = x, model = model)
+cluster_means <- function(data, model) {
+        checkmate::assert_class(model, "adpc")
+        data <- as.matrix(data)
+        checkmate::assert_matrix(data, any.missing = FALSE, nrows = nrow(model$A))
+
+        results <- data.frame()
+        k <- ncol(model$A)
+        for (i in 1:k) {
+                results <- rbind(results, colMeans(data[which(model$A[,i] == 1),]))
+                rownames(results)[i] <- paste("Cl", i, sep = "")
+        }
+        if (sum(rowSums(model$A) == 0) != 0) {
+                results <- rbind(results, colMeans(data[which(rowSums(model$A) == 0),]))
+                rownames(results)[k+1] <- "Cl0"
+        }
+        colnames(results) <- colnames(data)
+        results
 }
 

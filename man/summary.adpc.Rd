@@ -34,7 +34,8 @@ Invisibly returns object of class \code{summary.adpc}.
 \description{
 For an object of class \code{adpc} as input, this method yields a summary
 object of class \code{summary.adpc} including group characteristics of the
-clusters in the solution. Works for both full and low dimensional solutions.
+clusters in the solution in terms of the model variables.
+Works for both full and low dimensional solutions.
 Adjust the parameters \code{digits, matrix_rows, matrix_cols} to change the
 level of detail for the printing of the summary.
 }
