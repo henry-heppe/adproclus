@@ -134,7 +134,7 @@ summary.adpc <- function(object,
 
   A <- object$A
   k <- ncol(A)
-  cluster_sizes_overlaps <- matrix(rep(0, k^2), k, k)
+  cluster_sizes_overlaps <- matrix(rep(0, (k+1)^2), k+1, k+1)
 
   for (i in 1:k) {
     for (j in 1:k) {
@@ -142,24 +142,37 @@ summary.adpc <- function(object,
       cluster_sizes_overlaps[j, i] <- cluster_sizes_overlaps[i, j]
     }
   }
+  cluster_sizes_overlaps[k+1, k+1] <- sum(rowSums(A) == 0)
+
   cluster_characteristics <- list()
   if (is.null(object$C)) {
-    for (i in 1:k) {
-      members <- which(as.logical(A[, i]))
+    for (i in 1:(k+1)) {
+            if (i == k+1) {
+                    members <- which(rowSums(A) == 0)
+                    print(members)
+            } else {
+                    members <- which(as.logical(A[, i]))
+            }
+
       cluster_characteristics <- append(
         cluster_characteristics,
         list(summary(object$model[members, , drop = FALSE])[c(1, 4, 6), , drop = FALSE])
       )
-      names(cluster_characteristics)[i] <- colnames(A)[i]
+      names(cluster_characteristics)[i] <- if (i < k+1) colnames(A)[i] else "Cl0"
     }
   } else {
-    for (i in 1:k) {
-      members <- which(as.logical(A[, i]))
+    for (i in 1:(k+1)) {
+            if (i == k+1) {
+                    members <- which(rowSums(A) == 0)
+                    print(members)
+            } else {
+                    members <- which(as.logical(A[, i]))
+            }
       cluster_characteristics <- append(
         cluster_characteristics,
         list(summary(object$model_lowdim[members, , drop = FALSE])[c(1, 4, 6), , drop = FALSE])
       )
-      names(cluster_characteristics)[i] <- colnames(A)[i]
+      names(cluster_characteristics)[i] <- if (i < k+1) colnames(A)[i] else "Cl0"
     }
   }
 
@@ -219,7 +232,8 @@ print.summary.adpc <- function(x, ...) {
   cat("Cluster sizes and overlaps:\n")
   print(x$cluster_sizes_overlaps)
   cat(" (diagonal entries: number of observations in a cluster)\n")
-  cat(" (off-diagonal entry [i,j]:  number of observations both in cluster i and j)\n\n")
+  cat(" (off-diagonal entry [i,j]:  number of observations both in cluster i and j)\n")
+  cat(" (last row/column represents additional baseline cluster (observations which belong to no cluster))\n\n")
   if (is.null(x$model_complete$C)) {
     cat("Summary statistics of model variables per cluster:\n")
     if (n_var_true > n_var_inc) {
@@ -236,7 +250,7 @@ print.summary.adpc <- function(x, ...) {
   }
 
   lapply(
-    seq_len(ncol(x$model_complete$A)),
+    seq_len(ncol(x$model_complete$A)+1),
     function(i) {
       cat(names(x$cluster_characteristics)[i], "\n")
       print(x$cluster_characteristics[[i]][, 1:n_var_inc, drop = FALSE])
