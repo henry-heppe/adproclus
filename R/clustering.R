@@ -145,7 +145,7 @@ NULL
 adproclus <- function(data, nclusters,
                       start_allocation = NULL,
                       nrandomstart = 3, nsemirandomstart = 3,
-                      algorithm = "ALS1",
+                      algorithm = "ALS2",
                       save_all_starts = FALSE,
                       seed = NULL) {
   t <- proc.time()
