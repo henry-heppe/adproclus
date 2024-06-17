@@ -456,7 +456,7 @@ print.adpc <- function(x,
 #' compute the cluster means for a different set of variables for the same
 #' set of observations. The last row \code{Cl0} is the baseline cluster consisting
 #' of all the observations that were not assigned to a cluster,
-#' if this cluster is not empyt.
+#' if this cluster is not empty.
 #'
 #' This can be e.g. useful if one has a patient by symptom dataset, but only
 #' clusters on a subset of the symptoms. In this case this function nonetheless
@@ -472,6 +472,8 @@ print.adpc <- function(x,
 #' the ADPROCLUS model.
 #' @param model ADPROCLUS solution (class: \code{adpc}). Low dimensional model
 #' possible.
+#' @param digits Integer. The number of digits that all decimal numbers will
+#' be rounded to.
 #'
 #' @return Cluster-by-variable dataframe where the values are the cluster means
 #' for the given variable.
@@ -482,10 +484,11 @@ print.adpc <- function(x,
 #' x <- CGdata
 #' model <- adproclus(x, 3)
 #' cluster_means(data = x, model = model)
-cluster_means <- function(data, model) {
+cluster_means <- function(data, model, digits = 3) {
         checkmate::assert_class(model, "adpc")
         data <- as.matrix(data)
         checkmate::assert_matrix(data, any.missing = FALSE, nrows = nrow(model$A))
+        checkmate::assert_numeric(data)
 
         results <- data.frame()
         k <- ncol(model$A)
@@ -498,6 +501,7 @@ cluster_means <- function(data, model) {
                 rownames(results)[k+1] <- "Cl0"
         }
         colnames(results) <- colnames(data)
+        results <- round(results, digits)
         results
 }
 

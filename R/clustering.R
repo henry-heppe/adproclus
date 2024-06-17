@@ -400,8 +400,6 @@ adproclus <- function(data, nclusters,
 #'   in \code{data} that is accounted for by the clustering model.}
 #'   \item{\code{iterations}}{numeric. The number of iterations of the
 #'   algorithm.}
-#'   \item{\code{timer}}{numeric. The amount of time (in seconds) the complete
-#'   algorithm ran for.}
 #'   \item{\code{timer_one_run}}{numeric. The amount of time (in seconds) the
 #'   relevant single start ran for.}
 #'   \item{\code{initial_start}}{list. A list containing the initial
@@ -412,7 +410,9 @@ adproclus <- function(data, nclusters,
 #'   from one of the multiple starts.
 #'   Each element contains all of the above information.}
 #'   \item{\code{parameters}}{list. Containing the parameters used for the
-#'   model.}}
+#'   model.}
+#'   \item{\code{timer}}{numeric. The amount of time (in seconds) the complete
+#'   algorithm ran for.}}
 #'
 #' @export
 #'

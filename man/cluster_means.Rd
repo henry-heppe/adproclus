@@ -4,7 +4,7 @@
 \alias{cluster_means}
 \title{Cluster Means based on Original Variables}
 \usage{
-cluster_means(data, model)
+cluster_means(data, model, digits = 3)
 }
 \arguments{
 \item{data}{Object-by-variable matrix. Can contain other variables than
@@ -12,6 +12,9 @@ the ADPROCLUS model.}
 
 \item{model}{ADPROCLUS solution (class: \code{adpc}). Low dimensional model
 possible.}
+
+\item{digits}{Integer. The number of digits that all decimal numbers will
+be rounded to.}
 }
 \value{
 Cluster-by-variable dataframe where the values are the cluster means
@@ -26,7 +29,7 @@ the model was trained on, since this function can also be used to automatically
 compute the cluster means for a different set of variables for the same
 set of observations. The last row \code{Cl0} is the baseline cluster consisting
 of all the observations that were not assigned to a cluster,
-if this cluster is not empyt.
+if this cluster is not empty.
 }
 \details{
 This can be e.g. useful if one has a patient by symptom dataset, but only
