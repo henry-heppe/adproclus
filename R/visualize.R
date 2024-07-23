@@ -12,7 +12,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("clusters", "components"
 #' to each other in separate plots (\code{grid = TRUE}).
 #'
 #'
-#' @param model_fit Matrix of SSe or unexplained variance scores as given by the
+#' @param model_fit Matrix of SSE or unexplained variance scores as given by the
 #' output of \code{\link{mselect_adproclus}} or
 #' \code{\link{mselect_adproclus_low_dim}}.
 #' @param title String. Title to be displayed in plot.
