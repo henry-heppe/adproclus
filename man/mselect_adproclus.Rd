@@ -13,7 +13,7 @@ mselect_adproclus(
   start_allocation = NULL,
   nrandomstart = 1,
   nsemirandomstart = 1,
-  algorithm = "ALS1",
+  algorithm = "ALS2",
   save_all_starts = FALSE,
   seed = NULL
 )
@@ -41,7 +41,7 @@ passed to the ADPROCLUS procedure. See \code{\link{get_rational}} for more infor
 
 \item{nsemirandomstart}{Number of semi-random starts computed for each model.}
 
-\item{algorithm}{Character string "\code{ALS1}" (default) or "\code{ALS2}",
+\item{algorithm}{Character string "\code{ALS1}" or "\code{ALS2}" (default),
 denoting the type of alternating least squares algorithm. Can be
 abbreviated with "1" or "2".}
 

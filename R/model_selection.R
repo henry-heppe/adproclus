@@ -26,7 +26,7 @@
 #' passed to the ADPROCLUS procedure. See \code{\link{get_rational}} for more information.
 #' @param nrandomstart Number of random starts computed for each model.
 #' @param nsemirandomstart Number of semi-random starts computed for each model.
-#' @param algorithm Character string "\code{ALS1}" (default) or "\code{ALS2}",
+#' @param algorithm Character string "\code{ALS1}" or "\code{ALS2}" (default),
 #'   denoting the type of alternating least squares algorithm. Can be
 #'   abbreviated with "1" or "2".
 #' @param save_all_starts Logical. If \code{TRUE} and \code{return_models = TRUE},
@@ -62,7 +62,7 @@ mselect_adproclus <- function(data, min_nclusters, max_nclusters,
                               unexplvar = TRUE,
                               start_allocation = NULL,
                               nrandomstart = 1, nsemirandomstart = 1,
-                              algorithm = "ALS1",
+                              algorithm = "ALS2",
                               save_all_starts = FALSE,
                               seed = NULL) {
 
