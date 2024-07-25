@@ -19,7 +19,7 @@ possible.}
 
 \item{title}{String. Default: "ADPROCLUS solution"}
 
-\item{digits}{Integer. The number of digits that all decimal numbers will be
+\item{digits}{Integer. The number of decimal places that all decimal numbers will be
 rounded to.}
 
 \item{matrix_rows}{Integer. The number of matrix rows to display. OPTIONAL}

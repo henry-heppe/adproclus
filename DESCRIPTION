@@ -28,6 +28,7 @@ Imports:
     ggrepel,
     gtools,
     igraph,
+    matrixStats,
     multichull,
     NMFN,
     qgraph,

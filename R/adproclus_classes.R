@@ -109,7 +109,7 @@ adpc <- function(A, P,
 #' @param object ADPROCLUS solution (class: \code{adpc}). Low dimensional model
 #' possible.
 #' @param title String. Default: "ADPROCLUS solution"
-#' @param digits Integer. The number of digits that all decimal numbers will be
+#' @param digits Integer. The number of decimal places that all decimal numbers will be
 #' rounded to.
 #' @param matrix_rows Integer. The number of matrix rows to display. OPTIONAL
 #' @param matrix_cols Integer. The number of matrix columns to display. OPTIONAL
@@ -148,20 +148,31 @@ summary.adpc <- function(object,
   cluster_characteristics <- list()
   if (is.null(object$C)) {
     for (i in 1:k) {
-            members <- which(as.logical(A[, i]))
+      members <- which(as.logical(A[, i]))
+
+      cluster_charac_table <- rbind(matrixStats::colMins(object$model[members, , drop = FALSE]),
+                                    colMeans(object$model[members, , drop = FALSE]),
+                                    matrixStats::colMaxs(object$model[members, , drop = FALSE]))
+      colnames(cluster_charac_table) <- colnames(object$model)
+      rownames(cluster_charac_table) <- c("Min", "Mean", "Max")
 
       cluster_characteristics <- append(
         cluster_characteristics,
-        list(summary(object$model[members, , drop = FALSE])[c(1, 4, 6), , drop = FALSE])
+        list(cluster_charac_table)
       )
       names(cluster_characteristics)[i] <- colnames(A)[i]
     }
   } else {
     for (i in 1:k) {
-            members <- which(as.logical(A[, i]))
+      members <- which(as.logical(A[, i]))
+      cluster_charac_table <- rbind(matrixStats::colMins(object$model_lowdim[members, , drop = FALSE]),
+                                    colMeans(object$model_lowdim[members, , drop = FALSE]),
+                                    matrixStats::colMaxs(object$model_lowdim[members, , drop = FALSE]))
+      colnames(cluster_charac_table) <- colnames(object$model_lowdim)
+      rownames(cluster_charac_table) <- c("Min", "Mean", "Max")
       cluster_characteristics <- append(
         cluster_characteristics,
-        list(summary(object$model_lowdim[members, , drop = FALSE])[c(1, 4, 6), , drop = FALSE])
+        list(cluster_charac_table)
       )
       names(cluster_characteristics)[i] <- colnames(A)[i]
     }
@@ -243,8 +254,8 @@ print.summary.adpc <- function(x, ...) {
   lapply(
     seq_len(ncol(x$model_complete$A)),
     function(i) {
-      cat(names(x$cluster_characteristics)[i], "\n")
-      print(x$cluster_characteristics[[i]][, 1:n_var_inc, drop = FALSE])
+      cat("\n", names(x$cluster_characteristics)[i], "\n")
+      print(round(x$cluster_characteristics[[i]][, 1:n_var_inc, drop = FALSE], x$print_settings$digits))
     }
   )
 
@@ -330,7 +341,7 @@ plot.adpc <- function(x,
 #'
 #' @param x ADPROCLUS solution (class: \code{adpc})
 #' @param title String. Default: "ADPROCLUS solution"
-#' @param digits Integer. The number of digits that all decimal numbers will
+#' @param digits Integer. The number of decimal places that all decimal numbers will
 #' be rounded to.
 #' @param matrix_rows Integer. The number of matrix rows to display. OPTIONAL
 #' @param matrix_cols Integer. The number of matrix columns to display. OPTIONAL
@@ -464,7 +475,7 @@ print.adpc <- function(x,
 #' the ADPROCLUS model.
 #' @param model ADPROCLUS solution (class: \code{adpc}). Low dimensional model
 #' possible.
-#' @param digits Integer. The number of digits that all decimal numbers will
+#' @param digits Integer. The number of decimal places that all decimal numbers will
 #' be rounded to.
 #'
 #' @return Cluster-by-variable dataframe where the values are the cluster means

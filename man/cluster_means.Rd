@@ -13,7 +13,7 @@ the ADPROCLUS model.}
 \item{model}{ADPROCLUS solution (class: \code{adpc}). Low dimensional model
 possible.}
 
-\item{digits}{Integer. The number of digits that all decimal numbers will
+\item{digits}{Integer. The number of decimal places that all decimal numbers will
 be rounded to.}
 }
 \value{
