@@ -17,7 +17,7 @@ plot_cluster_network(
 \item{model}{ADPROCLUS solution (class: \code{adpc}). Low dimensional model
 possible.}
 
-\item{title}{String. Default: " Cluster network of ADPROCLUS solution"}
+\item{title}{String. Default: "Cluster network of ADPROCLUS solution"}
 
 \item{relative_overlap}{Logical. If \code{TRUE} (default), the number of
 observations belonging to two clusters
@@ -48,7 +48,7 @@ The numerical edge labels can be relative
 (number of overlap observations / total observations)
 or absolute (number of observations in both clusters).
 \strong{NOTE:} This function can be called through the
-\code{plot(model, type = "Network")} function with model an
+\code{plot(model, type = "network")} function with model an
 object of class \code{adpc}.
 }
 \examples{

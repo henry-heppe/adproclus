@@ -56,7 +56,7 @@ plot_scree_adpc <- function(model_fit,
 
         model_fit <- round(model_fit, digits)
 
-        #option for full dimensional model
+        # option for full dimensional model
         if (ncol(model_fit) == 1) {
                 data <- data.frame(clusters = strtoi(rownames(model_fit)), model_fit[, 1])
                 colnames(data)[2] <- colnames(model_fit)
@@ -69,7 +69,7 @@ plot_scree_adpc <- function(model_fit,
                         ggplot2::scale_y_continuous(labels = scales::label_number(accuracy = 10^(-digits))) +
                         ggplot2::theme_classic()
         } else {
-                #option for low dimensional model
+                # option for low dimensional model
                 if (substring(colnames(model_fit)[[1]], 1, 1) == "S") {
                         fit_var <- "SSE"
                 } else {
@@ -170,7 +170,7 @@ plot_scree_adpc_preselected <- function(model_fit,
 #' (number of overlap observations / total observations)
 #' or absolute (number of observations in both clusters).
 #' \strong{NOTE:} This function can be called through the
-#' \code{plot(model, type = "Network")} function with model an
+#' \code{plot(model, type = "network")} function with model an
 #' object of class \code{adpc}.
 #'
 #' @param model ADPROCLUS solution (class: \code{adpc}). Low dimensional model
@@ -180,7 +180,7 @@ plot_scree_adpc_preselected <- function(model_fit,
 #' is divided by the total number of observations. If \code{FALSE}
 #' the number of observations in a cluster overlap will be displayed on the
 #' edges.
-#' @param title String. Default: " Cluster network of ADPROCLUS solution"
+#' @param title String. Default: "Cluster network of ADPROCLUS solution"
 #' @param filetype Optional. Choose type of file to save the plot.
 #' Possible choices: \code{"R", "pdf", "svg", "tex", "jpg", "tiff", "png", ""}
 #' Default: \code{NULL} does not create a file.
@@ -216,11 +216,6 @@ plot_cluster_network <- function(model,
   null.ok = TRUE
   )
   checkmate::assertString(filename, null.ok = TRUE)
-
-  if (is.null(title)) {
-    title <- "Cluster network of ADPROCLUS solution"
-  }
-
 
   withr::local_seed(1)
 
@@ -318,7 +313,7 @@ plot_cluster_network <- function(model,
 #' solution of class \code{adpc}.
 #' The plot displays the profiles in the style of a correlation plot.
 #' \strong{NOTE:} This function can also be called through the
-#' \code{plot(model, type = "Profiles")} function with model an object of
+#' \code{plot(model, type = "profiles")} function with model an object of
 #' class \code{adpc}.
 #'
 #' @param model Object of class \code{adpc}. (Low dimensional) ADPROCLUS
@@ -344,14 +339,9 @@ plot_profiles <- function(model,
                           ...) {
         checkmate::assertClass(model, "adpc")
         checkmate::assertString(title, null.ok = TRUE)
-
-        if (is.null(title)) {
-                title <- "Profiles of ADPROCLUS solution"
-        }
         if (is.null(model$C)) {
                 corrplot::corrplot(model$P,
                                    is.corr = FALSE, title = title,
-                                   mar = c(0, 0, 2, 0),
                                    ...
                 )
         } else {
@@ -360,7 +350,6 @@ plot_profiles <- function(model,
                 }
                 corrplot::corrplot(model$C,
                                    is.corr = FALSE, title = title,
-                                   mar = c(0, 0, 2, 0),
                                    ...
                 )
         }
@@ -399,17 +388,11 @@ plot_vars_by_comp <- function(model,
                               title = "B' of Low Dimensional ADPROCLUS Solution",
                               ...) {
         checkmate::assertClass(model, "adpc")
-        checkmate::assertString(title, null.ok = TRUE)
-
-        if (is.null(title)) {
-                title <- "B' of Low Dimensional ADPROCLUS Solution"
-        }
         if (is.null(model$C)) {
                 stop("Model must be a low dimensional ADPROCLUS solution.")
         }
         corrplot::corrplot(t(model$B),
                            is.corr = FALSE, title = title,
-                           mar = c(0, 0, 2, 0),
                            ...
         )
         invisible(model)

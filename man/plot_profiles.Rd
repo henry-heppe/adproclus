@@ -24,7 +24,7 @@ Produce a representation of profile matrix \eqn{P}
 solution of class \code{adpc}.
 The plot displays the profiles in the style of a correlation plot.
 \strong{NOTE:} This function can also be called through the
-\code{plot(model, type = "Profiles")} function with model an object of
+\code{plot(model, type = "profiles")} function with model an object of
 class \code{adpc}.
 }
 \examples{

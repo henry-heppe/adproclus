@@ -15,7 +15,7 @@ as in the output of \code{\link{mselect_adproclus}} or \code{\link{mselect_adpro
 \item{...}{Additional parameters to be passed on to \code{multichull::CHull()} function.}
 }
 \value{
-For full dimensional ADPROCLUS a \code{CHull} object containing the
+For full dimensional ADPROCLUS a \code{CHull} object describing the
 chosen model.
 For low dimensional ADPROCLUS a matrix containing the list of chosen models
 and the relevant model parameter, compatible with
@@ -44,6 +44,9 @@ the largest or smallest number of clusters (components), i.e. for a set of
 three models it will always choose the middle one. If for a given number of
 clusters exactly two models were estimated, this function chooses the model
 with the lower SSE/unexplained variance.
+
+The name of the model fit criterion is propagated from the input matrix based
+on the first column name. It is either "SSE" or "Unexplained_Variance".
 }
 \examples{
 # Loading a test dataset into the global environment

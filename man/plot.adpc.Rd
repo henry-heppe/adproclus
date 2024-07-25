@@ -4,19 +4,13 @@
 \alias{plot.adpc}
 \title{Plotting a (low dimensional) ADPROCLUS solution}
 \usage{
-\method{plot}{adpc}(x, type = "Network", title = NULL, relative_overlap = TRUE, ...)
+\method{plot}{adpc}(x, type = "network", ...)
 }
 \arguments{
 \item{x}{Object of class \code{adpc}. (Low dimensional) ADPROCLUS solution}
 
-\item{type}{Choice for type of plot: one of \code{"Network", "Profiles",
-"vars_by_comp"}. Default: \code{"Network"}.}
-
-\item{title}{String. OPTIONAL.}
-
-\item{relative_overlap}{Logical, only applies to plot of
-\code{type = "Network"}. If \code{TRUE} (default), the number of observations
-belonging to two clusters is divided by the total number of observations.}
+\item{type}{Choice for type of plot: one of \code{"network", "profiles",
+"vars_by_comp"}. Default: \code{"network"}. Partial matching allowed.}
 
 \item{...}{additional arguments will be passed on to the functions
 \code{plot_cluster_network(), plot_profiles(), plot_vars_by_comp()}}
@@ -54,7 +48,7 @@ x <- stackloss
 clust <- adproclus_low_dim(x, 3, 1)
 
 # Produce three plots of the model
-plot(clust, type = "Network")
-plot(clust, type = "Profiles")
+plot(clust, type = "network")
+plot(clust, type = "profiles")
 plot(clust, type = "vars_by_comp")
 }

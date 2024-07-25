@@ -279,6 +279,9 @@ mselect_adproclus_low_dim <- function(data,
 #' clusters exactly two models were estimated, this function chooses the model
 #' with the lower SSE/unexplained variance.
 #'
+#' The name of the model fit criterion is propagated from the input matrix based
+#' on the first column name. It is either "SSE" or "Unexplained_Variance".
+#'
 #'
 #'
 #' @param model_fit Matrix containing SSEs or unexplained variance of all models
@@ -286,7 +289,7 @@ mselect_adproclus_low_dim <- function(data,
 #' @param percentage_fit Required proportion of increase in fit of a more complex model.
 #' @param ... Additional parameters to be passed on to \code{multichull::CHull()} function.
 #'
-#' @return For full dimensional ADPROCLUS a \code{CHull} object containing the
+#' @return For full dimensional ADPROCLUS a \code{CHull} object describing the
 #' chosen model.
 #' For low dimensional ADPROCLUS a matrix containing the list of chosen models
 #' and the relevant model parameter, compatible with
