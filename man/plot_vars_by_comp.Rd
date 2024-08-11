@@ -7,6 +7,7 @@
 plot_vars_by_comp(
   model,
   title = "B' of Low Dimensional ADPROCLUS Solution",
+  label_color = "black",
   ...
 )
 }
@@ -15,6 +16,8 @@ plot_vars_by_comp(
 ADPROCLUS solution}
 
 \item{title}{String. Default: "B' of Low Dimensional ADPROCLUS Solution"}
+
+\item{label_color}{String. The color of the text labels. Default: "black"}
 
 \item{...}{Additional arguments passing to the
 \code{corrplot::corrplot()} function, to customize the plot}

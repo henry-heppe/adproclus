@@ -383,7 +383,7 @@ print.adpc <- function(x,
     cat("   number of components: ", ncol(x$C), "\n")
     cat("   data format: ", nrow(x$model), "x", ncol(x$model), "\n")
     cat("   number of total starts:",
-      n_randomstart + n_semirandomstart + 1 * !is.null(start_allocation),
+      x$iterations,
       "\n"
     )
     if (!is.null(start_allocation)) {
@@ -391,8 +391,7 @@ print.adpc <- function(x,
     }
     cat("Results:", "\n")
     cat("   explained variance:", round(x$explvar, digits), "\n")
-    cat("   processing time:", round(x$timer, digits), "s", "\n")
-    cat("   iterations:", x$iterations, "\n")
+    cat("   total time:", round(x$timer, digits), "s", "\n")
     cat("\n")
     cat("A (cluster membership matrix):", "\n")
     print(x$A[1:n_obs_inc, 1:n_clust_inc_col, drop = FALSE])

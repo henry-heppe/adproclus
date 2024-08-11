@@ -319,6 +319,7 @@ plot_cluster_network <- function(model,
 #' @param model Object of class \code{adpc}. (Low dimensional) ADPROCLUS
 #' solution
 #' @param title String. Default: "Profiles of ADPROCLUS solution"
+#' @param label_color String. The color of the text labels. Default: "black"
 #' @param ... Additional arguments passing to the
 #' \code{corrplot::corrplot()} function, to customize the plot.
 #'
@@ -336,12 +337,14 @@ plot_cluster_network <- function(model,
 #' plot_profiles(clust)
 plot_profiles <- function(model,
                           title = "Profiles of ADPROCLUS solution",
+                          label_color = "black",
                           ...) {
         checkmate::assertClass(model, "adpc")
         checkmate::assertString(title, null.ok = TRUE)
         if (is.null(model$C)) {
                 corrplot::corrplot(model$P,
                                    is.corr = FALSE, title = title,
+                                   tl.col = label_color,
                                    ...
                 )
         } else {
@@ -350,6 +353,7 @@ plot_profiles <- function(model,
                 }
                 corrplot::corrplot(model$C,
                                    is.corr = FALSE, title = title,
+                                   tl.col = label_color,
                                    ...
                 )
         }
@@ -369,6 +373,7 @@ plot_profiles <- function(model,
 #' @param model Object of class \code{adpc}. Must be \strong{Low dimensional}
 #' ADPROCLUS solution
 #' @param title String. Default: "B' of Low Dimensional ADPROCLUS Solution"
+#' @param label_color String. The color of the text labels. Default: "black"
 #' @param ... Additional arguments passing to the
 #' \code{corrplot::corrplot()} function, to customize the plot
 #'
@@ -386,6 +391,7 @@ plot_profiles <- function(model,
 #' plot_vars_by_comp(clust)
 plot_vars_by_comp <- function(model,
                               title = "B' of Low Dimensional ADPROCLUS Solution",
+                              label_color = "black",
                               ...) {
         checkmate::assertClass(model, "adpc")
         if (is.null(model$C)) {
@@ -393,6 +399,7 @@ plot_vars_by_comp <- function(model,
         }
         corrplot::corrplot(t(model$B),
                            is.corr = FALSE, title = title,
+                           tl.col = label_color,
                            ...
         )
         invisible(model)
