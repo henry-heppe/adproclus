@@ -184,7 +184,7 @@ plot_scree_adpc_preselected <- function(model_fit,
 #' @param filetype Optional. Choose type of file to save the plot.
 #' Possible choices: \code{"R", "pdf", "svg", "tex", "jpg", "tiff", "png", ""}
 #' Default: \code{NULL} does not create a file.
-#' @param filename Optional. Name of the file without extension.
+#' @param filename Optional. Name of the file without extension. Default: "network_plot"
 #' @param ... Additional arguments passing to the
 #' \code{qgraph::qgraph()} function, to customize the graph visualization.
 #'
@@ -204,7 +204,7 @@ plot_cluster_network <- function(model,
                                  title = "Cluster network of ADPROCLUS solution",
                                  relative_overlap = TRUE,
                                  filetype = NULL,
-                                 filename = NULL,
+                                 filename = 'network_plot',
                                  ...) {
   checkmate::assertClass(model, "adpc")
   checkmate::assertString(title, null.ok = TRUE)

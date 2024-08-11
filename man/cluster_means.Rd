@@ -8,7 +8,8 @@ cluster_means(data, model, digits = 3)
 }
 \arguments{
 \item{data}{Object-by-variable matrix. Can contain other variables than
-the ADPROCLUS model.}
+the ADPROCLUS model. IMPORTANT: The number of rows must be equal to the
+number of observations in the ADPROCLUS model.}
 
 \item{model}{ADPROCLUS solution (class: \code{adpc}). Low dimensional model
 possible.}
@@ -22,24 +23,23 @@ for the given variable.
 }
 \description{
 Obtain a cluster-by-variable dataframe where the values are the cluster means
-for the given variable. Takes as input a (low dimensional) ADPROCLUS model
-of class \code{adpc} and the dataset the model was estimated on.
-The dataset does not actually have to have the same variables as the one
-the model was trained on, since this function can also be used to automatically
-compute the cluster means for a different set of variables for the same
-set of observations. The last row \code{Cl0} is the baseline cluster consisting
+for the given variables. Takes as input a (low dimensional) ADPROCLUS model
+of class \code{adpc} and a dataset. This dataset must have the same number
+of rows as the cluster membership matrix $\bm{A}$ of the model. The variables can
+be different from the ones the model was trained on. The function uses the
+cluster membership matrix of the model to computer per cluster the mean of
+the variables in the dataset. In the output matrix of cluster means,
+the last row \code{Cl0} corresponds to the baseline cluster consisting
 of all the observations that were not assigned to a cluster,
-if this cluster is not empty.
+if this cluster is not empty. This function effectively computes column means
+of the dataset separately for each cluster.
 }
 \details{
-This can be e.g. useful if one has a patient by symptom dataset, but only
-clusters on a subset of the symptoms. In this case this function nonetheless
-return the cluster means for all symptoms to describe the patients in a
-cluster more closely.
-
-The output of this function is different from the last output matrix in the
-\code{summary()} method. The former is in terms of the original variables
-while the latter is in terms of the approximated model variables.
+It is worth noting that the output of this function is different
+from the last output matrix in the
+\code{summary()} method applied to an ADPROCLUS model.
+The former computes the means over the original variable values
+while the latter computes them over the approximated model variable values.
 }
 \examples{
 # Obtain data, compute model, report cluster means
