@@ -25,7 +25,7 @@ for the given variable.
 Obtain a cluster-by-variable dataframe where the values are the cluster means
 for the given variables. Takes as input a (low dimensional) ADPROCLUS model
 of class \code{adpc} and a dataset. This dataset must have the same number
-of rows as the cluster membership matrix $\bm{A}$ of the model. The variables can
+of rows as the cluster membership matrix $A$ of the model. The variables can
 be different from the ones the model was trained on. The function uses the
 cluster membership matrix of the model to computer per cluster the mean of
 the variables in the dataset. In the output matrix of cluster means,

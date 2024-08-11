@@ -4,17 +4,13 @@
 \alias{plot_scree_adpc_preselected}
 \title{Scree plot of a pre-selection of low dimensional ADPROCLUS models}
 \usage{
-plot_scree_adpc_preselected(
-  model_fit,
-  title = "Scree plot of low dim ADPROCLUS pre-selected models",
-  digits = 3
-)
+plot_scree_adpc_preselected(model_fit, title = NULL, digits = 3)
 }
 \arguments{
 \item{model_fit}{Matrix with SSE or unexplained variance values.
 Can be obtained from \code{\link{select_by_CHull}}.}
 
-\item{title}{String. Title to be displayed in plot.}
+\item{title}{String. Optional title.}
 
 \item{digits}{Integer. The number of decimal places to display.}
 }

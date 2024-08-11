@@ -4,18 +4,13 @@
 \alias{plot_profiles}
 \title{Plot profile matrix of ADPROCLUS solution}
 \usage{
-plot_profiles(
-  model,
-  title = "Profiles of ADPROCLUS solution",
-  label_color = "black",
-  ...
-)
+plot_profiles(model, title = NULL, label_color = "black", ...)
 }
 \arguments{
 \item{model}{Object of class \code{adpc}. (Low dimensional) ADPROCLUS
 solution}
 
-\item{title}{String. Default: "Profiles of ADPROCLUS solution"}
+\item{title}{String. Optional title.}
 
 \item{label_color}{String. The color of the text labels. Default: "black"}
 

@@ -4,19 +4,14 @@
 \alias{plot_scree_adpc}
 \title{Scree plot of (low dimensional) ADPROCLUS models}
 \usage{
-plot_scree_adpc(
-  model_fit,
-  title = "Scree plot of ADPROCLUS models",
-  grid = FALSE,
-  digits = 3
-)
+plot_scree_adpc(model_fit, title = NULL, grid = FALSE, digits = 3)
 }
 \arguments{
 \item{model_fit}{Matrix of SSE or unexplained variance scores as given by the
 output of \code{\link{mselect_adproclus}} or
 \code{\link{mselect_adproclus_low_dim}}.}
 
-\item{title}{String. Title to be displayed in plot.}
+\item{title}{String. Optional title.}
 
 \item{grid}{Boolean. \code{FALSE} means for low dimensional ADPROCLUS all
 lines will be in one plot. \code{TRUE} means separate plots.}

@@ -4,18 +4,13 @@
 \alias{plot_vars_by_comp}
 \title{Plot variable to component matrix of ADPROCLUS solution}
 \usage{
-plot_vars_by_comp(
-  model,
-  title = "B' of Low Dimensional ADPROCLUS Solution",
-  label_color = "black",
-  ...
-)
+plot_vars_by_comp(model, title = NULL, label_color = "black", ...)
 }
 \arguments{
 \item{model}{Object of class \code{adpc}. Must be \strong{Low dimensional}
 ADPROCLUS solution}
 
-\item{title}{String. Default: "B' of Low Dimensional ADPROCLUS Solution"}
+\item{title}{String. Optional title.}
 
 \item{label_color}{String. The color of the text labels. Default: "black"}
 

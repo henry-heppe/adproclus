@@ -6,7 +6,7 @@
 \usage{
 plot_cluster_network(
   model,
-  title = "Cluster network of ADPROCLUS solution",
+  title = NULL,
   relative_overlap = TRUE,
   filetype = NULL,
   filename = "network_plot",
@@ -17,7 +17,7 @@ plot_cluster_network(
 \item{model}{ADPROCLUS solution (class: \code{adpc}). Low dimensional model
 possible.}
 
-\item{title}{String. Default: "Cluster network of ADPROCLUS solution"}
+\item{title}{String. Optional title.}
 
 \item{relative_overlap}{Logical. If \code{TRUE} (default), the number of
 observations belonging to two clusters

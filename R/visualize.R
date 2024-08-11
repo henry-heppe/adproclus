@@ -15,7 +15,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("clusters", "components"
 #' @param model_fit Matrix of SSE or unexplained variance scores as given by the
 #' output of \code{\link{mselect_adproclus}} or
 #' \code{\link{mselect_adproclus_low_dim}}.
-#' @param title String. Title to be displayed in plot.
+#' @param title String. Optional title.
 #' @param grid Boolean. \code{FALSE} means for low dimensional ADPROCLUS all
 #' lines will be in one plot. \code{TRUE} means separate plots.
 #' @param digits Integer. The number of decimal places to display.
@@ -47,11 +47,11 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("clusters", "components"
 #'   \item{\code{\link{select_by_CHull}}}{for automatic model selection via CHull method}
 #' }
 plot_scree_adpc <- function(model_fit,
-                          title = "Scree plot of ADPROCLUS models",
+                          title = NULL,
                           grid = FALSE,
                           digits = 3) {
         checkmate::assert_matrix(model_fit)
-        checkmate::assert_string(title)
+        checkmate::assert_string(title, null.ok = TRUE)
         checkmate::assert_count(digits, positive = TRUE, coerce = TRUE)
 
         model_fit <- round(model_fit, digits)
@@ -118,7 +118,7 @@ plot_scree_adpc <- function(model_fit,
 #'
 #' @param model_fit Matrix with SSE or unexplained variance values.
 #' Can be obtained from \code{\link{select_by_CHull}}.
-#' @param title String. Title to be displayed in plot.
+#' @param title String. Optional title.
 #' @param digits Integer. The number of decimal places to display.
 #'
 #' @return Returns the \code{ggplot2} object.
@@ -138,10 +138,10 @@ plot_scree_adpc <- function(model_fit,
 #' # Plot the results as a scree plot to select the appropriate number of clusters
 #' plot_scree_adpc_preselected(model_fits_preselected)
 plot_scree_adpc_preselected <- function(model_fit,
-                             title = "Scree plot of low dim ADPROCLUS pre-selected models",
+                             title = NULL,
                              digits = 3) {
         checkmate::assert_matrix(model_fit)
-        checkmate::assert_string(title)
+        checkmate::assert_string(title, null.ok = TRUE)
         checkmate::assert_count(digits, positive = TRUE, coerce = TRUE)
 
         model_fit <- round(model_fit, digits)
@@ -180,7 +180,7 @@ plot_scree_adpc_preselected <- function(model_fit,
 #' is divided by the total number of observations. If \code{FALSE}
 #' the number of observations in a cluster overlap will be displayed on the
 #' edges.
-#' @param title String. Default: "Cluster network of ADPROCLUS solution"
+#' @param title String. Optional title.
 #' @param filetype Optional. Choose type of file to save the plot.
 #' Possible choices: \code{"R", "pdf", "svg", "tex", "jpg", "tiff", "png", ""}
 #' Default: \code{NULL} does not create a file.
@@ -201,7 +201,7 @@ plot_scree_adpc_preselected <- function(model_fit,
 #' # Plot the overlapping the clusters
 #' plot_cluster_network(clust)
 plot_cluster_network <- function(model,
-                                 title = "Cluster network of ADPROCLUS solution",
+                                 title = NULL,
                                  relative_overlap = TRUE,
                                  filetype = NULL,
                                  filename = 'network_plot',
@@ -318,7 +318,7 @@ plot_cluster_network <- function(model,
 #'
 #' @param model Object of class \code{adpc}. (Low dimensional) ADPROCLUS
 #' solution
-#' @param title String. Default: "Profiles of ADPROCLUS solution"
+#' @param title String. Optional title.
 #' @param label_color String. The color of the text labels. Default: "black"
 #' @param ... Additional arguments passing to the
 #' \code{corrplot::corrplot()} function, to customize the plot.
@@ -336,7 +336,7 @@ plot_cluster_network <- function(model,
 #' # Plot the profile scores of each cluster
 #' plot_profiles(clust)
 plot_profiles <- function(model,
-                          title = "Profiles of ADPROCLUS solution",
+                          title = NULL,
                           label_color = "black",
                           ...) {
         checkmate::assertClass(model, "adpc")
@@ -348,9 +348,6 @@ plot_profiles <- function(model,
                                    ...
                 )
         } else {
-                if (title == "Profiles of ADPROCLUS solution") {
-                        title <- "Low dim Profiles C of ADPROCLUS solution"
-                }
                 corrplot::corrplot(model$C,
                                    is.corr = FALSE, title = title,
                                    tl.col = label_color,
@@ -372,7 +369,7 @@ plot_profiles <- function(model,
 #'
 #' @param model Object of class \code{adpc}. Must be \strong{Low dimensional}
 #' ADPROCLUS solution
-#' @param title String. Default: "B' of Low Dimensional ADPROCLUS Solution"
+#' @param title String. Optional title.
 #' @param label_color String. The color of the text labels. Default: "black"
 #' @param ... Additional arguments passing to the
 #' \code{corrplot::corrplot()} function, to customize the plot
@@ -390,7 +387,7 @@ plot_profiles <- function(model,
 #' # Plot the matrix B', connecting components with variables
 #' plot_vars_by_comp(clust)
 plot_vars_by_comp <- function(model,
-                              title = "B' of Low Dimensional ADPROCLUS Solution",
+                              title = NULL,
                               label_color = "black",
                               ...) {
         checkmate::assertClass(model, "adpc")
