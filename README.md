@@ -17,18 +17,18 @@ the object-by-variable data contains a very large number of variables.
 
 ## Installation
 
-You can install the development version of ADPROCLUS from
+You can install the latest version from CRAN:
+
+``` r
+install.packages("adproclus")
+```
+
+Or install the development version of ADPROCLUS from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("henry-heppe/adproclus")
-```
-
-Or install the latest version from CRAN:
-
-``` r
-install.packages("adproclus")
 ```
 
 ## Example
@@ -37,7 +37,7 @@ This is a basic example which shows you how to use the regular ADPROCLUS
 and the low dimensional ADPROCLUS:
 
 ``` r
-library(adproclus)
+library("adproclus")
 # import data
 our_data <- adproclus::CGdata
 
@@ -48,14 +48,54 @@ model_full <- adproclus(data = our_data, nclusters = 2)
 model_lowdim <- adproclus_low_dim(data = our_data, nclusters = 3, ncomponents = 2)
 ```
 
-The package also provides functionality to obtain membership matrices,
-that the algorithm can start the alternating least squares procedure on.
-There are three different possibilities to obtain such matrices: random,
-semi-random and rational (see respective function documentation for
-details).
+To select the number of clusters (and the number of components in the
+low dimensional case) the package provides two model selection
+functions.
 
 ``` r
-library(adproclus)
+library("adproclus")
+# estimate multiple ADPROCLUS models
+models <- mselect_adproclus(data = CGdata, min_nclusters = 2, max_nclusters = 4)
+
+# estimate multiple low dimensional ADPROCLUS models
+models_lowdim <- mselect_adproclus_low_dim(data = CGdata, min_nclusters = 2, max_nclusters = 4, min_ncomponents = 1, max_ncomponents = 3)
+
+# visualize models as a scree plot
+plot_scree_adpc(models)
+```
+
+<img src="man/figures/README-example 3-1.png" width="100%" />
+
+``` r
+
+# visualize the low dimensional models as a scree plot
+plot_scree_adpc(models_lowdim)
+```
+
+<img src="man/figures/README-example 3-2.png" width="100%" />
+
+``` r
+
+# select the best full dimensional model
+best_model <- select_by_CHull(models)
+
+# select a the conditionally optimal low dimensional model for each number of clusters
+best_models_lowdim <- select_by_CHull(models_lowdim)
+
+# visualize the preselected set of low dimensional models
+plot_scree_adpc_preselected(best_models_lowdim)
+```
+
+<img src="man/figures/README-example 3-3.png" width="100%" />
+
+The package also provides functionality to obtain membership matrices,
+which the algorithm can start the alternating least squares procedure
+on. There are three different possibilities to obtain such matrices:
+random, semi-random and rational (see respective function documentation
+for details).
+
+``` r
+library("adproclus")
 # import data
 our_data <- adproclus::CGdata
 # Obtaining a membership matrix were the entries are randomly assigned values of 0 or 1
