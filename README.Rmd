@@ -55,7 +55,7 @@ model_lowdim <- adproclus_low_dim(data = our_data, nclusters = 3, ncomponents = 
 ```
 
 To select the number of clusters (and the number of components in the low dimensional case) the package provides two model selection functions.
-```{r example 3}
+```{r example 3, out.width="40%"}
 library("adproclus")
 # estimate multiple ADPROCLUS models
 models <- mselect_adproclus(data = CGdata, min_nclusters = 2, max_nclusters = 4)
