@@ -64,7 +64,7 @@ models_lowdim <- mselect_adproclus_low_dim(data = CGdata, min_nclusters = 2, max
 plot_scree_adpc(models)
 ```
 
-<img src="man/figures/README-example 3-1.png" width="40%" />
+<img src="man/figures/README-example_3-1.png" width="40%" />
 
 ``` r
 
@@ -72,7 +72,7 @@ plot_scree_adpc(models)
 plot_scree_adpc(models_lowdim)
 ```
 
-<img src="man/figures/README-example 3-2.png" width="40%" />
+<img src="man/figures/README-example_3-2.png" width="40%" />
 
 ``` r
 
@@ -86,7 +86,7 @@ best_models_lowdim <- select_by_CHull(models_lowdim)
 plot_scree_adpc_preselected(best_models_lowdim)
 ```
 
-<img src="man/figures/README-example 3-3.png" width="40%" />
+<img src="man/figures/README-example_3-3.png" width="40%" />
 
 The package also provides functionality to obtain membership matrices,
 which the algorithm can start the alternating least squares procedure
