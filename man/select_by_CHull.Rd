@@ -25,7 +25,7 @@ and the relevant model parameter, compatible with
 For a set of full dimensional ADPROCLUS models (each with different number of clusters),
 this function finds the "elbow" in the scree plot by using the
 CHull procedure (Wilderjans, Ceuleman & Meers, 2013) implemented in
-the \code{\link[multichull]{multichull}} package.
+the \code{multichull} package.
 For a matrix of low dimensional ADPROCLUS models
 (each with different number of cluster and components),
 this function finds the "elbow" in the scree plot for each
