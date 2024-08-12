@@ -235,7 +235,7 @@ print.summary.adpc <- function(x, ...) {
   print(x$cluster_sizes_overlaps)
   cat(" (diagonal entries: number of observations in a cluster)\n")
   cat(" (off-diagonal entry [i,j]:  number of observations both in cluster i and j)\n")
-  cat(" (last row/column represents additional baseline cluster (observations which belong to no cluster))\n\n")
+  cat(" (last row/column represents additional baseline cluster)\n\n")
   if (is.null(x$model_complete$C)) {
     cat("Summary statistics of approximated model variables per cluster:\n")
     if (n_var_true > n_var_inc) {
