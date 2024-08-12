@@ -382,16 +382,18 @@ print.adpc <- function(x,
     cat("   number of clusters:", ncol(x$A), "\n")
     cat("   number of components: ", ncol(x$C), "\n")
     cat("   data format: ", nrow(x$model), "x", ncol(x$model), "\n")
+    cat("   total time:", round(x$timer, digits), "s", "\n")
     cat("   number of total starts:",
-      x$iterations,
+        n_randomstart + n_semirandomstart + 1 * !is.null(start_allocation),
       "\n"
     )
     if (!is.null(start_allocation)) {
       cat("   A rational start was also included.\n")
     }
-    cat("Results:", "\n")
+    cat("Results Best Run:", "\n")
     cat("   explained variance:", round(x$explvar, digits), "\n")
-    cat("   total time:", round(x$timer, digits), "s", "\n")
+    cat("   time:", round(x$timer_one_run, digits), "s", "\n")
+    cat("   iterations to convergence:", x$iterations, "\n")
     cat("\n")
     cat("A (cluster membership matrix):", "\n")
     print(x$A[1:n_obs_inc, 1:n_clust_inc_col, drop = FALSE])
@@ -413,11 +415,13 @@ print.adpc <- function(x,
     if (n_var_true - n_var_inc > 0) {
       cat("[", n_var_true - n_var_inc, " columns were omitted ]\n")
     }
+    cat("\n")
   } else {
     cat(title, "\n")
     cat("Setup:", "\n")
     cat("   number of clusters:", ncol(x$A), "\n")
     cat("   data format: ", nrow(x$model), "x", ncol(x$model), "\n")
+    cat("   total time:", round(x$timer, digits), "s", "\n")
     cat("   number of total starts:",
       n_randomstart + n_semirandomstart + 1 * !is.null(start_allocation),
       "\n"
@@ -425,10 +429,11 @@ print.adpc <- function(x,
     if (!is.null(start_allocation)) {
       cat("   A rational start was also included.\n")
     }
-    cat("Results:", "\n")
+    cat("Results Best Run:", "\n")
     cat("   explained variance:", round(x$explvar, digits), "\n")
-    cat("   processing time:", round(x$timer, digits), "s", "\n")
-    cat("   iterations:", x$iterations, "\n")
+    cat("   time:", round(x$timer_one_run, digits), "s", "\n")
+    cat("   iterations to convergence:", x$iterations, "\n")
+    cat("\n")
     cat("A (cluster membership matrix):", "\n")
     print(x$A[1:n_obs_inc, 1:n_clust_inc_col, drop = FALSE])
     if (n_obs_true - n_obs_inc > 0) {
@@ -437,6 +442,7 @@ print.adpc <- function(x,
     if (n_clust_true - n_clust_inc_col > 0) {
       cat("[", n_clust_true - n_clust_inc_col, " columns were omitted ]\n")
     }
+    cat("\n")
     cat("P (profiles):", "\n")
     print(round(x$P[1:n_clust_inc_row, 1:n_var_inc, drop = FALSE], digits))
     if (n_clust_true - n_clust_inc_row > 0) {
@@ -445,6 +451,7 @@ print.adpc <- function(x,
     if (n_var_true - n_var_inc > 0) {
       cat("[", n_var_true - n_var_inc, " columns were omitted ]\n")
     }
+    cat("\n")
   }
 }
 

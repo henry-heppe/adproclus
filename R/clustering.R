@@ -77,8 +77,8 @@ NULL
 #'   of \code{data}.}
 #'   \item{\code{explvar}}{numeric. The proportion of variance
 #'   in \code{data} that is accounted for by the clustering model.}
-#'   \item{\code{iterations}}{numeric. The total number of runs
-#'   (random, semi-random and rational starts).}
+#'   \item{\code{iterations}}{numeric. The number of algorithm iterations
+#'   until convergence of the relevant single start.}
 #'   \item{\code{timer_one_run}}{numeric. The amount of time (in seconds) the
 #'   relevant single start ran for.}
 #'   \item{\code{initial_start}}{list. Containing the initial
@@ -398,8 +398,8 @@ adproclus <- function(data, nclusters,
 #'   of \code{data}.}
 #'   \item{\code{explvar}}{numeric. The proportion of variance
 #'   in \code{data} that is accounted for by the clustering model.}
-#'   \item{\code{iterations}}{The total number of runs
-#'   (random, semi-random and rational starts).}
+#'   \item{\code{iterations}}{numeric. The number of algorithm iterations
+#'   until convergence of the relevant single start.}
 #'   \item{\code{timer_one_run}}{numeric. The amount of time (in seconds) the
 #'   relevant single start ran for.}
 #'   \item{\code{initial_start}}{list. A list containing the initial

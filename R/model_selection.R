@@ -229,7 +229,7 @@ mselect_adproclus_low_dim <- function(data,
                                 results[i,] <- results_i
                         }
                         colnames(results) <- sapply(list(min_ncomponents:max_ncomponents),
-                                                    function(x) {paste("Unexplained_Variance_", x, "comp", sep = "")})
+                                                    function(x) {paste("Unexpl_Variance_", x, "comp", sep = "")})
                 } else {
                         for (i in 1:ncluster_param) {
                                 results_i <- c()
