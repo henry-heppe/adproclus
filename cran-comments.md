@@ -4,5 +4,5 @@
 
 ## revdepcheck results
 
-There are no reverse dependencies.
+There are currently no downstream dependencies for this package.
 
