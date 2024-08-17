@@ -29,7 +29,8 @@ procedure (see \code{\link{adproclus}} and \code{\link{adproclus_low_dim}}).
 \details{
 The function uses the same quadratic loss function and minimization method as
 the (low dimensional) ADPROCLUS procedure does to find the next conditionally
- optimal membership matrix A. (for details, see Depril et al., 2012).
+ optimal membership matrix A. (for details, see Depril et al., 2012). For the full
+ dimensional ADPROCLUS it uses the algorithm \code{ALS2} and not \code{ALS1}.
 
 \strong{Warning:} This function does \emph{not} obtain an ADPRCOLUS model. To
 perform additive profile clustering, see \code{\link{adproclus}}.
