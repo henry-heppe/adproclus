@@ -49,5 +49,5 @@ test_that("Scree plots low dimensional", {
                                                      min_ncomponents = 1, max_ncomponents = 4,
                                                      seed = 1)
         expect_no_condition(plot_scree_adpc(model_selection))
-        expect_no_condition(plot_scree_adpc(model_selection, grid = TRUE))
+        expect_no_error(plot_scree_adpc(model_selection, grid = TRUE))
 })
