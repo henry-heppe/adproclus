@@ -1,5 +1,10 @@
 # adproclus (development version)
 
+# adproclus 2.0.1
+## Minor improvements and fixes
+* The tests of the visualization functions do not error anymore. 
+  They were broken by a ggplot2 update
+
 # adproclus 2.0.0
 
 ## Breaking changes

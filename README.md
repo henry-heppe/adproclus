@@ -6,6 +6,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/henry-heppe/adproclus/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/henry-heppe/adproclus/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/henry-heppe/adproclus/graph/badge.svg)](https://app.codecov.io/gh/henry-heppe/adproclus)
 <!-- badges: end -->
 
 This package is an implementation of the additive profile clustering
@@ -64,7 +66,7 @@ models_lowdim <- mselect_adproclus_low_dim(data = CGdata, min_nclusters = 2, max
 plot_scree_adpc(models)
 ```
 
-<img src="man/figures/README-example_3-1.png" width="40%" />
+<img src="man/figures/README-example_3-1.png" alt="" width="40%" />
 
 ``` r
 
@@ -72,7 +74,7 @@ plot_scree_adpc(models)
 plot_scree_adpc(models_lowdim)
 ```
 
-<img src="man/figures/README-example_3-2.png" width="40%" />
+<img src="man/figures/README-example_3-2.png" alt="" width="40%" />
 
 ``` r
 
@@ -86,7 +88,7 @@ best_models_lowdim <- select_by_CHull(models_lowdim)
 plot_scree_adpc_preselected(best_models_lowdim)
 ```
 
-<img src="man/figures/README-example_3-3.png" width="40%" />
+<img src="man/figures/README-example_3-3.png" alt="" width="40%" />
 
 The package also provides functionality to obtain membership matrices,
 which the algorithm can start the alternating least squares procedure
